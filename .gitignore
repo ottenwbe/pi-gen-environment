@@ -1,6 +1,13 @@
 # Compiled files
 *.tfstate
 *.tfstate.backup
+*.tfvars
 
 # Module directory
 .terraform/
+.idea/
+
+# Project files and direcotires
+*iml
+ssh/
+
