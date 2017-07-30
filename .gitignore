@@ -11,3 +11,5 @@
 *iml
 ssh/
 
+*.conf
+wpa_supplicant.json

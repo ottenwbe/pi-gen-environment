@@ -8,6 +8,10 @@ variable "secret_key" {
   description = "Secret Access"
 }
 
+variable "ssh_path" {
+  description = "Secret Access"
+}
+
 /** AZ which is used by default during the deployment */
 variable "default_az" {
   description = "Default AZ"

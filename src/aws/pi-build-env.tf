@@ -18,7 +18,7 @@ resource "aws_vpc" "pi_builder_vpc" {
 /** key for deployment of jumpbox and nat */
 resource "aws_key_pair" "pi_builder_key" {
   key_name = "pi-builder"
-  public_key = "${file("../ssh/pi-builder")}"
+  public_key = "${file("${var.ssh_path}/pi-builder.pub")}"
 }
 
 
@@ -41,20 +41,26 @@ resource "aws_instance" "pi_builder_vm" {
     "${aws_security_group.http.id}"]
   key_name = "${aws_key_pair.pi_builder_key.key_name}"
 
+  provisioner "file" {
+    connection {
+      user = "ubuntu"
+      host = "${aws_instance.pi_builder_vm.public_dns}"
+      timeout = "25m"
+      private_key = "${file("${var.ssh_path}/pi-builder.pem")}"
+    }
+    source = "../sh/build-pi-img.sh"
+    destination = "/home/ubuntu/build-pi-img.sh"
+  }
+
   provisioner "remote-exec" {
     connection {
       user = "ubuntu"
       host = "${aws_instance.pi_builder_vm.public_dns}"
       timeout = "25m"
-      private_key = "${file("../ssh/pi-builder.ppk")}"
+      private_key = "${file("${var.ssh_path}/pi-builder.pem")}"
     }
     inline = [
-      "sudo apt update",
-      "sudo apt -y install quilt qemu-user-static debootstrap pxz zip bsdtar",
-      "git clone quilt qemu-user-static debootstrap pxz zip bsdtar",
-      "cd pi-gen",
-      "echo \"IMG_NAME=chiipi\" > config",
-      "sudo ./build.sh",
+      "sh build-pi-img.sh"
     ]
   }
 

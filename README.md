@@ -1,5 +1,9 @@
 # pi-gen-environment
 
+##WIP Notice
+
+This project is still under construction...
+
 ## Start and build the environment
  
  1. Create a folder _src/ssh_ and generate a ssh key pair, e.g.,    
@@ -16,4 +20,8 @@
         
 4. Fetch the img in pi-gen/deploy via scp     
 
+    vagrant scp vagrant@default:~/pi-gen/deploy/image_2017-07-28-chiipi-lite.zip
+
          
+Install it on the card:
+    

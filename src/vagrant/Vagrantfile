@@ -1,0 +1,17 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+    config.vm.box = "debian/stretch64" #"debian/jessie64"
+
+    config.vm.provision "file", source: "../sh/build-pi-img.sh", destination: "build-pi-img.sh"
+    config.vm.provision "file", source: "../../conf", destination: "conf"
+    config.vm.provision "file", source: "../../../pi-gen", destination: "pi-gen"
+
+    config.vm.provision "shell", inline: <<-SHELL
+        sh build-pi-img.sh
+    SHELL
+
+
+end
