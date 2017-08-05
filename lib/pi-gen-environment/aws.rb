@@ -1,6 +1,13 @@
 require "fileutils"
 
 class AWS
+
+  def initialize
+    unless File.directory?('ssh')
+      FileUtils.mkdir_p 'ssh'
+    end
+  end
+
   def build
     create_keys
     puts 'Build env with terraform'
