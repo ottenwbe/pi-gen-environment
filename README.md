@@ -1,6 +1,8 @@
 # pi-gen-environment
 
 
+[![Build Status](https://travis-ci.org/ottenwbe/pi-gen-environment.svg?branch=master)](https://travis-ci.org/ottenwbe/pi-gen-environment)
+
 ##WIP Notice
 
 This project is still under construction...
