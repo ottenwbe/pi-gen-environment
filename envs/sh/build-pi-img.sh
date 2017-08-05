@@ -4,12 +4,9 @@
 sudo apt update
 sudo apt -y install parted zerofree dosfstools git quilt qemu-user-static debootstrap pxz zip bsdtar ruby-full libcap2-bin
 
-repo=$1
-
-if [ ! -z ${repo} ]
-then
-    # Get build sources from a repo
-    git clone ${repo}
+file="gitpath"
+if [ -f "$file" ]; then
+    git clone "$(< gitpath)"
 fi
 
 cd pi-gen
