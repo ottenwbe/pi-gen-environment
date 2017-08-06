@@ -1,8 +1,8 @@
 require 'thor'
 require 'fileutils'
-require 'pi-gen-environment/vagrant'
-require 'pi-gen-environment/aws'
-require 'pi-gen-environment/git_file'
+require_relative 'pi-gen-environment/vagrant'
+require_relative 'pi-gen-environment/aws'
+require_relative 'pi-gen-environment/git_file'
 
 class PiGen < Thor
 

@@ -1,4 +1,4 @@
-require 'pi-gen-environment'
+require_relative 'lib/pi-gen-environment'
 
 begin
 
