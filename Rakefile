@@ -1,15 +1,27 @@
-require_relative 'lib/pi-gen-environment'
+require 'pi-gen-environment'
 
-task :default => :run_vagrant
+begin
+
+  require 'rspec/core/rake_task'
+
+  task :default => :test
+
+  RSpec::Core::RakeTask.new(:test) do
+    require 'rspec/core/rake_task'
+  end
+
+rescue LoadError
+  puts 'RSpec is not installed. This means rake is not able to execute tests!'
+end
 
 task :run_vagrant do
-  PiGen.start(["build","VAGRANT"])
+  PiGen.start(["build", "VAGRANT"])
 end
 
 task :run_echo do
-  PiGen.start(["build","ECHO"])
+  PiGen.start(["build", "ECHO"])
 end
 
 task :run_echo_git do
-  PiGen.start(["build","ECHO","--git_path='path'"])
+  PiGen.start(["build", "ECHO", "--git_path='path'"])
 end

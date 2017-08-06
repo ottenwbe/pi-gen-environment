@@ -3,17 +3,17 @@
 
 require 'fileutils'
 
-Vagrant.configure("2") do |config|
+Vagrant.configure('2') do |config|
 
-  config.vm.box = "debian/stretch64"
+  ROOT = '../../'
 
-  config.vm.provision 'file', source: "../sh/build-pi-img.sh", destination: 'build-pi-img.sh'
-  config.vm.provision 'file', source: "../../conf", destination: 'conf'
+  config.vm.box = 'debian/stretch64'
 
-  if File.directory?('../../../pi-gen') then
-    config.vm.provision 'file', source: "../../../pi-gen", destination: 'pi-gen'
-  elsif File.file?('../../gitpath')
-    config.vm.provision 'file', source: "../../gitpath", destination: 'pi-gen'
+  config.vm.provision 'file', source: ROOT+'envs/sh/build-pi-img.sh', destination: 'build-pi-img.sh'
+  config.vm.provision 'file', source: ROOT+'conf', destination: 'conf'
+
+  if File.directory?(ROOT+'../pi-gen')
+    config.vm.provision 'file', source: ROOT+'../pi-gen', destination: 'pi-gen'
   end
 
   config.vm.provision 'shell', inline: <<-SHELL
