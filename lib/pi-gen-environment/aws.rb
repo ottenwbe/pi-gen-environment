@@ -1,15 +1,19 @@
 require 'fileutils'
+require_relative 'logex'
 
 class AWS
 
-  def initialize
-    unless File.directory?('ssh')
-      FileUtils.mkdir_p 'ssh'
+  def build
+    create_ssh_folder
+    create_keys
+    begin
+      terraform
+    ensure
+      del_keys
     end
   end
 
-  def build
-    create_keys
+  def terraform
     puts 'Build env with terraform'
     Dir.chdir 'envs/aws' do
       system 'terraform plan'
@@ -18,7 +22,7 @@ class AWS
   end
 
   def create_keys(key_name = 'pi-builder')
-    puts 'Create AWS key unless it exists'
+    $logger.info 'Create AWS key unless it exists'
     unless File.file?("ssh/#{key_name}.pub")
       system "ssh-keygen -t rsa -C pi-builder -P '' -f ssh/#{key_name} -b 4096"
       FileUtils.mv "ssh/#{key_name}", "ssh/#{key_name}.pem"
@@ -35,4 +39,10 @@ class AWS
     end
   end
 
+
+  def create_ssh_folder
+    unless File.directory?('ssh')
+      FileUtils.mkdir_p 'ssh'
+    end
+  end
 end

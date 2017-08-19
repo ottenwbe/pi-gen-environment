@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'pi-gen-environment'
+require_relative '../lib/pi-gen-environment'
 
 PiGen.start(ARGV)
