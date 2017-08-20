@@ -1,4 +1,4 @@
-Gem::Specification.new do |s|
+ Gem::Specification.new do |s|
   s.name = 'pi-gen-environment'
   s.version = '0.1.0'
   s.licenses = ['MIT']

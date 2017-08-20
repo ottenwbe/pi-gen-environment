@@ -20,8 +20,7 @@ class PiGen < Thor
         when 'VAGRANT'
           Vagrant.new.build
         when 'ECHO'
-          $logger.info "Echo: - Git Path: #{options[:git_path]}"
-          $logger.info "Echo: - Workspace Path: #{options[:workspace]}"
+          puts "Echo: - Git Path: #{options[:git_path]} and Workspace Path: #{options[:workspace]}"
         else
           $logger.info 'NO valid build environment (AWS or VAGRANT) defined!'
       end
