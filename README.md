@@ -3,12 +3,12 @@
 
 [![Build Status](https://travis-ci.org/ottenwbe/pi-gen-environment.svg?branch=master)](https://travis-ci.org/ottenwbe/pi-gen-environment)
 
-##WIP Notice
+## WIP Notice
 
 This project is still under construction...
 
 
-##What is pi-gen-environment?
+## What is pi-gen-environment?
 
 'Pi-gen-environment' is able to configure and personalize 
 you presonal raspbian image.
@@ -18,6 +18,10 @@ you presonal raspbian image.
 - vagrant or terraform (+aws account)
 - ruby
 - rake
+
+## Development 
+
+Current development is done on the development branch.
 
 ## Start and build the environment
 
