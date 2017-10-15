@@ -1,0 +1,31 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'fileutils'
+
+$dependencies = <<SCRIPT
+sudo apt update
+sudo apt -y install git curl quilt parted qemu-user-static debootstrap zerofree pxz zip dosfstools libcap2-bin bsdtar
+SCRIPT
+
+Vagrant.configure('2') do |config|
+
+  ROOT = <%= root %>
+
+  config.vm.box = 'debian/stretch64'
+  config.disksize.size = <%= disk_size %>
+
+  config.vm.provision 'shell', inline: $dependencies
+
+  config.vm.provision 'file', source: ROOT+'envs/sh/build-pi-img.sh', destination: 'build-pi-img.sh'
+  config.vm.provision 'file', source: ROOT+'conf', destination: 'conf'
+
+  if File.directory?(ROOT+'../pi-gen')
+    config.vm.provision 'file', source: ROOT+'../pi-gen', destination: 'pi-gen'
+  end
+
+  config.vm.provision 'shell', inline: <<-SHELL
+    source build-pi-img.sh
+  SHELL
+
+end
