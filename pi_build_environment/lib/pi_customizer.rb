@@ -21,19 +21,23 @@
 require 'thor'
 require 'fileutils'
 require_relative 'pi_customizer/builder/builder'
+require_relative 'pi_customizer/environment/environment'
+require_relative 'pi_customizer/environment/environment_builder_factory'
 
 module PiCustomizer
-
   class PiGen < Thor
-
     desc 'build ENV', 'Build pi image on environment ENV (options are AWS or VAGRANT).'
     option :git_path
     option :workspace
-
+    option :config_file
     def build(env)
-      builder = Builder::PiBuilder.new
-      builder.environmentName = env
+      builder = Environment::environment_builder_factory(env, "#{options[:git_path]}", "#{options[:workspace]}", "#{options[:config_file]}")
       builder.build
+    end
+
+    desc 'version', 'Shows the version number.'
+    def version
+      puts VERSION
     end
   end
 end

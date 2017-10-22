@@ -1,4 +1,4 @@
-require_relative 'pi_builder_environment/lib/pi_customizer'
+require_relative 'lib/pi_customizer'
 
 begin
 

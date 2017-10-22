@@ -25,8 +25,10 @@ module PiCustomizer
   module Workspace
     class Workspace
 
-      DEFAULT_WORKSPACE_DIRECTORY = '../pi-gen'
+      DEFAULT_WORKSPACE_DIRECTORY = '~/pi-gen'
       DEFAULT_GIT_PATH = 'https://github.com/ottenwbe/pi-gen.git'
+
+      attr_reader :git_path, :workspace_directory
 
       def initialize(workspace_dir = DEFAULT_WORKSPACE_DIRECTORY, git_path = DEFAULT_GIT_PATH)
         $logger.info "Creating workspace at '#{workspace_dir}' from '#{git_path}'"

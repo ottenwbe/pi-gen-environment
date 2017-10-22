@@ -25,16 +25,30 @@ module PiCustomizer
   module Environment
     class VagrantFile
 
-      attr_accessor :vagrant_path, :root, :disk_size
+      attr_accessor :vagrant_path, :disk_size, :config_file_destination, :config_file_source, :workspace, :git_path
 
-      def initialize
+      def initialize(workspace, config_path)
         @vagrant_path = 'envs/vagrant/'
         @disk_size = "'20GB'"
+        @config_file_destination = '~/conf.json'
+        if config_path.nil? || config_path.empty?
+          @config_file_source = 'conf.json'
+        else
+          @config_file_source = config_path
+        end
+        if workspace.nil?
+          @git_path = Workspace::DEFAULT_GIT_PATH
+          @workspace = Workspace::DEFAULT_WORKSPACE_DIRECTORY
+        else
+          @git_path = workspace.git_path
+          @workspace = workspace.workspace_directory
+        end
       end
 
-      def render(template)
-        ERB.new(template).result(binding)
+      def get_binding
+        binding
       end
+
     end
   end
 
@@ -62,14 +76,15 @@ module PiCustomizer
       end
     end
 
+    def render
+      ERB.new(@template).result(@vagrant_file.get_binding)
+    end
+
     private def write_rendered
       File.open(@vagrant_file.vagrant_path.to_s + 'Vagrantfile', 'w+') do |f|
-        f.write(@vagrant_file.render(@template))
+        f.write(render)
       end
     end
 
   end
 end
-
-
-

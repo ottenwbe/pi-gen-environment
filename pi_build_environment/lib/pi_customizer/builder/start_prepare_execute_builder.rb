@@ -26,16 +26,18 @@ module PiCustomizer
   module Builder
     class StartStopBuilder < PiBuilder
 
-      def start
+      protected def start
+        @env.check
         @env.start
         @env.prepare
       end
 
-      def execute
+      protected def execute
         @env.build_image
       end
 
-      def stop
+      protected def stop
+        @env.clean_up
         @env.stop
       end
 

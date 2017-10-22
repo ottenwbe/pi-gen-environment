@@ -5,7 +5,13 @@ require 'fileutils'
 
 $dependencies = <<SCRIPT
 sudo apt update
+sudo apt -y upgrade
 sudo apt -y install git curl quilt parted qemu-user-static debootstrap zerofree pxz zip dosfstools libcap2-bin bsdtar
+SCRIPT
+
+$modify = <<SCRIPT
+# install gem
+# execute gem with parameters
 SCRIPT
 
 Vagrant.configure('2') do |config|
@@ -15,17 +21,13 @@ Vagrant.configure('2') do |config|
   config.vm.box = 'debian/stretch64'
   config.disksize.size = '20GB'
 
+  # Prepare environment by updating the dependencies
   config.vm.provision 'shell', inline: $dependencies
 
-  config.vm.provision 'file', source: ROOT+'envs/sh/build-pi-img.sh', destination: 'build-pi-img.sh'
-  config.vm.provision 'file', source: ROOT+'conf', destination: 'conf'
+  # Copy config file
+  #config.vm.provision 'file' --- config file
 
-  if File.directory?(ROOT+'../pi-gen')
-    config.vm.provision 'file', source: ROOT+'../pi-gen', destination: 'pi-gen'
-  end
-
-  config.vm.provision 'shell', inline: <<-SHELL
-    source build-pi-img.sh
-  SHELL
+  # Actually modify and build
+  config.vm.provision 'shell', inline: $modify
 
 end

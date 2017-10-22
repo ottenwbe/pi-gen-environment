@@ -18,18 +18,42 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../environment/environment_factory'
+require_relative '../environment/environment_builder_factory'
 require_relative '../workspace/workspace'
 
 module PiCustomizer
   module Builder
     class PiBuilder
 
-      attr_accessor :environmentName
+      def initialize(environment)
+        @env = environment
+      end
 
       def build
-        $logger.error 'Pi Builder not specified!'
+        check_builder
+        begin
+          start
+          execute
+        ensure
+          stop
+        end
       end
+
+      protected def check_builder
+        if @env.nil?
+          raise 'No environment specified, please specify the "environment", e.g. Vagrant'
+        end
+      end
+
+      protected def start
+      end
+
+      protected def execute
+      end
+
+      protected def stop
+      end
+
     end
   end
 end

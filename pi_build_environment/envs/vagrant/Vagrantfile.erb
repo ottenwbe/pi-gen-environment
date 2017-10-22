@@ -5,27 +5,52 @@ require 'fileutils'
 
 $dependencies = <<SCRIPT
 sudo apt update
-sudo apt -y install git curl quilt parted qemu-user-static debootstrap zerofree pxz zip dosfstools libcap2-bin bsdtar
+sudo apt -y upgrade
+sudo apt -y install quilt parted qemu-user-static debootstrap zerofree pxz zip dosfstools libcap2-bin bsdtar
+sudo apt -y install git curl ruby-full
+SCRIPT
+
+$prepare = <<SCRIPT
+# install gem
+if [ -f "pi_build_modifier.gem" ]; then
+  echo "Gem exists"
+else
+  gem install --local pi_build_modifier.gem
+end
+mkdir <%= workspace %>
+if [ -f "<%= workspace %>" ]; then
+  git clone <%= git_path %> <%= workspace %>
+else
+  git pull <%= git_path %> -r
+end
+SCRIPT
+
+$modify = <<SCRIPT
+# Execute gem with parameters
+pi_build_modifier <%= config_file_destination %>
 SCRIPT
 
 Vagrant.configure('2') do |config|
 
-  ROOT = <%= root %>
-
   config.vm.box = 'debian/stretch64'
   config.disksize.size = <%= disk_size %>
 
+  # Prepare environment by updating the dependencies
   config.vm.provision 'shell', inline: $dependencies
 
-  config.vm.provision 'file', source: ROOT+'envs/sh/build-pi-img.sh', destination: 'build-pi-img.sh'
-  config.vm.provision 'file', source: ROOT+'conf', destination: 'conf'
+  # Copy config file
+  config.vm.provision , source: "<%= config_file_source %>", destination: "<%= config_file_destination %>"
 
-  if File.directory?(ROOT+'../pi-gen')
-    config.vm.provision 'file', source: ROOT+'../pi-gen', destination: 'pi-gen'
+  if File.exists? pi_build_modifier.gem
+    config.vm.provision , source: "pi_build_modifier.gem", destination: "~/pi_build_modifier.gem"
+  else
+    raise 'Config file cannot be found!'
   end
 
-  config.vm.provision 'shell', inline: <<-SHELL
-    source build-pi-img.sh
-  SHELL
+  # Actually modify and build
+  config.vm.provision 'shell', inline: $prepare
+
+  # Actually modify the build sources and build the environment
+  config.vm.provision 'shell', inline: $modify
 
 end

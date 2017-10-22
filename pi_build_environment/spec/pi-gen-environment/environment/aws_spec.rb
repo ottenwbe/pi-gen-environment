@@ -1,4 +1,4 @@
-require 'pi_customizer/environment/aws'
+require 'pi_build_environment/environment/aws'
 require 'fileutils'
 require 'pathname'
 

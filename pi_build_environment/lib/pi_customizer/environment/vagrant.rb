@@ -36,21 +36,25 @@ module PiCustomizer
 
       def prepare
         $logger.info '[Prepare] pi-image in vagrant environment'
-
-        VagrantFileRenderer.new(VagrantFile.new).create_from_template
-
+        VagrantFileRenderer.new(VagrantFile.new(@workspace, @config_path)).create_from_template
       end
 
       def start
         $logger.info '[Start] pi-image in local vagrant environment'
         Dir.chdir(VAGRANT_PATH) do
-          system 'vagrant destroy -f' #cleanup
+          system 'vagrant destroy -f' # cleanup old environment
           system 'vagrant up --provider=virtualbox --no-provision'
         end
       end
 
       def build_image
         system 'vagrant provision'
+        #TODO: push finished product to some destination, e.g. an S3 bucket
+      end
+
+      def clean_up
+        $logger.info '[Clean Up] pi-image in local vagrant environment'
+        # TODO: remove old files in Vagrant box?
       end
 
       def stop
@@ -60,6 +64,7 @@ module PiCustomizer
         end
       end
 
+=begin
       def build
         $logger.info 'Building pi-image in local vagrant environment'
         Dir.chdir(VAGRANT_PATH) do
@@ -67,6 +72,7 @@ module PiCustomizer
           system 'vagrant up --provider=virtualbox --provision'
         end
       end
+=end
 
       def ensure_vagrant
         unless system 'vagrant -v'

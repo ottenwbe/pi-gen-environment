@@ -21,6 +21,9 @@
 require_relative 'vagrant'
 require_relative 'aws'
 require_relative 'environment'
+require_relative '../builder/prepare_start_execute_builder'
+require_relative '../builder/start_prepare_execute_builder'
+require_relative '../builder/builder'
 
 module PiCustomizer
   module Environment
@@ -29,18 +32,37 @@ module PiCustomizer
     ENV_VAGRANT = 'VAGRANT'
     ENV_ECHO = 'ECHO'
 
-    def Environment.environment_factory(workspace, env, git_path, space)
+    def Environment.environment_builder_factory(env, git_path, workspace, config_path)
+
+      workspace = Workspace::Workspace.new(workspace, git_path)
+      environment = environment_factory(env, config_path, workspace)
+
       case env
         when ENV_AWS
-          env = AWS.new
+          env_builder = PrepareExecuteBuilder.new(environment)
         when ENV_VAGRANT
-          env = Vagrant.new
+          env_builder = PrepareExecuteBuilder.new(environment)
         when ENV_ECHO
-          puts "Echo: - Git Path: #{git_path} and Workspace Path: #{space}"
-          env = EnvironmentControl.new
+          puts "Echo: - Git Path: #{git_path} and Workspace Path: #{workspace}"
+          env_builder = StartStopBuilder.new(environment)
         else
-          $logger.info 'NO valid build environment (AWS or VAGRANT) defined!'
-          env = EnvironmentControl.new
+          $logger.info 'NO valid build environment defined!'
+          env_builder = PiBuilder.new(environment)
+      end
+      env_builder
+    end
+
+    def Environment.environment_factory(environment, config_path, workspace)
+      case environment
+        when ENV_AWS
+          env = AWS.new(config_path, workspace)
+        when ENV_VAGRANT
+          env = Vagrant.new(config_path, workspace)
+        when ENV_ECHO
+          env = EnvironmentControl.new(config_path, workspace)
+        else
+          $logger.info 'NO valid environment (e.g., AWS or VAGRANT) defined!'
+          env = EnvironmentControl.new(config_path, workspace)
       end
       env
     end

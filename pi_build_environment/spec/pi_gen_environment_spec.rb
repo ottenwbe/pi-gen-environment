@@ -1,6 +1,6 @@
-require 'pi_customizer'
+require 'pi_build_environment'
 require 'fileutils'
-require 'pi_customizer/config/logex'
+require 'pi_build_environment/config/logex'
 
 module PiCustomizer
   RSpec.describe PiGen do

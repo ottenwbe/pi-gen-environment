@@ -1,4 +1,4 @@
-require 'pi_customizer/workspace/workspace'
+require 'pi_build_environment/workspace/workspace'
 require 'fileutils'
 require 'pathname'
 
@@ -7,7 +7,7 @@ module PiCustomizer
     RSpec.describe Workspace do
 
       let(:git_path) {'../pi-gen-test'}
-      let(:default_git) {'https://github.com/ottenwbe/pi_customizer.git'}
+      let(:default_git) {'https://github.com/ottenwbe/pi_build_environment.git'}
 
       it 'allows to create and remove a workspace and destroys it afterwards' do
         git_file = Workspace.new(git_path, default_git)

@@ -1,3 +1,23 @@
+# Copyright (c) 2017 Beate Ottenwälder
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 require 'erb'
 require 'json'
 
@@ -24,42 +44,22 @@ module PiBuildModifier
 
   class WPASupplicant
 
-    def initialize(stage_path = '', networks = Array.new(0), wpa_country = 'DE')
-      @stage_path = stage_path
+    attr_reader :template_path, :relative_output_path
+
+    def initialize(networks = Array.new(0), wpa_country = 'DE')
       @networks = networks
       @wpa_country = wpa_country
+      @template_path = File.join(File.dirname(__FILE__), '/../templates/wpa_supplicant.conf.erb').to_s
+      @relative_output_path = 'stage2/02-net-tweaks/wpa_supplicant.conf'
     end
 
-    def run
-      read_json_input
-      read_template
-      save_conf
+    def map(json_data)
+      @networks = json_data['networks'].map {|rd| WifiNetwork.new(rd['ssid'], rd['wpsk'])} if json_data.has_key? 'networks'
+      @wpa_country = json_data['wpa_country'] if json_data.has_key? 'wpa_country'
     end
 
-    def read_json_input
-      json_file = @stage_path.to_s + 'files/wpa_supplicant.json'
-      if File.file?(json_file)
-        File.open(json_file, 'r+') do |f|
-          data = JSON.parse(f.read)
-          @networks = data['Networks'].map {|rd| WifiNetwork.new(rd['ssid'], rd['wpsk'])}
-        end
-      end
-    end
-
-    def read_template
-      File.open(@stage_path.to_s + 'files/wpa_supplicant.conf.erb', 'r+') do |f|
-        @template = f.read
-      end
-    end
-
-    def render
-      ERB.new(@template).result(binding)
-    end
-
-    def save_conf
-      File.open(@stage_path.to_s + 'files/wpa_supplicant.conf', 'w+') do |f|
-        f.write(render)
-      end
+    def get_binding
+      binding
     end
 
   end

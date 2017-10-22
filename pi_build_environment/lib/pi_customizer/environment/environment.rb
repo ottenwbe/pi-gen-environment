@@ -24,17 +24,11 @@ module PiCustomizer
   module Environment
     class EnvironmentControl
 
-      attr_accessor :workspace
+      attr_reader :workspace, :config_path
 
-      def execute_all
-        begin
-          check
-          prepare
-          start
-          build_image
-        ensure
-          stop
-        end
+      def initialize(workspace, config_path)
+        @workspace = workspace
+        @config_path = config_path
       end
 
       def check
@@ -51,6 +45,10 @@ module PiCustomizer
 
       def build_image
         $logger.warn 'Missing build_image command'
+      end
+
+      def clean_up
+        $logger.warn 'Missing clean_up command'
       end
 
       def stop

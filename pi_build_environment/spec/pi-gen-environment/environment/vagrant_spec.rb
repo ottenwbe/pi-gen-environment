@@ -1,4 +1,4 @@
-require 'pi_customizer/environment/vagrant'
+require 'pi_build_environment/environment/vagrant'
 require 'fileutils'
 require 'pathname'
 
