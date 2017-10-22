@@ -18,46 +18,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../environment/environment_factory'
+require_relative '../environment/environment_builder_factory'
 require_relative '../workspace/workspace'
 require_relative 'builder'
 
 module PiCustomizer
   module Builder
-    class PrepareExecuteBuilder < PiBuilder
-
-      def build
-        prepare
-        execute
-        stop
-      end
+    class StartStopBuilder < PiBuilder
 
       def start
-        if environmentName.nil?
-          $logger.error('No environment specified, please specify the "environmentName"')
-          return
-        end
-
-        @workspace = Workspace::Workspace.new(workspace_dir: options[:workspace], git_location: options[:git_path])
-        @env = Environment.environment_factory(workspace, environmentName, "#{options[:git_path]}", "#{options[:workspace]}")
-        @env.workspace = workspace
-
         @env.start
         @env.prepare
-
-      end
-
-      def stop
-        @workspace.clean_up
-        @env.stop
       end
 
       def execute
-        @workspace.get_or_refresh
-        @env.prepare_image
         @env.build_image
-        @env.deploy_image
       end
+
+      def stop
+        @env.stop
+      end
+
     end
   end
 end

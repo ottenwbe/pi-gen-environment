@@ -18,24 +18,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../environment/environment_factory'
+require_relative '../environment/environment_builder_factory'
 require_relative '../workspace/workspace'
 require_relative 'builder'
 
 module PiCustomizer
   module Builder
-    def create_builder(env)
-      case env
-        when ENV_AWS then
-          env_builder = PiBuilder.new
-        when ENV_VAGRANT then
-          env_builder = PiBuilder.new
-        when ENV_ECHO then
-          env_builder = PiBuilder.new
-        else
-          env_builder = PiBuilder.new
+    class PrepareExecuteBuilder < PiBuilder
+
+      def start
+        @env.prepare
       end
-      env_builder
+
+      def execute
+        @env.start
+        @env.build_image
+      end
+
+
+      def stop
+        @env.clean_up
+        @env.stop
+      end
+
     end
   end
 end

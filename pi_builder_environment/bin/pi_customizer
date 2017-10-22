@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-
-require_relative '../pi_builder_environment/lib/pi_customizer'
-
-PiGen.start(ARGV)
