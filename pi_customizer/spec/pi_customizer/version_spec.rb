@@ -18,39 +18,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require 'pi_customizer/version'
 require 'rspec'
-require 'fileutils'
-require 'pi_build_modifier/net-tweaks/WifiNetwork'
-require 'pi_build_modifier/mapper/mapper'
 
-module PiBuildModifier
-  RSpec.describe WPASupplicant do
+module PiCustomizer
 
-    let(:empty_json_config) {'config_empty.json'}
-
-    before(:each) do
-      File.open(empty_json_config, 'w') {|file| file.write('{}')}
+  describe PiCustomizer do
+    it 'has a version number' do
+      expect(PiCustomizer::VERSION).not_to be nil
     end
 
-    after(:each) do
-      FileUtils.rm(empty_json_config)
-    end
-
-    it 'should create a default "WPAsupplication".conf ' do
-
-      #Given
-      wpaSupplicant = WPASupplicant.new
-      mapper = Mapper.new(wpaSupplicant, empty_json_config, File.dirname(__FILE__))
-
-      #When
-      mapper.do_map
-
-      #Then
-      expect(Pathname.new(File.dirname(__FILE__) + '/' + wpaSupplicant.relative_output_path)).to be_file
-
-      #After
-      FileUtils.rm File.dirname(__FILE__) + '/' + wpaSupplicant.relative_output_path
-    end
   end
-
 end

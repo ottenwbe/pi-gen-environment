@@ -1,13 +1,6 @@
 language: ruby
 rvm:
-  - 2.4.0
-  - 2.4.1
-
-before_install:
-  - gem install bundler
-
-install:
-  - bundle install
+  - 2.4.2
 
 script:
-  - bundle exec rake
+  - source test.sh

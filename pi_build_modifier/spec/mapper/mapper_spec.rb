@@ -19,8 +19,8 @@
 # SOFTWARE.
 
 require 'rspec'
-require_relative '../../lib/pi_build_modifier/mapper/mapper'
-require 'FileUtils'
+require 'fileutils'
+require 'pi_build_modifier/mapper/mapper'
 
 module PiBuildModifier
   RSpec.describe Mapper do

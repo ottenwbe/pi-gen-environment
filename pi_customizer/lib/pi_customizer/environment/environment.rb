@@ -18,39 +18,44 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'rspec'
-require 'fileutils'
-require 'pi_build_modifier/net-tweaks/WifiNetwork'
-require 'pi_build_modifier/mapper/mapper'
+require 'pi_customizer/config/logex'
 
-module PiBuildModifier
-  RSpec.describe WPASupplicant do
+module PiCustomizer
+  module Environment
+    class EnvironmentControl
 
-    let(:empty_json_config) {'config_empty.json'}
+      attr_reader :workspace, :config_path
 
-    before(:each) do
-      File.open(empty_json_config, 'w') {|file| file.write('{}')}
-    end
+      def initialize(workspace, config_path)
+        @workspace = workspace
+        @config_path = config_path
+      end
 
-    after(:each) do
-      FileUtils.rm(empty_json_config)
-    end
+      def check
+        $logger.warn '[Check] Pre-flight checks are skipped...'
+      end
 
-    it 'should create a default "WPAsupplication".conf ' do
+      def prepare
+        $logger.warn '[Prepare] Preparation steps are skipped...'
+      end
 
-      #Given
-      wpaSupplicant = WPASupplicant.new
-      mapper = Mapper.new(wpaSupplicant, empty_json_config, File.dirname(__FILE__))
+      def start
+        $logger.warn '[Start] Environment is not started...'
+      end
 
-      #When
-      mapper.do_map
+      def build_image
+        $logger.warn '[Build Image] Missing build_image command'
+      end
 
-      #Then
-      expect(Pathname.new(File.dirname(__FILE__) + '/' + wpaSupplicant.relative_output_path)).to be_file
+      def clean_up
+        $logger.warn '[Clean up] Missing clean_up command'
+      end
 
-      #After
-      FileUtils.rm File.dirname(__FILE__) + '/' + wpaSupplicant.relative_output_path
+      def stop
+        $logger.warn '[Stop] Missing stop command'
+      end
+
     end
   end
-
 end
+

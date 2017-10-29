@@ -18,39 +18,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'rspec'
+require 'thor'
 require 'fileutils'
-require 'pi_build_modifier/net-tweaks/WifiNetwork'
-require 'pi_build_modifier/mapper/mapper'
+require 'pi_customizer/version'
+require 'pi_customizer/environment/environment_builder_factory'
 
-module PiBuildModifier
-  RSpec.describe WPASupplicant do
-
-    let(:empty_json_config) {'config_empty.json'}
-
-    before(:each) do
-      File.open(empty_json_config, 'w') {|file| file.write('{}')}
+module PiCustomizer
+  class PiGen < Thor
+    desc 'build ENV', 'Build pi image on environment ENV (options are AWS or VAGRANT).'
+    option :git_path
+    option :workspace
+    option :config_file
+    def build(env)
+      builder = Environment::environment_builder_factory(env, "#{options[:git_path]}", "#{options[:workspace]}", "#{options[:config_file]}")
+      builder.build
     end
 
-    after(:each) do
-      FileUtils.rm(empty_json_config)
-    end
-
-    it 'should create a default "WPAsupplication".conf ' do
-
-      #Given
-      wpaSupplicant = WPASupplicant.new
-      mapper = Mapper.new(wpaSupplicant, empty_json_config, File.dirname(__FILE__))
-
-      #When
-      mapper.do_map
-
-      #Then
-      expect(Pathname.new(File.dirname(__FILE__) + '/' + wpaSupplicant.relative_output_path)).to be_file
-
-      #After
-      FileUtils.rm File.dirname(__FILE__) + '/' + wpaSupplicant.relative_output_path
+    desc 'version', 'Shows the version number.'
+    def version
+      puts VERSION
     end
   end
-
 end

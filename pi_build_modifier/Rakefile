@@ -1,6 +1,14 @@
 require 'bundler/gem_tasks'
-require 'rspec/core/rake_task'
 
-RSpec::Core::RakeTask.new(:spec)
+lib = File.join(File.dirname(__FILE__), '/lib')
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-task :default => :spec
+begin
+  require 'rspec/core/rake_task'
+
+  RSpec::Core::RakeTask.new(:spec)
+
+  task :default => :spec
+rescue LoadError
+  puts 'RSpec is not installed. This means rake is not able to execute tests!'
+end

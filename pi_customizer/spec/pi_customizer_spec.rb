@@ -18,39 +18,38 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'rspec'
+require 'erb'
+require 'pi_customizer'
 require 'fileutils'
-require 'pi_build_modifier/net-tweaks/WifiNetwork'
-require 'pi_build_modifier/mapper/mapper'
+require 'pi_customizer/config/logex'
+require 'pi_customizer/version'
+require 'rspec'
 
-module PiBuildModifier
-  RSpec.describe WPASupplicant do
+module PiCustomizer
+  describe PiGen do
 
-    let(:empty_json_config) {'config_empty.json'}
-
-    before(:each) do
-      File.open(empty_json_config, 'w') {|file| file.write('{}')}
+    context 'ECHO' do
+      it 'starts a build when the command line parameter \'build\' is passed' do
+        expect(STDOUT).to receive(:puts).with('Echo: - Git Path: , Workspace Path: , Config Path: ')
+        PiGen.start(%w(build ECHO))
+      end
+      it 'reads the git_path variable' do
+        expect(STDOUT).to receive(:puts).with('Echo: - Git Path: git, Workspace Path: , Config Path: ')
+        PiGen.start(%w(build ECHO --git_path=git))
+      end
+      it 'reads the config_path variable' do
+        expect(STDOUT).to receive(:puts).with('Echo: - Git Path: , Workspace Path: , Config Path: cfg')
+        PiGen.start(%w(build ECHO --config_file=cfg))
+      end
     end
 
-    after(:each) do
-      FileUtils.rm(empty_json_config)
+    context 'version' do
+      it 'returns the app\'s version' do
+        expect(STDOUT).to receive(:puts).with(VERSION)
+        PiGen.start(%w(version))
+      end
+
     end
 
-    it 'should create a default "WPAsupplication".conf ' do
-
-      #Given
-      wpaSupplicant = WPASupplicant.new
-      mapper = Mapper.new(wpaSupplicant, empty_json_config, File.dirname(__FILE__))
-
-      #When
-      mapper.do_map
-
-      #Then
-      expect(Pathname.new(File.dirname(__FILE__) + '/' + wpaSupplicant.relative_output_path)).to be_file
-
-      #After
-      FileUtils.rm File.dirname(__FILE__) + '/' + wpaSupplicant.relative_output_path
-    end
   end
-
 end
