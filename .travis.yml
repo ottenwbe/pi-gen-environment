@@ -2,5 +2,10 @@ language: ruby
 rvm:
   - 2.4.2
 
+before_install:
+  - gem install bundler
+  - cd pi_customizer/ && bundle install && cd ..
+  - cd pi_build_modifier/ && bundle install && cd ..
+
 script:
-  - source test.sh
+  - rake spec

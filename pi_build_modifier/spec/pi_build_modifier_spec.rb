@@ -18,15 +18,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'spec_helper'
+require_relative 'spec_helper'
+require 'pi_build_modifier'
+require 'pi_build_modifier/version'
 
-RSpec.describe PiBuildModifier do
-  it 'has a version number' do
-    expect(PiBuildModifier::VERSION).not_to be nil
-  end
+module PiBuildModifier
+  RSpec.describe PiBuildModifier do
+    it 'has a version number' do
+      expect(VERSION).not_to be nil
+    end
 
-  it 'prints commands to stderr when called' do
-    expect {PiBuildModifier::PiBuildModifier.start(ARGV)}.to output.to_stderr
+    it 'prints commands to stderr when called' do
+      expect {PiBuildModifier.start(ARGV)}.to output.to_stderr
+    end
   end
 end
+
 

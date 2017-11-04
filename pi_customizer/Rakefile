@@ -1,29 +1,13 @@
-
-lib = File.join(File.dirname(__FILE__),'/lib')
+lib = File.join(File.dirname(__FILE__), '/lib')
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-require 'pi_customizer'
-
 begin
-
+  require 'bundler/gem_tasks'
   require 'rspec/core/rake_task'
 
   RSpec::Core::RakeTask.new(:spec)
-
   task :default => :spec
 
 rescue LoadError
-  puts 'RSpec is not installed. This means rake is not able to execute tests!'
-end
-
-task :run_vagrant do
-  PiGen.start(%w(build VAGRANT))
-end
-
-task :run_echo do
-  PiGen.start(%w(build ECHO))
-end
-
-task :run_echo_git do
-  PiGen.start(%w(build ECHO --git_path='path'))
+  puts 'RSpec or Bundler is not installed. This means rake is not able to execute tests!'
 end

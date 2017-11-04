@@ -18,33 +18,37 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/environment/vagrant'
-require 'pi_customizer/environment/aws'
 require 'pi_customizer/environment/environment'
+require 'pi_customizer/environment/aws/aws'
+require 'pi_customizer/environment/vagrant/vagrant'
+require 'pi_customizer/environment/docker/docker'
+require 'pi_customizer/builder/builder'
 require 'pi_customizer/builder/prepare_start_execute_builder'
 require 'pi_customizer/builder/start_prepare_execute_builder'
-require 'pi_customizer/builder/builder'
-require 'pi_customizer/config/logex'
+require 'pi_customizer/workspace/workspace'
+require 'pi_customizer/workspace/local_config'
+require 'pi_customizer/utils/logex'
+
 
 module PiCustomizer
   module Environment
 
     ENV_AWS = 'AWS'
     ENV_VAGRANT = 'VAGRANT'
+    ENV_DOCKER = 'DOCKER'
     ENV_ECHO = 'ECHO'
 
-    def Environment.environment_builder_factory(env, git_path, workspace_path, config_path)
+    def Environment.environment_builder_factory(env, git_path, workspace_directory, config_path, tmp_directory)
 
-      workspace = Workspace::Workspace.new(workspace_path, git_path)
-      environment = environment_factory(env, config_path, workspace)
+      workspace = Workspace::Workspace.new(workspace_directory, git_path)
+      local_config = Workspace::LocalConfig.new(config_path, tmp_directory)
+      environment = environment_factory(env, local_config, workspace)
 
       case env
-        when ENV_AWS
+        when ENV_AWS, ENV_VAGRANT
           env_builder = Builder::PrepareExecuteBuilder.new(environment)
-        when ENV_VAGRANT
-          env_builder = Builder::PrepareExecuteBuilder.new(environment)
-        when ENV_ECHO
-          puts "Echo: - Git Path: #{git_path}, Workspace Path: #{workspace_path}, Config Path: #{config_path}"
+        when ENV_DOCKER, ENV_ECHO
+          puts "Echo: - Git Path: #{git_path}, Workspace Path: #{workspace_directory}, Config Path: #{config_path}"
           env_builder = Builder::StartStopBuilder.new(environment)
         else
           $logger.warn 'No valid build environment defined!'
@@ -53,17 +57,19 @@ module PiCustomizer
       env_builder
     end
 
-    def Environment.environment_factory(env, config_path, workspace)
+    def Environment.environment_factory(env, local_config, workspace)
       case env
         when ENV_AWS
-          environment = AWS.new(config_path, workspace)
+          environment = AWS.new(workspace, local_config)
         when ENV_VAGRANT
-          environment = Vagrant.new(config_path, workspace)
+          environment = Vagrant.new(workspace, local_config )
+        when ENV_DOCKER
+          environment = Docker.new(workspace, local_config)
         when ENV_ECHO
-          environment = EnvironmentControl.new(config_path, workspace)
+          environment = EnvironmentControl.new(workspace, local_config)
         else
           $logger.info 'NO valid environment (e.g., AWS or VAGRANT) defined!'
-          environment = EnvironmentControl.new(config_path, workspace)
+          environment = EnvironmentControl.new(workspace, local_config)
       end
       environment
     end

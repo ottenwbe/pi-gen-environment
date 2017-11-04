@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/pi_customizer'
+require 'pi_customizer'
 
-PiCustomizer::PiGen.start(ARGV)
+PiCustomizer::PiCustomizer.start(ARGV)

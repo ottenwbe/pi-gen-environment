@@ -17,9 +17,9 @@ if [ -f "pi_build_modifier.gem" ]; then
 else
   gem install --local pi_build_modifier.gem
 end
-mkdir ~/pi-gen
-if [ -f "~/pi-gen" ]; then
-  git clone https://github.com/ottenwbe/pi-gen.git ~/pi-gen
+mkdir /build/pi-gen
+if [ -f "/build/pi-gen" ]; then
+  git clone https://github.com/ottenwbe/pi-gen.git /build/pi-gen
 else
   git pull https://github.com/ottenwbe/pi-gen.git -r
 end

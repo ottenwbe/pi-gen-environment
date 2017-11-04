@@ -16,3 +16,8 @@ wpa_supplicant.json
 .vagrant/
 Gemfile.lock
 *gem
+
+cid
+config
+coverage/
+tmp/

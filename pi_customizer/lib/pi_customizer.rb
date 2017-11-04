@@ -24,14 +24,19 @@ require 'pi_customizer/version'
 require 'pi_customizer/environment/environment_builder_factory'
 
 module PiCustomizer
-  class PiGen < Thor
+  class PiCustomizer < Thor
     desc 'build ENV', 'Build pi image on environment ENV (options are AWS or VAGRANT).'
     option :git_path
     option :workspace
     option :config_file
+    option :tmp_folder
     def build(env)
-      builder = Environment::environment_builder_factory(env, "#{options[:git_path]}", "#{options[:workspace]}", "#{options[:config_file]}")
-      builder.build
+      begin
+        builder = Environment::environment_builder_factory(env, "#{options[:git_path]}", "#{options[:workspace]}", "#{options[:config_file]}", "#{options[:tmp_folder]}")
+        builder.build
+      rescue Exception => e
+        $logger.error e.message
+      end
     end
 
     desc 'version', 'Shows the version number.'
