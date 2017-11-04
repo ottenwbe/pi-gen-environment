@@ -11,6 +11,6 @@ Vagrant.configure('2') do |config|
     sudo apt -y install build-essential ruby-full 
     gem install bundler 
     cd /vagrant
-    ./install.sh
+    rake spec
   SHELL
 end

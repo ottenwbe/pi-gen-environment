@@ -19,18 +19,18 @@
 # SOFTWARE.
 
 require 'thor'
-require_relative 'pi_build_modifier/net-tweaks/WifiNetwork'
-require_relative 'pi_build_modifier/mapper/mapper'
-require_relative 'pi_build_modifier/version'
+require 'pi_build_modifier/net-tweaks/wifi_network'
+require 'pi_build_modifier/modifier/erb_mapper'
+require 'pi_build_modifier/version'
+require 'pi_build_modifier/modifier_task'
 
 module PiBuildModifier
   class PiBuildModifier < Thor
 
     desc 'modify CONFIG WORKSPACE', 'Modify the pi image sources at the specified WORKSPACE with the specified configuration file.'
     def modify(config, workspace)
-      wpa = WPASupplicant
-      mapper = Mapper.new(wpa, config, workspace)
-      mapper.do_map
+      task = Task::Modifier.new(config, workspace)
+      task.execute
     end
 
     desc 'version', 'Show the version of the modifier.'

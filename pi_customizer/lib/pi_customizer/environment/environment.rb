@@ -18,17 +18,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/config/logex'
+require 'pi_customizer/utils/logex'
 
 module PiCustomizer
   module Environment
     class EnvironmentControl
 
-      attr_reader :workspace, :config_path
+      attr_reader :workspace, :config
 
-      def initialize(workspace, config_path)
+      def initialize(workspace, config)
         @workspace = workspace
-        @config_path = config_path
+        @config = config
       end
 
       def check

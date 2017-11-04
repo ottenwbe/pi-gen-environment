@@ -19,19 +19,19 @@
 # SOFTWARE.
 
 require 'fileutils'
-require 'pi_customizer/config/logex'
+require 'pi_customizer/utils/logex'
 
 module PiCustomizer
   module Workspace
     class Workspace
 
-      DEFAULT_WORKSPACE_DIRECTORY = '~/pi-gen'
+      DEFAULT_WORKSPACE_DIRECTORY = '/build/pi-gen'
       DEFAULT_GIT_PATH = 'https://github.com/ottenwbe/pi-gen.git'
 
       attr_reader :git_path, :workspace_directory
 
       def initialize(workspace_dir = DEFAULT_WORKSPACE_DIRECTORY, git_path = DEFAULT_GIT_PATH)
-        $logger.info "Workspace at '#{workspace_dir}' with source '#{git_path}'"
+        $logger.debug "Workspace at '#{workspace_dir}' with source '#{git_path}'"
         @workspace_directory = if workspace_dir.nil? or workspace_dir == ''
                                  DEFAULT_WORKSPACE_DIRECTORY
                                else
@@ -42,26 +42,9 @@ module PiCustomizer
                     else
                       git_path.to_s
                     end
-        $logger.info "Workspace at '#{@workspace_directory}' with source '#{@git_path}'"
+        $logger.debug "Workspace at '#{@workspace_directory}' with source '#{@git_path}'"
       end
 
-      def do_work
-        get_or_refresh
-        yield
-        clean_up
-      end
-
-      def get_or_refresh
-        if File.directory?(@workspace_directory)
-          system "git pull #{@workspace_directory} -r"
-        else
-          system "git clone #{@git_path} #{@workspace_directory}"
-        end
-      end
-
-      def clean_up
-        FileUtils.rm_rf @workspace_directory
-      end
     end
   end
 end

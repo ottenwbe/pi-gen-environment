@@ -18,9 +18,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../environment/environment_builder_factory'
-require_relative '../workspace/workspace'
-require_relative 'builder'
+require 'pi_customizer/environment/environment_builder_factory'
+require 'pi_customizer/workspace/workspace'
+require 'pi_customizer/builder/builder'
 
 module PiCustomizer
   module Builder

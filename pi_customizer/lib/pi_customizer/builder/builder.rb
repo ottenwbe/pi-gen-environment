@@ -18,8 +18,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../environment/environment_builder_factory'
-require_relative '../workspace/workspace'
+require 'pi_customizer/environment/environment_builder_factory'
+require 'pi_customizer/workspace/workspace'
 
 module PiCustomizer
   module Builder
@@ -34,6 +34,8 @@ module PiCustomizer
         begin
           start
           execute
+        rescue Exception => e
+          $logger.error e.message
         ensure
           stop
         end
