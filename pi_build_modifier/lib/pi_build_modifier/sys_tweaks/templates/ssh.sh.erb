@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+<% if @enable != 'disable' %>
+on_chroot << EOF
+systemctl <%= @enable %> ssh
+EOF
+
+<% end %>

@@ -1,10 +1,11 @@
 language: ruby
 rvm:
-  - 2.4.0
-  - 2.4.1
+  - 2.4.2
 
-install:
-  - bundle install
+before_install:
+  - gem install bundler
+  - cd pi_customizer/ && bundle install && cd ..
+  - cd pi_build_modifier/ && bundle install && cd ..
 
 script:
-  - bundle exec rake
+  - rake spec

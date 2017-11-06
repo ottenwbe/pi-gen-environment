@@ -1,0 +1,18 @@
+{
+  "system": {
+    "name" : "chiipi",
+    "type" : "lite"
+  },
+  "ssh" : {
+    "enabled" : true
+  },
+  "wifi": {
+    "networks": [
+      {
+        "ssid": "ssid_test",
+        "wpsk": "wpsk_test"
+      }
+    ],
+    "wpa_country": "DE"
+  }
+}
