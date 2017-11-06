@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class PiCustomizer::Environment::Vagrant - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+  var index_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="EnvironmentControl.html">PiCustomizer::Environment::EnvironmentControl</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-build_image">#build_image</a>
+    
+    <li ><a href="#method-i-check">#check</a>
+    
+    <li ><a href="#method-i-clean_up">#clean_up</a>
+    
+    <li ><a href="#method-i-ensure_vagrant">#ensure_vagrant</a>
+    
+    <li ><a href="#method-i-prepare">#prepare</a>
+    
+    <li ><a href="#method-i-start">#start</a>
+    
+    <li ><a href="#method-i-stop">#stop</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-PiCustomizer::Environment::Vagrant">
+  <h1 id="class-PiCustomizer::Environment::Vagrant" class="class">
+    class PiCustomizer::Environment::Vagrant
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="VAGRANT_PATH">VAGRANT_PATH
+        
+        <dd>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-build_image" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">build_image</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="build_image-source">
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 50</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">build_image</span>
+  <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant provision&#39;</span>
+  <span class="ruby-comment">#TODO: push finished product to some destination, e.g. an S3 bucket</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-check" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">check</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="check-source">
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 32</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">check</span>
+  <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Check] Pre-flight checks are executing...&#39;</span>
+  <span class="ruby-identifier">ensure_vagrant</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-clean_up" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">clean_up</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="clean_up-source">
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 55</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">clean_up</span>
+  <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Clean Up] pi-image in local vagrant environment&#39;</span>
+  <span class="ruby-comment"># TODO: remove old files in Vagrant box?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-ensure_vagrant" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ensure_vagrant</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>def build</p>
+
+<pre class="ruby"><span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;Building pi-image in local vagrant environment&#39;</span>
+<span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span>(<span class="ruby-constant">VAGRANT_PATH</span>) <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant destroy -f&#39;</span>
+  <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant up --provider=virtualbox --provision&#39;</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>end</p>
+          
+          
+
+          
+          <div class="method-source-code" id="ensure_vagrant-source">
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 77</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ensure_vagrant</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant -v&#39;</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-string">&#39;Vagrant not installed. Please ensure that vagrant is installed correctly.&#39;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-prepare" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">prepare</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="prepare-source">
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 37</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">prepare</span>
+  <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Prepare] pi-image in vagrant environment&#39;</span>
+  <span class="ruby-constant">VagrantFileRenderer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">VagrantFile</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@workspace</span>, <span class="ruby-ivar">@config_path</span>)).<span class="ruby-identifier">create_from_template</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-start" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">start</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="start-source">
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 42</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">start</span>
+  <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Start] pi-image in local vagrant environment&#39;</span>
+  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span>(<span class="ruby-constant">VAGRANT_PATH</span>) <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant destroy -f&#39;</span> <span class="ruby-comment"># cleanup old environment</span>
+    <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant up --provider=virtualbox --no-provision&#39;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-stop" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">stop</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="stop-source">
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 60</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">stop</span>
+  <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Stop] pi-image in local vagrant environment&#39;</span>
+  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span>(<span class="ruby-constant">VAGRANT_PATH</span>) <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant destroy -f&#39;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.1.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
