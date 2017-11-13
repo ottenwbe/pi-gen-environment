@@ -18,10 +18,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require_relative '../../spec_helper'
+require 'fileutils'
+require 'pathname'
+require 'pi_customizer/workspace/remote_workspace'
+
 module PiCustomizer
 
-  ##
-  # The current version of the pi_customizer gem
+  RSpec.describe Workspace::RemoteWorkspace do
 
-  VERSION = '0.1.2-alpha'
+    let(:git_path) {'../pi-gen-test'}
+    let(:default_git) {'https://github.com/ottenwbe/pi_customizer.git'}
+
+    it 'allows us to check for parameter equality' do
+      remote_workspace_1 = Workspace::RemoteWorkspace.new('a', 'b')
+      remote_workspace_2 = Workspace::RemoteWorkspace.new('a', 'b')
+      expect(remote_workspace_1==remote_workspace_2).to be true
+    end
+
+    it 'allows us to check for parameter inequality' do
+      remote_workspace_1 = Workspace::RemoteWorkspace.new('a', 'b')
+      remote_workspace_2 = Workspace::RemoteWorkspace.new('c', 'd')
+      expect(remote_workspace_1==remote_workspace_2).to be false
+    end
+
+  end
 end

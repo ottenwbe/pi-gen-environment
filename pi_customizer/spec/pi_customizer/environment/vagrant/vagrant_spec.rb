@@ -18,10 +18,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require_relative '../../../spec_helper'
+require 'fileutils'
+require 'pathname'
+require 'pi_customizer/environment/vagrant/vagrant'
+
 module PiCustomizer
+  module Environment
+    RSpec.describe Vagrant do
 
-  ##
-  # The current version of the pi_customizer gem
+      let(:vagrant_env) {Vagrant.new(nil, nil)}
 
-  VERSION = '0.1.2-alpha'
+      describe '#check' do
+        it 'checks for the existence of vagrant' do
+          expect(vagrant_env).to receive(:system).with('vagrant -v').and_return(true)
+          vagrant_env.check
+        end
+      end
+
+    end
+  end
 end

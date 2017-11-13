@@ -21,3 +21,4 @@ cid
 config
 coverage/
 tmp/
+/pi_customizer/lib/pi_customizer/environment/vagrant/templates/Vagrantfile

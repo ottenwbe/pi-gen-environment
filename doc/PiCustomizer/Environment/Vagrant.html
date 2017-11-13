@@ -115,7 +115,7 @@
       </header>
       <dl>
       
-        <dt id="VAGRANT_PATH">VAGRANT_PATH
+        <dt id="VAGRANT_SOURCE">VAGRANT_SOURCE
         
         <dd>
         
@@ -154,8 +154,10 @@
           <div class="method-source-code" id="build_image-source">
             <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 50</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">build_image</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant provision&#39;</span>
-  <span class="ruby-comment">#TODO: push finished product to some destination, e.g. an S3 bucket</span>
+  <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Build] pi-image in local vagrant environment&#39;</span>
+  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span>(<span class="ruby-ivar">@config</span>.<span class="ruby-identifier">tmp_directory</span>) <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant provision&#39;</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -220,10 +222,9 @@
 
           
           <div class="method-source-code" id="clean_up-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 55</span>
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 57</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">clean_up</span>
   <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Clean Up] pi-image in local vagrant environment&#39;</span>
-  <span class="ruby-comment"># TODO: remove old files in Vagrant box?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -248,22 +249,13 @@
 
         <div class="method-description">
           
-          <p>def build</p>
-
-<pre class="ruby"><span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;Building pi-image in local vagrant environment&#39;</span>
-<span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span>(<span class="ruby-constant">VAGRANT_PATH</span>) <span class="ruby-keyword">do</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant destroy -f&#39;</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant up --provider=virtualbox --provision&#39;</span>
-<span class="ruby-keyword">end</span>
-</pre>
-
-<p>end</p>
+          
           
           
 
           
           <div class="method-source-code" id="ensure_vagrant-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 77</span>
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 68</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">ensure_vagrant</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant -v&#39;</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-string">&#39;Vagrant not installed. Please ensure that vagrant is installed correctly.&#39;</span>
@@ -301,7 +293,7 @@
             <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 37</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">prepare</span>
   <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Prepare] pi-image in vagrant environment&#39;</span>
-  <span class="ruby-constant">VagrantFileRenderer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">VagrantFile</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@workspace</span>, <span class="ruby-ivar">@config_path</span>)).<span class="ruby-identifier">create_from_template</span>
+  <span class="ruby-constant">VagrantFileRenderer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">VagrantFile</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@config</span>, <span class="ruby-ivar">@workspace</span>)).<span class="ruby-identifier">create_from_template</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -335,7 +327,7 @@
             <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 42</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">start</span>
   <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Start] pi-image in local vagrant environment&#39;</span>
-  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span>(<span class="ruby-constant">VAGRANT_PATH</span>) <span class="ruby-keyword">do</span>
+  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span>(<span class="ruby-ivar">@config</span>.<span class="ruby-identifier">tmp_directory</span>) <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant destroy -f&#39;</span> <span class="ruby-comment"># cleanup old environment</span>
     <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant up --provider=virtualbox --no-provision&#39;</span>
   <span class="ruby-keyword">end</span>
@@ -369,10 +361,10 @@
 
           
           <div class="method-source-code" id="stop-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 60</span>
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">stop</span>
   <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Stop] pi-image in local vagrant environment&#39;</span>
-  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span>(<span class="ruby-constant">VAGRANT_PATH</span>) <span class="ruby-keyword">do</span>
+  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span>(<span class="ruby-ivar">@config</span>.<span class="ruby-identifier">tmp_directory</span>) <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;vagrant destroy -f&#39;</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>

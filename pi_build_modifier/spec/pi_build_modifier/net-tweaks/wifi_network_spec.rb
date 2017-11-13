@@ -29,15 +29,28 @@ require 'pi_build_modifier/modifier/pi_modifier'
   RSpec.describe PiBuildModifier::WPASupplicant do
 
     let(:empty_json_config) {'config_empty.json'}
+    let(:json_config) {'config_full.json'}
     let(:workspace) {File.dirname(__FILE__) + '/workspace'}
 
-    before(:each) do
+    before do
       FileUtils.mkdir_p workspace
       File.open(empty_json_config, 'w') {|file| file.write('{}')}
+      File.open(json_config, 'w') {|file| file.write(' {"wifi" : {
+    "wpa_country" : "DE_test",
+    "networks": [
+      {
+        "ssid": "test_wpsk",
+        "wpsk": "test_wpsk"
+      }
+    ]
+  }
+}
+')}
     end
 
-    after(:each) do
+    after do
       FileUtils.rm(empty_json_config)
+      FileUtils.rm(json_config)
       FileUtils.rm_rf workspace
     end
 
@@ -45,8 +58,8 @@ require 'pi_build_modifier/modifier/pi_modifier'
 
       #Given
       modifier = PiBuildModifier::PiModifier.new
-      wpaSupplicant = PiBuildModifier::WPASupplicant.new
-      mapper = PiBuildModifier::ERBMapper.new(wpaSupplicant, workspace)
+      wpa_supplicant = PiBuildModifier::WPASupplicant.new
+      mapper = PiBuildModifier::ERBMapper.new(wpa_supplicant, workspace)
 
       #When
       modifier.with_json_configuration(empty_json_config)
@@ -54,7 +67,25 @@ require 'pi_build_modifier/modifier/pi_modifier'
       modifier.modify
 
       #Then
-      expect(Pathname.new(workspace + '/' + wpaSupplicant.relative_output_path)).to be_file
+      expect(Pathname.new(workspace + '/' + wpa_supplicant.relative_output_path)).to be_file
     end
+
+    it 'should create a "WPAsupplication".conf with all attributes set' do
+
+      #Given
+      modifier = PiBuildModifier::PiModifier.new
+      wpa_supplicant = PiBuildModifier::WPASupplicant.new
+      mapper = PiBuildModifier::ERBMapper.new(wpa_supplicant, workspace)
+
+      #When
+      modifier.with_json_configuration(json_config)
+      modifier.with_mapper(mapper)
+      modifier.modify
+
+      #Then
+      wpa_supplicant_file = File.read(workspace + '/' + wpa_supplicant.relative_output_path)
+      expect(wpa_supplicant_file).to match(/network/)
+    end
+
   end
 
