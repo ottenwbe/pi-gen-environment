@@ -38,18 +38,27 @@ RSpec.describe PiBuildModifier::RunModifier do
   end
 
   it 'should be of type Mapper' do
-    expect(PiBuildModifier::RunModifier.new(workspace)).to be_a PiBuildModifier::Mapper
+    expect(PiBuildModifier::RunModifier.new).to be_a PiBuildModifier::Mapper
   end
 
   it 'should append lines to the 01-run.sh file' do
 
     #Given
-    modifier = PiBuildModifier::RunModifier.new(workspace)
+    modifier = PiBuildModifier::RunModifier.new.mapper(workspace)
     FileUtils.mkdir_p File.dirname(workspace + '/' + modifier.relative_output_path)
     FileUtils.touch(workspace + '/' + modifier.relative_output_path)
-    PiBuildModifier::RunModifier.append_lines.clear
-    PiBuildModifier::RunModifier.append('1')
-    PiBuildModifier::RunModifier.append('2')
+    modifier.append(Class.new do
+      def append_line
+        '1'
+      end
+    end.new
+    )
+    modifier.append(Class.new do
+      def append_line
+        '2'
+      end
+    end.new
+    )
 
 
     #When
@@ -57,8 +66,9 @@ RSpec.describe PiBuildModifier::RunModifier do
 
     #Then
     expect(Pathname.new(workspace + '/' + modifier.relative_output_path)).to be_file
-    expect(IO.read(Pathname.new(workspace + '/' + modifier.relative_output_path))).to eq("source #{workspace}/1\nsource #{workspace}/2\n")
+    expect(IO.read(Pathname.new(workspace + '/' + modifier.relative_output_path))).to match(/\nsource #{workspace}\/1\nsource #{workspace}\/2\n/)
 
   end
+
 end
 

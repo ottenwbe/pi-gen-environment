@@ -9,9 +9,11 @@ Gem::Specification.new do |spec|
   spec.name = 'pi_build_modifier'
   spec.version = PiBuildModifier::VERSION
   spec.license = 'MIT'
-  spec.authors = ['Beate Ottenwälder']
-  spec.summary = %q{Write a short summary, because Rubygems requires one.}
-  spec.description = %q{ Write a longer description or delete this line.}
+  spec.author = 'Beate Ottenwälder'
+  spec.email = 'ottenwbe.public@gmail.com'
+  spec.homepage = 'https://github.com/ottenwbe/pi-gen-environment.git'
+  spec.summary = 'Modify Rapbian image builds.'
+  spec.description = 'Modifies the build process of a Rapbian image.'
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})

@@ -73,6 +73,8 @@
     
     <li ><a href="#method-c-new">::new</a>
     
+    <li ><a href="#method-i-3D-3D">#==</a>
+    
   </ul>
 </div>
 
@@ -86,6 +88,9 @@
 
   <section class="description">
     
+<p>The LocalWorkspace class encapsulates the configuration of the workspace on
+the machine where the build of the pi image is triggered</p>
+
   </section>
 
   
@@ -96,25 +101,6 @@
 
     
 
-    
-    <section class="constants-list">
-      <header>
-        <h3>Constants</h3>
-      </header>
-      <dl>
-      
-        <dt id="DEFAULT_CONFIG_PATH">DEFAULT_CONFIG_PATH
-        
-        <dd>
-        
-      
-        <dt id="DEFAULT_TMP_DIRECTORY">DEFAULT_TMP_DIRECTORY
-        
-        <dd>
-        
-      
-      </dl>
-    </section>
     
 
     
@@ -127,6 +113,19 @@
       <div id="attribute-i-config_path" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">config_path</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-modifier_gem_path" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">modifier_gem_path</span><span
             class="attribute-access-type">[R]</span>
         </div>
 
@@ -164,7 +163,7 @@
         
         <div class="method-heading">
           <span class="method-name">new</span><span
-            class="method-args">(config_path = DEFAULT_CONFIG_PATH, tmp_directory = DEFAULT_TMP_DIRECTORY)</span>
+            class="method-args">(config_path = '', tmp_directory = '', modifier_gem_path = '')</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -179,20 +178,53 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/workspace/local_config.rb, line 33</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">config_path</span> = <span class="ruby-constant">DEFAULT_CONFIG_PATH</span>, <span class="ruby-identifier">tmp_directory</span> = <span class="ruby-constant">DEFAULT_TMP_DIRECTORY</span>)
-  <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Local Config at &#39;#{config_path}&#39; with tmp dir &#39;#{tmp_directory}&#39;&quot;</span>
-  <span class="ruby-ivar">@config_path</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">config_path</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">config_path</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;&#39;</span>
-                   <span class="ruby-constant">DEFAULT_CONFIG_PATH</span>
-                 <span class="ruby-keyword">else</span>
-                   <span class="ruby-identifier">config_path</span>.<span class="ruby-identifier">to_s</span>
-                 <span class="ruby-keyword">end</span>
-  <span class="ruby-ivar">@tmp_directory</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">tmp_directory</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">tmp_directory</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;&#39;</span>
-                     <span class="ruby-constant">DEFAULT_TMP_DIRECTORY</span>
-                   <span class="ruby-keyword">else</span>
-                     <span class="ruby-identifier">tmp_directory</span>.<span class="ruby-identifier">to_s</span>
-                   <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Local Config at &#39;#{@config_path}&#39; with tmp dir &#39;#{@tmp_directory}&#39;&quot;</span>
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/workspace/local_workspace.rb, line 38</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">config_path</span> = <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-identifier">tmp_directory</span> = <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-identifier">modifier_gem_path</span> = <span class="ruby-string">&#39;&#39;</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">config_path</span> = <span class="ruby-identifier">config_path</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">tmp_directory</span> = <span class="ruby-identifier">tmp_directory</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">modifier_gem_path</span> = <span class="ruby-identifier">modifier_gem_path</span>
+  <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Local Config at &#39;#{@config_path}&#39; with tmp dir &#39;#{@tmp_directory}&#39; and modifier_gem_path = &#39;#{@modifier_gem_path}&#39;&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-3D-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">==</span><span
+            class="method-args">(other)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="3D-3D-source">
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/workspace/local_workspace.rb, line 45</span>
+<span class="ruby-keyword">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">other</span>)
+  (<span class="ruby-ivar">@tmp_directory</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">tmp_directory</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-ivar">@modifier_gem_path</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">modifier_gem_path</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-ivar">@config_path</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">config_path</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           

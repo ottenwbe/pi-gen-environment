@@ -21,34 +21,39 @@
 require 'fileutils'
 require 'pi_build_modifier/modifier/mapper'
 
+
 module PiBuildModifier
+
+  ##
+  # RunModifier is a class which appends lines to the 'stage2/01-sys-tweaks/01-run.sh' file in the pi gen build repository
 
   class RunModifier < Mapper
 
-    attr_reader :relative_output_path
+    attr_reader :relative_output_path, :appender
 
-    @@append_lines = Array.new
-    def self.append_lines
-      @@append_lines
-    end
-
-    def initialize(workspace)
-      @workspace = workspace
+    def initialize
+      @appender = Array.new
+      @workspace = nil
       @relative_output_path = 'stage2/01-sys-tweaks/01-run.sh'
     end
 
-    def self.append(append_line)
-      @@append_lines << append_line
+    def mapper(workspace)
+      @workspace = workspace
+      self
+    end
+
+    def append(appender)
+      @appender << appender
     end
 
     def map(json_data)
     end
 
     def modify
-      puts @@append_lines.to_s
       open("#{@workspace}/#{@relative_output_path}", 'a') do |f|
-        @@append_lines.each do |a|
-          f.puts "source #{@workspace}/#{a}"
+        f.puts ''
+        @appender.each do |a|
+          f.puts "source #{@workspace}/#{a.append_line}"
         end
       end
     end

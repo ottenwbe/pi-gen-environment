@@ -42,19 +42,11 @@ RSpec.describe PiBuildModifier::Ssh do
     FileUtils.rm_rf workspace
   end
 
-  it 'should add itself to the run_modifier' do
-    #Given
-    #When
-    ssh=PiBuildModifier::Ssh.new
-    #Then
-    expect(PiBuildModifier::RunModifier.append_lines).to include("#{ssh.relative_output_path}")
-  end
-
   it 'should create a default ssh.sh file' do
     #Given
     modifier = PiBuildModifier::PiModifier.new
     ssh = PiBuildModifier::Ssh.new
-    mapper = PiBuildModifier::ERBMapper.new(ssh, workspace)
+    mapper = ssh.mapper(workspace)
 
     #When
     modifier.with_json_configuration(empty_json_config)
