@@ -22,12 +22,8 @@ require_relative '../spec_helper'
 require 'rspec'
 require 'pi_customizer/version'
 
-module PiCustomizer
-
-  describe 'version' do
-    it 'has a version number' do
-      expect(PiCustomizer::PiCustomizer::VERSION).not_to be nil
-    end
-
+describe PiCustomizer do
+  it 'has a version number' do
+    expect(PiCustomizer::VERSION).not_to be nil
   end
 end

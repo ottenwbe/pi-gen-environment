@@ -37,7 +37,7 @@ module PiCustomizer
         $logger.info "[Start | Docker] Build docker image: #{DOCKERFILE}"
         system "docker build --rm=true --file=#{DOCKERFILE} --tag=pi:build #{DOCKERFILE_PATH}"
         $logger.info "[Start | Docker] Start docker image with volume #{@config.tmp_directory}:#{@workspace.workspace_directory}"
-        system "docker run --volume=#{@config.tmp_directory}:#{@workspace.workspace_directory}:rw --privileged --detach pi:build \"/sbin/init\" > cid"
+        system "sudo docker run -v #{@config.tmp_directory}:#{@workspace.workspace_directory}:rw -v /dev:/dev -v /lib/modules:/lib/modules --cap-add=ALL --privileged=true --detach  --security-opt label:disable pi:build \"/sbin/init\" > cid"
       end
 
       def prepare
@@ -47,9 +47,9 @@ module PiCustomizer
 
       def build_image
         $logger.info '[Build| Docker] customization of build sources'
-        system "docker exec --tty \"$(cat cid)\" bash -c \"sudo pi_build_modifier modify #{CONFIG_PATH_IN_DOCKER}/config.json #{@workspace.workspace_directory}\""
+        system "sudo docker exec --tty \"$(cat cid)\" bash -c \"sudo pi_build_modifier modify #{CONFIG_PATH_IN_DOCKER}/config.json #{@workspace.workspace_directory}\""
         $logger.info '[Build| Docker] pi-image build step'
-        system "docker exec --tty \"$(cat cid)\" bash -c \"cd #{@workspace.workspace_directory} && sudo ./build.sh\"" #sudo chown docker #{@workspace.workspace_directory} &&
+        system "sudo docker exec --tty \"$(cat cid)\" bash -c \"cd #{@workspace.workspace_directory} && sudo ./build.sh\"" #sudo chown docker #{@workspace.workspace_directory} &&
       end
 
       def clean_up
@@ -58,18 +58,19 @@ module PiCustomizer
 
       def stop
         $logger.info '[Stop | Docker] Stop pi:build container'
-        system 'docker stop "$(cat cid)"'
+        #system 'docker stop "$(cat cid)"'
         $logger.info '[Stop | Docker] RM pi:build container'
-        system 'docker rm "$(cat cid)"'
+        #system 'docker rm "$(cat cid)"'
+        #TODO: rm cid file!
       end
 
-      def ensure_docker
+      private def ensure_docker
         unless system 'docker -v'
           raise 'Docker is not installed. Please ensure that Docker is running.'
         end
       end
 
-      def prepare_configuration
+      private def prepare_configuration
         $logger.info "[Prepare | Docker] Copy the configuration file from #{@config.config_path} to #{CONFIG_PATH_IN_DOCKER}/config.json in container"
         system "docker exec --tty \"$(cat cid)\" bash -c \"sudo mkdir -p #{CONFIG_PATH_IN_DOCKER}\""
         system "docker cp #{@config.config_path} \"$(cat cid)\":#{CONFIG_PATH_IN_DOCKER}/config.json"
@@ -78,7 +79,7 @@ module PiCustomizer
         system "docker exec --tty \"$(cat cid)\" bash -c \"sudo gem install #{CONFIG_PATH_IN_DOCKER}/pi_build_modifier.gem\""
       end
 
-      def prepare_workspace
+      private def prepare_workspace
         $logger.info "[Prepare | Docker] Clone git project: #{@workspace}"
         system "docker exec --tty \"$(cat cid)\" bash -c \"sudo mkdir -p #{@workspace.workspace_directory}\""
         #TODO: git clone vs git pull when code exists...

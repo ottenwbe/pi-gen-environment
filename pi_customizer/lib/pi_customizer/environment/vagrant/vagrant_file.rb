@@ -20,29 +20,32 @@
 
 require 'erb'
 require 'fileutils'
-require 'pi_customizer/workspace/workspace'
+require 'pi_customizer/workspace/remote_workspace'
+require 'pi_customizer/workspace/local_workspace'
 
 module PiCustomizer
   module Environment
+
+    ##
+    # VagrantFile describes the dynamic attributes of the Vagrantfile which is used to start up the vagrant environment
+
     class VagrantFile
 
-      attr_accessor :vagrant_path, :disk_size, :config_file_destination, :config_file_source, :workspace, :git_path
+      attr_accessor :vagrant_template_path, :disk_size, :config_file_destination, :workspace, :config
 
-      def initialize(config_path, workspace)
-        @vagrant_path = File.join(File.dirname(__FILE__), '/../../../../envs/vagrant/')
-        @disk_size = '20GB'
-        @config_file_destination = '~/conf.json'
-        if config_path.nil? || config_path.empty?
-          @config_file_source = 'conf.json'
+      def initialize(config, workspace)
+        @vagrant_template_path = File.join(File.dirname(__FILE__), '/templates/Vagrantfile.erb')
+        @disk_size = '40GB'
+        @config_file_destination = '/vagrant/conf.json'
+        if config.nil?
+          @config = Workspace::LocalWorkspace.new
         else
-          @config_file_source = config_path
+          @config = config
         end
         if workspace.nil?
-          @git_path = Workspace::Workspace::DEFAULT_GIT_PATH
-          @workspace = Workspace::Workspace::DEFAULT_WORKSPACE_DIRECTORY
+          @workspace = Workspace::RemoteWorkspace.new
         else
-          @git_path = workspace.git_path
-          @workspace = workspace.workspace_directory
+          @workspace = workspace
         end
       end
 
@@ -51,41 +54,42 @@ module PiCustomizer
       end
 
     end
-  end
 
-  class VagrantFileRenderer
 
-    def initialize(vagrant_file)
-      @vagrant_file = vagrant_file
-    end
+    class VagrantFileRenderer
 
-    def create_from_template
-      check_dependencies
-      read_template
-      write_rendered
-    end
+      def initialize(vagrant_file)
+        @vagrant_file = vagrant_file
+      end
 
-    private def check_dependencies
-      unless File.file?(@vagrant_file.vagrant_path.to_s + 'Vagrantfile.erb')
-        raise "'Vagrantfile.erb' template not specified. Searching in path '%s'" % [@vagrant_file.vagrant_path]
+      def create_from_template
+        check_dependencies
+        read_template
+        write_vagrantfile
+      end
+
+      private def check_dependencies
+        unless File.file?(@vagrant_file.vagrant_template_path.to_s)
+          raise "'Vagrantfile.erb' template not specified. Expected template in path '%s'" % [@vagrant_file.vagrant_template_path]
+        end
+      end
+
+      private def read_template
+        File.open(@vagrant_file.vagrant_template_path.to_s, 'r+') do |f|
+          @template = f.read
+        end
+      end
+
+      def render
+        ERB.new(@template).result(@vagrant_file.get_binding)
+      end
+
+      private def write_vagrantfile
+        FileUtils.mkdir_p @vagrant_file.config.tmp_directory
+        File.open(@vagrant_file.config.tmp_directory.to_s + '/Vagrantfile', 'w+') do |f|
+          f.write(render)
+        end
       end
     end
-
-    private def read_template
-      File.open(@vagrant_file.vagrant_path.to_s + 'Vagrantfile.erb', 'r+') do |f|
-        @template = f.read
-      end
-    end
-
-    def render
-      ERB.new(@template).result(@vagrant_file.get_binding)
-    end
-
-    private def write_rendered
-      File.open(@vagrant_file.vagrant_path.to_s + 'Vagrantfile', 'w+') do |f|
-        f.write(render)
-      end
-    end
-
   end
 end

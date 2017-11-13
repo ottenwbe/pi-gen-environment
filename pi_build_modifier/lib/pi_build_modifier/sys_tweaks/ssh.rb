@@ -34,7 +34,14 @@ module PiBuildModifier
       @enable = 'enable'
       @template_path = File.join(File.dirname(__FILE__), '/templates/ssh.sh.erb').to_s
       @relative_output_path = 'stage2/01-sys-tweaks/ssh.sh'
-      RunModifier.append("#{@relative_output_path}")
+    end
+
+    def mapper(workspace)
+      ERBMapper.new(self, workspace)
+    end
+
+    def append_line
+      "#{@relative_output_path}"
     end
 
     def map(json_data)

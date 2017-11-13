@@ -18,8 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/environment/environment_builder_factory'
-require 'pi_customizer/workspace/workspace'
 require 'pi_customizer/builder/builder'
 
 module PiCustomizer
@@ -29,10 +27,10 @@ module PiCustomizer
       protected def start
         @env.check
         @env.prepare
+        @env.start
       end
 
       protected def execute
-        @env.start
         @env.build_image
       end
 

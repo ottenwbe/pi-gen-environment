@@ -22,22 +22,39 @@ require 'thor'
 require 'fileutils'
 require 'pi_customizer/version'
 require 'pi_customizer/environment/environment_builder_factory'
+require 'pi_customizer/workspace/remote_workspace'
+require 'pi_customizer/workspace/local_workspace'
 
 module PiCustomizer
+
+  ##
+  # PiCustomizer defines all of pi_customizer's cli commands
+
   class PiCustomizer < Thor
-    desc 'build ENV', 'Build pi image on environment ENV (options are AWS or VAGRANT).'
-    option :git_path
-    option :workspace
-    option :config_file
-    option :tmp_folder
+
+    ##
+    # The build command can be called to trigger a build of a pi image
+
+    desc 'build ENV', 'Build pi image on environment ENV (valid environments are DOCKER, AWS or VAGRANT).'
+    method_option :git_build_sources, :default => Workspace::DEFAULT_GIT_PATH, :aliases => '-g'
+    method_option :workspace, :default => Workspace::DEFAULT_WORKSPACE_DIRECTORY, :aliases => '-w'
+    method_option :deploy_dir, :default => Dir.getwd, :aliases => '-d'
+    method_option :config_file, :default => Workspace::DEFAULT_CONFIG_PATH, :aliases => '-c'
+    method_option :tmp_folder, :default => Workspace::DEFAULT_TMP_DIRECTORY, :aliases => '-t'
+    method_option :modifier_gem_path, :default => '', :aliases => '-m'
     def build(env)
       begin
-        builder = Environment::environment_builder_factory(env, "#{options[:git_path]}", "#{options[:workspace]}", "#{options[:config_file]}", "#{options[:tmp_folder]}")
+        remote_workspace = Workspace::RemoteWorkspace.new("#{options[:workspace]}", "#{options[:git_build_sources]}")
+        local_workspace = Workspace::LocalWorkspace.new("#{options[:config_file]}", "#{options[:tmp_folder]}", "#{options[:modifier_gem_path]}")
+        builder = Environment::environment_builder_factory(env, local_workspace, remote_workspace)
         builder.build
       rescue Exception => e
         $logger.error e.message
       end
     end
+
+    ##
+    # The version command prints the current version of the pi_customizer gem to the command line
 
     desc 'version', 'Shows the version number.'
     def version

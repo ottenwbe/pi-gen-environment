@@ -25,8 +25,8 @@ require 'pi_customizer/environment/docker/docker'
 require 'pi_customizer/builder/builder'
 require 'pi_customizer/builder/prepare_start_execute_builder'
 require 'pi_customizer/builder/start_prepare_execute_builder'
-require 'pi_customizer/workspace/workspace'
-require 'pi_customizer/workspace/local_config'
+require 'pi_customizer/workspace/remote_workspace'
+require 'pi_customizer/workspace/local_workspace'
 require 'pi_customizer/utils/logex'
 
 
@@ -38,18 +38,16 @@ module PiCustomizer
     ENV_DOCKER = 'DOCKER'
     ENV_ECHO = 'ECHO'
 
-    def Environment.environment_builder_factory(env, git_path, workspace_directory, config_path, tmp_directory)
+    def Environment.environment_builder_factory(env, local_workspace, remote_workspace)
 
-      workspace = Workspace::Workspace.new(workspace_directory, git_path)
-      local_config = Workspace::LocalConfig.new(config_path, tmp_directory)
-      environment = environment_factory(env, local_config, workspace)
+      environment = environment_factory(env, local_workspace, remote_workspace)
 
       case env
         when ENV_AWS, ENV_VAGRANT
           env_builder = Builder::PrepareExecuteBuilder.new(environment)
         when ENV_DOCKER, ENV_ECHO
-          puts "Echo: - Git Path: #{git_path}, Workspace Path: #{workspace_directory}, Config Path: #{config_path}"
-          env_builder = Builder::StartStopBuilder.new(environment)
+          puts "Echo: - Git Path: #{remote_workspace.git_path}, Workspace Path: #{remote_workspace.workspace_directory}, Config Path: #{local_workspace.config_path}"
+          env_builder = Builder::StartExecuteBuilder.new(environment)
         else
           $logger.warn 'No valid build environment defined!'
           env_builder = Builder::PiBuilder.new(environment)
@@ -57,19 +55,19 @@ module PiCustomizer
       env_builder
     end
 
-    def Environment.environment_factory(env, local_config, workspace)
+    def Environment.environment_factory(env, local_workspace, remote_workspace)
       case env
         when ENV_AWS
-          environment = AWS.new(workspace, local_config)
+          environment = AWS.new(remote_workspace, local_workspace)
         when ENV_VAGRANT
-          environment = Vagrant.new(workspace, local_config )
+          environment = Vagrant.new(remote_workspace, local_workspace)
         when ENV_DOCKER
-          environment = Docker.new(workspace, local_config)
+          environment = Docker.new(remote_workspace, local_workspace)
         when ENV_ECHO
-          environment = EnvironmentControl.new(workspace, local_config)
+          environment = EnvironmentControl.new(remote_workspace, local_workspace)
         else
           $logger.info 'NO valid environment (e.g., AWS or VAGRANT) defined!'
-          environment = EnvironmentControl.new(workspace, local_config)
+          environment = EnvironmentControl.new(remote_workspace, local_workspace)
       end
       environment
     end

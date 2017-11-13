@@ -78,7 +78,7 @@
     <a href="PiCustomizer/Builder/PrepareExecuteBuilder.html">PiCustomizer::Builder::PrepareExecuteBuilder</a>
   </li>
   <li class="class">
-    <a href="PiCustomizer/Builder/StartStopBuilder.html">PiCustomizer::Builder::StartStopBuilder</a>
+    <a href="PiCustomizer/Builder/StartExecuteBuilder.html">PiCustomizer::Builder::StartExecuteBuilder</a>
   </li>
   <li class="module">
     <a href="PiCustomizer/Environment.html">PiCustomizer::Environment</a>
@@ -99,34 +99,27 @@
     <a href="PiCustomizer/Environment/VagrantFile.html">PiCustomizer::Environment::VagrantFile</a>
   </li>
   <li class="class">
-    <a href="PiCustomizer/PiCustomizer.html">PiCustomizer::PiCustomizer</a>
+    <a href="PiCustomizer/Environment/VagrantFileRenderer.html">PiCustomizer::Environment::VagrantFileRenderer</a>
   </li>
   <li class="class">
-    <a href="PiCustomizer/VagrantFileRenderer.html">PiCustomizer::VagrantFileRenderer</a>
+    <a href="PiCustomizer/PiCustomizer.html">PiCustomizer::PiCustomizer</a>
+  </li>
+  <li class="module">
+    <a href="PiCustomizer/PiCustomizer/Workspace.html">PiCustomizer::PiCustomizer::Workspace</a>
   </li>
   <li class="module">
     <a href="PiCustomizer/Workspace.html">PiCustomizer::Workspace</a>
   </li>
   <li class="class">
-    <a href="PiCustomizer/Workspace/LocalConfig.html">PiCustomizer::Workspace::LocalConfig</a>
+    <a href="PiCustomizer/Workspace/LocalWorkspace.html">PiCustomizer::Workspace::LocalWorkspace</a>
   </li>
   <li class="class">
-    <a href="PiCustomizer/Workspace/Workspace.html">PiCustomizer::Workspace::Workspace</a>
+    <a href="PiCustomizer/Workspace/RemoteWorkspace.html">PiCustomizer::Workspace::RemoteWorkspace</a>
   </li>
 </ul>
 
 <h2 id="methods">Methods</h2>
 <ul>
-
-  <li class="method">
-    <a href="PiBuildModifier/RunModifier.html#method-c-append">::append</a>
-    &mdash;
-    <span class="container">PiBuildModifier::RunModifier</span>
-
-  <li class="method">
-    <a href="PiBuildModifier/RunModifier.html#method-c-append_lines">::append_lines</a>
-    &mdash;
-    <span class="container">PiBuildModifier::RunModifier</span>
 
   <li class="method">
     <a href="PiCustomizer/Environment.html#method-c-environment_builder_factory">::environment_builder_factory</a>
@@ -199,19 +192,34 @@
     <span class="container">PiCustomizer::Environment::VagrantFile</span>
 
   <li class="method">
-    <a href="PiCustomizer/VagrantFileRenderer.html#method-c-new">::new</a>
+    <a href="PiCustomizer/Environment/VagrantFileRenderer.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">PiCustomizer::VagrantFileRenderer</span>
+    <span class="container">PiCustomizer::Environment::VagrantFileRenderer</span>
 
   <li class="method">
-    <a href="PiCustomizer/Workspace/LocalConfig.html#method-c-new">::new</a>
+    <a href="PiCustomizer/Workspace/LocalWorkspace.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">PiCustomizer::Workspace::LocalConfig</span>
+    <span class="container">PiCustomizer::Workspace::LocalWorkspace</span>
 
   <li class="method">
-    <a href="PiCustomizer/Workspace/Workspace.html#method-c-new">::new</a>
+    <a href="PiCustomizer/Workspace/RemoteWorkspace.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">PiCustomizer::Workspace::Workspace</span>
+    <span class="container">PiCustomizer::Workspace::RemoteWorkspace</span>
+
+  <li class="method">
+    <a href="PiCustomizer/Workspace/LocalWorkspace.html#method-i-3D-3D">#==</a>
+    &mdash;
+    <span class="container">PiCustomizer::Workspace::LocalWorkspace</span>
+
+  <li class="method">
+    <a href="PiCustomizer/Workspace/RemoteWorkspace.html#method-i-3D-3D">#==</a>
+    &mdash;
+    <span class="container">PiCustomizer::Workspace::RemoteWorkspace</span>
+
+  <li class="method">
+    <a href="PiBuildModifier/RunModifier.html#method-i-append">#append</a>
+    &mdash;
+    <span class="container">PiBuildModifier::RunModifier</span>
 
   <li class="method">
     <a href="PiCustomizer/PiCustomizer.html#method-i-build">#build</a>
@@ -227,6 +235,11 @@
     <a href="PiCustomizer/Environment/AWS.html#method-i-build">#build</a>
     &mdash;
     <span class="container">PiCustomizer::Environment::AWS</span>
+
+  <li class="method">
+    <a href="PiCustomizer/PiCustomizer.html#method-i-build+ENV">#build ENV</a>
+    &mdash;
+    <span class="container">PiCustomizer::PiCustomizer</span>
 
   <li class="method">
     <a href="PiCustomizer/Environment/Docker.html#method-i-build_image">#build_image</a>
@@ -279,9 +292,9 @@
     <span class="container">PiCustomizer::Environment::Vagrant</span>
 
   <li class="method">
-    <a href="PiCustomizer/VagrantFileRenderer.html#method-i-create_from_template">#create_from_template</a>
+    <a href="PiCustomizer/Environment/VagrantFileRenderer.html#method-i-create_from_template">#create_from_template</a>
     &mdash;
-    <span class="container">PiCustomizer::VagrantFileRenderer</span>
+    <span class="container">PiCustomizer::Environment::VagrantFileRenderer</span>
 
   <li class="method">
     <a href="PiCustomizer/Environment/AWS.html#method-i-create_keys">#create_keys</a>
@@ -297,11 +310,6 @@
     <a href="PiCustomizer/Environment/AWS.html#method-i-del_keys">#del_keys</a>
     &mdash;
     <span class="container">PiCustomizer::Environment::AWS</span>
-
-  <li class="method">
-    <a href="PiCustomizer/Environment/Docker.html#method-i-ensure_docker">#ensure_docker</a>
-    &mdash;
-    <span class="container">PiCustomizer::Environment::Docker</span>
 
   <li class="method">
     <a href="PiCustomizer/Environment/Vagrant.html#method-i-ensure_vagrant">#ensure_vagrant</a>
@@ -324,9 +332,9 @@
     <span class="container">PiCustomizer::Builder::PrepareExecuteBuilder</span>
 
   <li class="method">
-    <a href="PiCustomizer/Builder/StartStopBuilder.html#method-i-execute">#execute</a>
+    <a href="PiCustomizer/Builder/StartExecuteBuilder.html#method-i-execute">#execute</a>
     &mdash;
-    <span class="container">PiCustomizer::Builder::StartStopBuilder</span>
+    <span class="container">PiCustomizer::Builder::StartExecuteBuilder</span>
 
   <li class="method">
     <a href="PiBuildModifier/WPASupplicant.html#method-i-get_binding">#get_binding</a>
@@ -374,6 +382,11 @@
     <span class="container">PiBuildModifier::System</span>
 
   <li class="method">
+    <a href="PiBuildModifier/RunModifier.html#method-i-mapper">#mapper</a>
+    &mdash;
+    <span class="container">PiBuildModifier::RunModifier</span>
+
+  <li class="method">
     <a href="PiBuildModifier/PiBuildModifier.html#method-i-modify">#modify</a>
     &mdash;
     <span class="container">PiBuildModifier::PiBuildModifier</span>
@@ -419,24 +432,14 @@
     <span class="container">PiCustomizer::Environment::Vagrant</span>
 
   <li class="method">
-    <a href="PiCustomizer/Environment/Docker.html#method-i-prepare_configuration">#prepare_configuration</a>
-    &mdash;
-    <span class="container">PiCustomizer::Environment::Docker</span>
-
-  <li class="method">
-    <a href="PiCustomizer/Environment/Docker.html#method-i-prepare_workspace">#prepare_workspace</a>
-    &mdash;
-    <span class="container">PiCustomizer::Environment::Docker</span>
-
-  <li class="method">
     <a href="PiBuildModifier/ERBMapper.html#method-i-render">#render</a>
     &mdash;
     <span class="container">PiBuildModifier::ERBMapper</span>
 
   <li class="method">
-    <a href="PiCustomizer/VagrantFileRenderer.html#method-i-render">#render</a>
+    <a href="PiCustomizer/Environment/VagrantFileRenderer.html#method-i-render">#render</a>
     &mdash;
-    <span class="container">PiCustomizer::VagrantFileRenderer</span>
+    <span class="container">PiCustomizer::Environment::VagrantFileRenderer</span>
 
   <li class="method">
     <a href="PiCustomizer/Builder/PiBuilder.html#method-i-start">#start</a>
@@ -449,9 +452,9 @@
     <span class="container">PiCustomizer::Builder::PrepareExecuteBuilder</span>
 
   <li class="method">
-    <a href="PiCustomizer/Builder/StartStopBuilder.html#method-i-start">#start</a>
+    <a href="PiCustomizer/Builder/StartExecuteBuilder.html#method-i-start">#start</a>
     &mdash;
-    <span class="container">PiCustomizer::Builder::StartStopBuilder</span>
+    <span class="container">PiCustomizer::Builder::StartExecuteBuilder</span>
 
   <li class="method">
     <a href="PiCustomizer/Environment/Docker.html#method-i-start">#start</a>
@@ -479,9 +482,9 @@
     <span class="container">PiCustomizer::Builder::PrepareExecuteBuilder</span>
 
   <li class="method">
-    <a href="PiCustomizer/Builder/StartStopBuilder.html#method-i-stop">#stop</a>
+    <a href="PiCustomizer/Builder/StartExecuteBuilder.html#method-i-stop">#stop</a>
     &mdash;
-    <span class="container">PiCustomizer::Builder::StartStopBuilder</span>
+    <span class="container">PiCustomizer::Builder::StartExecuteBuilder</span>
 
   <li class="method">
     <a href="PiCustomizer/Environment/Docker.html#method-i-stop">#stop</a>
@@ -527,6 +530,11 @@
     <a href="PiBuildModifier/PiModifier.html#method-i-with_mapper">#with_mapper</a>
     &mdash;
     <span class="container">PiBuildModifier::PiModifier</span>
+
+  <li class="method">
+    <a href="PiBuildModifier/RunModifier.html#method-i-with_workspace">#with_workspace</a>
+    &mdash;
+    <span class="container">PiBuildModifier::RunModifier</span>
 </ul>
 </main>
 

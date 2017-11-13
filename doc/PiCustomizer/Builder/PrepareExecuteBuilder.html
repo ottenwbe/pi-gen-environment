@@ -130,9 +130,8 @@
 
           
           <div class="method-source-code" id="execute-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/builder/prepare_start_execute_builder.rb, line 34</span>
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/builder/prepare_start_execute_builder.rb, line 33</span>
           <span class="ruby-keyword">def</span> <span class="ruby-identifier">execute</span>
-  <span class="ruby-ivar">@env</span>.<span class="ruby-identifier">start</span>
   <span class="ruby-ivar">@env</span>.<span class="ruby-identifier">build_image</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -164,10 +163,11 @@
 
           
           <div class="method-source-code" id="start-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/builder/prepare_start_execute_builder.rb, line 29</span>
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/builder/prepare_start_execute_builder.rb, line 27</span>
           <span class="ruby-keyword">def</span> <span class="ruby-identifier">start</span>
   <span class="ruby-ivar">@env</span>.<span class="ruby-identifier">check</span>
   <span class="ruby-ivar">@env</span>.<span class="ruby-identifier">prepare</span>
+  <span class="ruby-ivar">@env</span>.<span class="ruby-identifier">start</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -198,7 +198,7 @@
 
           
           <div class="method-source-code" id="stop-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/builder/prepare_start_execute_builder.rb, line 39</span>
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/builder/prepare_start_execute_builder.rb, line 37</span>
           <span class="ruby-keyword">def</span> <span class="ruby-identifier">stop</span>
   <span class="ruby-ivar">@env</span>.<span class="ruby-identifier">clean_up</span>
   <span class="ruby-ivar">@env</span>.<span class="ruby-identifier">stop</span>
