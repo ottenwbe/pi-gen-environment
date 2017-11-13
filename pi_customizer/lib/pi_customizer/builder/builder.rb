@@ -19,7 +19,6 @@
 # SOFTWARE.
 
 require 'pi_customizer/environment/environment_builder_factory'
-require 'pi_customizer/workspace/workspace'
 
 module PiCustomizer
   module Builder

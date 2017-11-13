@@ -1,0 +1,62 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$dependencies = <<SCRIPT
+sudo apt update
+sudo apt -y upgrade
+sudo apt -y install quilt parted qemu-user-static debootstrap zerofree pxz zip dosfstools libcap2-bin bsdtar
+sudo apt -y install git curl ruby-full build-essential
+SCRIPT
+
+$install_modifier_gem = <<SCRIPT
+# install gem
+<% if config.modifier_gem_path.nil? %>gem install pi_build_modifier --pre <% else %>gem install /home/ubuntu/pi_build_modifier.gem<% end %>
+SCRIPT
+
+$prepare = <<SCRIPT
+mkdir -p <%= workspace.workspace_directory %>
+if [ -f "<%= workspace.workspace_directory %>" ]; then
+  echo 'git pull to workspace'
+  git pull <%= workspace.git_path %> <%= workspace.workspace_directory %> -r
+else
+  echo 'git clone to workspace'
+  git clone <%= workspace.git_path %> <%= workspace.workspace_directory %>
+fi
+SCRIPT
+
+$modify = <<SCRIPT
+# Execute gem with parameters
+cd  <%= workspace.workspace_directory %>
+pi_build_modifier modify <%= config_file_destination %> <%= workspace.workspace_directory %>
+sudo ./build.sh
+cp -r deploy /vagrant
+SCRIPT
+
+Vagrant.configure('2') do |config|
+
+  config.vm.box = 'ubuntu/xenial64' #Note, that 'debian/stretch64' cannot be resized with the disksize plugin
+
+  unless Vagrant.has_plugin?("vagrant-disksize")
+    raise 'vagrant-disksize plugin is not installed! Use: vagrant plugin install vagrant-disksize'
+  end
+
+  config.disksize.size = '<%= disk_size %>'
+
+  # Prepare environment by updating the dependencies
+  config.vm.provision 'shell', inline: $dependencies
+
+  <% unless config.modifier_gem_path.nil? %>config.vm.provision 'file', source: '<%= config.modifier_gem_path.to_s %>', destination: '/home/ubuntu/pi_build_modifier.gem' <% end %>
+
+  # Modifier gem is installed
+  config.vm.provision 'shell', inline: $install_modifier_gem
+
+  # Copy config file
+  config.vm.provision 'file', source: '<%= config.config_path.to_s %>', destination: '<%= config_file_destination %>'
+
+  # Prepare the modification
+  config.vm.provision 'shell', inline: $prepare
+
+  # Actually modify the build sources and then build the environment
+  config.vm.provision 'shell', inline: $modify
+
+end

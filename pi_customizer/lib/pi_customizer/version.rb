@@ -19,5 +19,9 @@
 # SOFTWARE.
 
 module PiCustomizer
-  VERSION = '0.1.0-alpha'
+
+  ##
+  # The current version of the pi_customizer gem
+
+  VERSION = '0.1.2-alpha'
 end

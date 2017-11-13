@@ -22,6 +22,7 @@ require_relative '../../spec_helper'
 require 'rspec'
 require 'pi_customizer/environment/environment_builder_factory'
 require 'pi_customizer/environment/docker/docker'
+require 'pi_customizer/environment/aws/aws'
 
 module PiCustomizer
   module Environment
@@ -36,6 +37,16 @@ module PiCustomizer
         env = Environment::environment_factory(ENV_DOCKER, '', '')
         expect(env).to be_a Docker
       end
+
+      it 'creates an AWS environment when ENV_AWS is specified' do
+        env = Environment::environment_factory(ENV_AWS, '', '')
+        expect(env).to be_a AWS
+      end
+
+      #it 'reads the config_path variable' do
+      #  expect(STDOUT).to receive(:puts).with(match(/Config Path: cfg/)) #'Echo: - Git Path: , Workspace Path: , Config Path: cfg')
+      #  PiCustomizer.start(%w(build ECHO --config_file=cfg))
+      #end
 
     end
   end

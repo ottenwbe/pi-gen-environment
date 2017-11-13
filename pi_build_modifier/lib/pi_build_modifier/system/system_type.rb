@@ -34,7 +34,7 @@ module PiBuildModifier
 
     def initialize(workspace)
       @workspace = workspace
-      @name = 'chiipi'
+      @name = 'custompi'
       @type = Type::FULL
       @relative_output_path = @workspace
     end

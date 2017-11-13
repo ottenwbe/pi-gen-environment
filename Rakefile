@@ -1,9 +1,11 @@
 build_projects = %w(pi_build_modifier)
 install_projects = %w(pi_customizer)
-projects = (build_projects+install_projects).uniq
+all_gems = (build_projects+install_projects).uniq
 files = %w(pi_build_modifier/lib/**/*.rb pi_customizer/lib/**/*.rb)
 
-# test tasks
+##
+# The spec task executes rspec tests for all gems of the pi_customizer project.
+# This task is executed by default when 'rspec' is called.
 
 begin
   require 'rspec/core/rake_task'
@@ -11,17 +13,18 @@ begin
   RSpec::Core::RakeTask.new(:spec) do |t|
 
     pattern = ''
-    projects.each do |p|
+    all_gems.each do |gem|
       if pattern == ''
-        pattern = "#{p}/spec/**{,/*/**}/*_spec.rb"
+        pattern = "#{gem}/spec/**{,/*/**}/*_spec.rb"
       else
-        pattern = pattern + ',' + "#{p}/spec/**{,/*/**}/*_spec.rb"
+        pattern = pattern + ',' + "#{gem}/spec/**{,/*/**}/*_spec.rb"
       end
     end
     t.pattern = pattern
   end
 rescue LoadError
-  puts 'RSpec is not installed. This means rake is not able to execute tests! Execute: gem install rspec!'
+  puts 'RSpec is not installed. This means rake is not able to execute tests! Try: '
+  puts '* gem install rspec!'
 end
 
 task :default => :spec
@@ -36,17 +39,29 @@ begin
     rdoc.rdoc_files.include(files)
   end
 rescue LoadError
-  puts 'RSpec is not installed. This means rake is not able to build the documentation! Execute: gem install rdoc!'
+  puts 'RSpec is not installed. This means rake is not able to build the documentation!'
+  puts '* Try: gem install rdoc!'
 end
 
 
 # build tasks
 
-desc 'Build all sub projects'
+desc 'Build all sub all_gems'
 task :build do
-  projects.each do |p|
+  all_gems.each do |p|
     Dir.chdir p do
       system 'rake build'
+    end
+  end
+end
+
+namespace :uninstall do
+  desc 'remove the locally required gems'
+  task :local do
+    install_projects.each do |p|
+      Dir.chdir p do
+        system "gem uninstall #{p} -a -x"
+      end
     end
   end
 end
@@ -60,8 +75,6 @@ namespace :install do
     build_projects.each do |p|
       Dir.chdir p do
         system 'rake build'
-        #TODO: uplaod gem to a server
-        FileUtils.mv('pkg/pi_build_modifier-0.1.0.gem', '../pi_customizer/envs/pi_build_modifier.gem')
       end
     end
     install_projects.each do |p|
@@ -71,11 +84,11 @@ namespace :install do
     end
   end
 
-  task :local => [:spec, :rdoc]
+  task :local => [:spec, :rdoc, 'uninstall:local']
 
 end
 
-# run the application
+# run the pi_customizer from source
 
 namespace :run do
 

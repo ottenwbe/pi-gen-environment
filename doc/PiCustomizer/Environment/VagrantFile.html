@@ -88,6 +88,9 @@
 
   <section class="description">
     
+<p><a href="VagrantFile.html">VagrantFile</a> describes the dynamic attributes
+of the Vagrantfile which is used to start up the vagrant environment</p>
+
   </section>
 
   
@@ -107,9 +110,9 @@
       </header>
 
       
-      <div id="attribute-i-config_file_destination" class="method-detail">
+      <div id="attribute-i-config" class="method-detail">
         <div class="method-heading attribute-method-heading">
-          <span class="method-name">config_file_destination</span><span
+          <span class="method-name">config</span><span
             class="attribute-access-type">[RW]</span>
         </div>
 
@@ -120,9 +123,9 @@
         </div>
       </div>
       
-      <div id="attribute-i-config_file_source" class="method-detail">
+      <div id="attribute-i-config_file_destination" class="method-detail">
         <div class="method-heading attribute-method-heading">
-          <span class="method-name">config_file_source</span><span
+          <span class="method-name">config_file_destination</span><span
             class="attribute-access-type">[RW]</span>
         </div>
 
@@ -146,22 +149,9 @@
         </div>
       </div>
       
-      <div id="attribute-i-git_path" class="method-detail">
+      <div id="attribute-i-vagrant_template_path" class="method-detail">
         <div class="method-heading attribute-method-heading">
-          <span class="method-name">git_path</span><span
-            class="attribute-access-type">[RW]</span>
-        </div>
-
-        <div class="method-description">
-        
-        
-        
-        </div>
-      </div>
-      
-      <div id="attribute-i-vagrant_path" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">vagrant_path</span><span
+          <span class="method-name">vagrant_template_path</span><span
             class="attribute-access-type">[RW]</span>
         </div>
 
@@ -199,7 +189,7 @@
         
         <div class="method-heading">
           <span class="method-name">new</span><span
-            class="method-args">(config_path, workspace)</span>
+            class="method-args">(config, workspace)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -214,22 +204,20 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant_file.rb, line 31</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">config_path</span>, <span class="ruby-identifier">workspace</span>)
-  <span class="ruby-ivar">@vagrant_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-keyword">__FILE__</span>), <span class="ruby-string">&#39;/../../../../envs/vagrant/&#39;</span>)
-  <span class="ruby-ivar">@disk_size</span> = <span class="ruby-string">&#39;20GB&#39;</span>
-  <span class="ruby-ivar">@config_file_destination</span> = <span class="ruby-string">&#39;~/conf.json&#39;</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">config_path</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">config_path</span>.<span class="ruby-identifier">empty?</span>
-    <span class="ruby-ivar">@config_file_source</span> = <span class="ruby-string">&#39;conf.json&#39;</span>
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant_file.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">config</span>, <span class="ruby-identifier">workspace</span>)
+  <span class="ruby-ivar">@vagrant_template_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-keyword">__FILE__</span>), <span class="ruby-string">&#39;/templates/Vagrantfile.erb&#39;</span>)
+  <span class="ruby-ivar">@disk_size</span> = <span class="ruby-string">&#39;40GB&#39;</span>
+  <span class="ruby-ivar">@config_file_destination</span> = <span class="ruby-string">&#39;/vagrant/conf.json&#39;</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-ivar">@config</span> = <span class="ruby-constant">Workspace</span><span class="ruby-operator">::</span><span class="ruby-constant">LocalWorkspace</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@config_file_source</span> = <span class="ruby-identifier">config_path</span>
+    <span class="ruby-ivar">@config</span> = <span class="ruby-identifier">config</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">workspace</span>.<span class="ruby-identifier">nil?</span>
-    <span class="ruby-ivar">@git_path</span> = <span class="ruby-constant">Workspace</span><span class="ruby-operator">::</span><span class="ruby-constant">Workspace</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_GIT_PATH</span>
-    <span class="ruby-ivar">@workspace</span> = <span class="ruby-constant">Workspace</span><span class="ruby-operator">::</span><span class="ruby-constant">Workspace</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_WORKSPACE_DIRECTORY</span>
+    <span class="ruby-ivar">@workspace</span> = <span class="ruby-constant">Workspace</span><span class="ruby-operator">::</span><span class="ruby-constant">RemoteWorkspace</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@git_path</span> = <span class="ruby-identifier">workspace</span>.<span class="ruby-identifier">git_path</span>
-    <span class="ruby-ivar">@workspace</span> = <span class="ruby-identifier">workspace</span>.<span class="ruby-identifier">workspace_directory</span>
+    <span class="ruby-ivar">@workspace</span> = <span class="ruby-identifier">workspace</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -269,7 +257,7 @@
 
           
           <div class="method-source-code" id="get_binding-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant_file.rb, line 49</span>
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant_file.rb, line 52</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_binding</span>
   <span class="ruby-identifier">binding</span>
 <span class="ruby-keyword">end</span></pre>

@@ -135,7 +135,7 @@
         
         <div class="method-heading">
           <span class="method-name">environment_builder_factory</span><span
-            class="method-args">(env, git_path, workspace_directory, config_path, tmp_directory)</span>
+            class="method-args">(env, local_workspace, remote_workspace)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -151,18 +151,16 @@
           
           <div class="method-source-code" id="environment_builder_factory-source">
             <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/environment_builder_factory.rb, line 41</span>
-<span class="ruby-keyword">def</span> <span class="ruby-constant">Environment</span>.<span class="ruby-identifier">environment_builder_factory</span>(<span class="ruby-identifier">env</span>, <span class="ruby-identifier">git_path</span>, <span class="ruby-identifier">workspace_directory</span>, <span class="ruby-identifier">config_path</span>, <span class="ruby-identifier">tmp_directory</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Environment</span>.<span class="ruby-identifier">environment_builder_factory</span>(<span class="ruby-identifier">env</span>, <span class="ruby-identifier">local_workspace</span>, <span class="ruby-identifier">remote_workspace</span>)
 
-  <span class="ruby-identifier">workspace</span> = <span class="ruby-constant">Workspace</span><span class="ruby-operator">::</span><span class="ruby-constant">Workspace</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">workspace_directory</span>, <span class="ruby-identifier">git_path</span>)
-  <span class="ruby-identifier">local_config</span> = <span class="ruby-constant">Workspace</span><span class="ruby-operator">::</span><span class="ruby-constant">LocalConfig</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">config_path</span>, <span class="ruby-identifier">tmp_directory</span>)
-  <span class="ruby-identifier">environment</span> = <span class="ruby-identifier">environment_factory</span>(<span class="ruby-identifier">env</span>, <span class="ruby-identifier">local_config</span>, <span class="ruby-identifier">workspace</span>)
+  <span class="ruby-identifier">environment</span> = <span class="ruby-identifier">environment_factory</span>(<span class="ruby-identifier">env</span>, <span class="ruby-identifier">local_workspace</span>, <span class="ruby-identifier">remote_workspace</span>)
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">env</span>
     <span class="ruby-keyword">when</span> <span class="ruby-constant">ENV_AWS</span>, <span class="ruby-constant">ENV_VAGRANT</span>
       <span class="ruby-identifier">env_builder</span> = <span class="ruby-constant">Builder</span><span class="ruby-operator">::</span><span class="ruby-constant">PrepareExecuteBuilder</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">environment</span>)
     <span class="ruby-keyword">when</span> <span class="ruby-constant">ENV_DOCKER</span>, <span class="ruby-constant">ENV_ECHO</span>
-      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Echo: - Git Path: #{git_path}, Workspace Path: #{workspace_directory}, Config Path: #{config_path}&quot;</span>
-      <span class="ruby-identifier">env_builder</span> = <span class="ruby-constant">Builder</span><span class="ruby-operator">::</span><span class="ruby-constant">StartStopBuilder</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">environment</span>)
+      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Echo: - Git Path: #{remote_workspace.git_path}, Workspace Path: #{remote_workspace.workspace_directory}, Config Path: #{local_workspace.config_path}&quot;</span>
+      <span class="ruby-identifier">env_builder</span> = <span class="ruby-constant">Builder</span><span class="ruby-operator">::</span><span class="ruby-constant">StartExecuteBuilder</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">environment</span>)
     <span class="ruby-keyword">else</span>
       <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">warn</span> <span class="ruby-string">&#39;No valid build environment defined!&#39;</span>
       <span class="ruby-identifier">env_builder</span> = <span class="ruby-constant">Builder</span><span class="ruby-operator">::</span><span class="ruby-constant">PiBuilder</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">environment</span>)
@@ -183,7 +181,7 @@
         
         <div class="method-heading">
           <span class="method-name">environment_factory</span><span
-            class="method-args">(env, local_config, workspace)</span>
+            class="method-args">(env, local_workspace, remote_workspace)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -198,20 +196,20 @@
 
           
           <div class="method-source-code" id="environment_factory-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/environment_builder_factory.rb, line 60</span>
-<span class="ruby-keyword">def</span> <span class="ruby-constant">Environment</span>.<span class="ruby-identifier">environment_factory</span>(<span class="ruby-identifier">env</span>, <span class="ruby-identifier">local_config</span>, <span class="ruby-identifier">workspace</span>)
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/environment_builder_factory.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Environment</span>.<span class="ruby-identifier">environment_factory</span>(<span class="ruby-identifier">env</span>, <span class="ruby-identifier">local_workspace</span>, <span class="ruby-identifier">remote_workspace</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">env</span>
     <span class="ruby-keyword">when</span> <span class="ruby-constant">ENV_AWS</span>
-      <span class="ruby-identifier">environment</span> = <span class="ruby-constant">AWS</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">workspace</span>, <span class="ruby-identifier">local_config</span>)
+      <span class="ruby-identifier">environment</span> = <span class="ruby-constant">AWS</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">remote_workspace</span>, <span class="ruby-identifier">local_workspace</span>)
     <span class="ruby-keyword">when</span> <span class="ruby-constant">ENV_VAGRANT</span>
-      <span class="ruby-identifier">environment</span> = <span class="ruby-constant">Vagrant</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">workspace</span>, <span class="ruby-identifier">local_config</span> )
+      <span class="ruby-identifier">environment</span> = <span class="ruby-constant">Vagrant</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">remote_workspace</span>, <span class="ruby-identifier">local_workspace</span>)
     <span class="ruby-keyword">when</span> <span class="ruby-constant">ENV_DOCKER</span>
-      <span class="ruby-identifier">environment</span> = <span class="ruby-constant">Docker</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">workspace</span>, <span class="ruby-identifier">local_config</span>)
+      <span class="ruby-identifier">environment</span> = <span class="ruby-constant">Docker</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">remote_workspace</span>, <span class="ruby-identifier">local_workspace</span>)
     <span class="ruby-keyword">when</span> <span class="ruby-constant">ENV_ECHO</span>
-      <span class="ruby-identifier">environment</span> = <span class="ruby-constant">EnvironmentControl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">workspace</span>, <span class="ruby-identifier">local_config</span>)
+      <span class="ruby-identifier">environment</span> = <span class="ruby-constant">EnvironmentControl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">remote_workspace</span>, <span class="ruby-identifier">local_workspace</span>)
     <span class="ruby-keyword">else</span>
       <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;NO valid environment (e.g., AWS or VAGRANT) defined!&#39;</span>
-      <span class="ruby-identifier">environment</span> = <span class="ruby-constant">EnvironmentControl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">workspace</span>, <span class="ruby-identifier">local_config</span>)
+      <span class="ruby-identifier">environment</span> = <span class="ruby-constant">EnvironmentControl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">remote_workspace</span>, <span class="ruby-identifier">local_workspace</span>)
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">environment</span>
 <span class="ruby-keyword">end</span></pre>
