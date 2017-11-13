@@ -147,6 +147,7 @@ Make sure Ruby is installed (and dependencies to build native extensions)
 
 On Fedora:
 
+
     sudo dnf group install "C Development Tools and Libraries"
     sudo dnf install ruby ruby-devel     
     sudo dnf install redhat-rpm-config 
