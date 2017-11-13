@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../../spec_helper'
+require_relative '../../../spec_helper'
 require 'fileutils'
 require 'pathname'
 require 'pi_customizer/environment/vagrant/vagrant'
@@ -27,15 +27,15 @@ module PiCustomizer
   module Environment
     RSpec.describe Vagrant do
 
-      let(:vagrant_env) {Vagrant.new(nil, '')}
+      let(:vagrant_env) {Vagrant.new(nil, nil)}
 
-      it 'checks for the existence of vagrant' do
-        if system 'vagrant -v'
-          expect{vagrant_env.check}.not_to raise_error
-        else
-          expect{vagrant_env.check}.to raise_error
+      describe '#check' do
+        it 'checks for the existence of vagrant' do
+          expect(vagrant_env).to receive(:system).with('vagrant -v').and_return(true)
+          vagrant_env.check
         end
       end
+
     end
   end
 end

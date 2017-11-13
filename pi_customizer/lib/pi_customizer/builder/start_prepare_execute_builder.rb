@@ -18,13 +18,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/environment/environment_builder_factory'
-require 'pi_customizer/workspace/workspace'
 require 'pi_customizer/builder/builder'
 
 module PiCustomizer
   module Builder
-    class StartStopBuilder < PiBuilder
+    class StartExecuteBuilder < PiBuilder
 
       protected def start
         @env.check

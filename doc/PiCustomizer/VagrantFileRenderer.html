@@ -130,7 +130,7 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant_file.rb, line 58</span>
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant_file.rb, line 57</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">vagrant_file</span>)
   <span class="ruby-ivar">@vagrant_file</span> = <span class="ruby-identifier">vagrant_file</span>
 <span class="ruby-keyword">end</span></pre>
@@ -171,11 +171,11 @@
 
           
           <div class="method-source-code" id="create_from_template-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant_file.rb, line 62</span>
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant_file.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create_from_template</span>
   <span class="ruby-identifier">check_dependencies</span>
   <span class="ruby-identifier">read_template</span>
-  <span class="ruby-identifier">write_rendered</span>
+  <span class="ruby-identifier">write_vagrantfile</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -206,7 +206,7 @@
 
           
           <div class="method-source-code" id="render-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant_file.rb, line 80</span>
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/vagrant/vagrant_file.rb, line 79</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">render</span>
   <span class="ruby-constant">ERB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@template</span>).<span class="ruby-identifier">result</span>(<span class="ruby-ivar">@vagrant_file</span>.<span class="ruby-identifier">get_binding</span>)
 <span class="ruby-keyword">end</span></pre>

@@ -23,28 +23,41 @@ require 'pi_customizer/utils/logex'
 
 module PiCustomizer
   module Workspace
-    class LocalConfig
 
-      DEFAULT_CONFIG_PATH = File.join(File.dirname(__FILE__), '/../../../envs/config.json')
-      DEFAULT_TMP_DIRECTORY = Dir.getwd + '/tmp'
+    DEFAULT_WORKSPACE_DIRECTORY = '/build/pi-gen'
+    DEFAULT_GIT_PATH = 'https://github.com/ottenwbe/pi-gen.git'
 
-      attr_reader :config_path, :tmp_directory
+    ##
+    # The RemoteWorkspace class encapsulates the configuration of the workspace in the build environment
 
-      def initialize(config_path = DEFAULT_CONFIG_PATH, tmp_directory = DEFAULT_TMP_DIRECTORY)
-        $logger.debug "Local Config at '#{config_path}' with tmp dir '#{tmp_directory}'"
-        @config_path = if config_path.nil? or config_path == ''
-                         DEFAULT_CONFIG_PATH
-                       else
-                         config_path.to_s
-                       end
-        @tmp_directory = if tmp_directory.nil? or tmp_directory == ''
-                           DEFAULT_TMP_DIRECTORY
-                         else
-                           tmp_directory.to_s
-                         end
-        $logger.debug "Local Config at '#{@config_path}' with tmp dir '#{@tmp_directory}'"
+    class RemoteWorkspace
+
+      attr_reader :git_path, :workspace_directory
+
+      def initialize(workspace_dir = '', git_path = '')
+        $logger.debug "Workspace at '#{workspace_dir}' with source '#{git_path}'"
+        @workspace_directory = if workspace_dir.nil? or workspace_dir == ''
+                                 DEFAULT_WORKSPACE_DIRECTORY
+                               else
+                                 workspace_dir.to_s
+                               end
+        @git_path = if git_path.nil? or git_path == ''
+                      DEFAULT_GIT_PATH
+                    else
+                      git_path.to_s
+                    end
+        $logger.debug "Workspace at '#{@workspace_directory}' with source '#{@git_path}'"
+      end
+
+      ##
+      # Checks for value equality between a pair of RemoteWorkspace's attributes
+
+      def ==(other)
+        (@git_path == other.git_path) && (@workspace_directory == other.workspace_directory)
       end
 
     end
   end
 end
+
+

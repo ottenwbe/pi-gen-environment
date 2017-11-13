@@ -2,7 +2,7 @@ require 'simplecov'
 #require 'codecov'
 
 SimpleCov.start do
-  add_filter %r{^/spec/}
+  add_filter %r{/spec/}
 end
 #SimpleCov.formatter = SimpleCov::Formatter::Codecov
 

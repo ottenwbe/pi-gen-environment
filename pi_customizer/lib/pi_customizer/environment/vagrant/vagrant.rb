@@ -27,7 +27,7 @@ module PiCustomizer
   module Environment
     class Vagrant < EnvironmentControl
 
-      VAGRANT_PATH = File.join(File.dirname(__FILE__), '/../../../../envs/vagrant')
+      VAGRANT_SOURCE = File.join(File.dirname(__FILE__), '/templates')
 
       def check
         $logger.info '[Check] Pre-flight checks are executing...'
@@ -36,43 +36,34 @@ module PiCustomizer
 
       def prepare
         $logger.info '[Prepare] pi-image in vagrant environment'
-        VagrantFileRenderer.new(VagrantFile.new(@workspace, @config_path)).create_from_template
+        VagrantFileRenderer.new(VagrantFile.new(@config, @workspace)).create_from_template
       end
 
       def start
         $logger.info '[Start] pi-image in local vagrant environment'
-        Dir.chdir(VAGRANT_PATH) do
+        Dir.chdir(@config.tmp_directory) do
           system 'vagrant destroy -f' # cleanup old environment
           system 'vagrant up --provider=virtualbox --no-provision'
         end
       end
 
       def build_image
-        system 'vagrant provision'
-        #TODO: push finished product to some destination, e.g. an S3 bucket
+        $logger.info '[Build] pi-image in local vagrant environment'
+        Dir.chdir(@config.tmp_directory) do
+          system 'vagrant provision'
+        end
       end
 
       def clean_up
         $logger.info '[Clean Up] pi-image in local vagrant environment'
-        # TODO: remove old files in Vagrant box?
       end
 
       def stop
         $logger.info '[Stop] pi-image in local vagrant environment'
-        Dir.chdir(VAGRANT_PATH) do
+        Dir.chdir(@config.tmp_directory) do
           system 'vagrant destroy -f'
         end
       end
-
-=begin
-      def build
-        $logger.info 'Building pi-image in local vagrant environment'
-        Dir.chdir(VAGRANT_PATH) do
-          system 'vagrant destroy -f'
-          system 'vagrant up --provider=virtualbox --provision'
-        end
-      end
-=end
 
       def ensure_vagrant
         unless system 'vagrant -v'

@@ -2,6 +2,4 @@ country=<%= @wpa_country %>
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 
-<% @networks.each do |network|  %>
-    network=<%= network %>
-<% end %>
+<% @networks.each do |network|  %>network=<%= network %><% end %>

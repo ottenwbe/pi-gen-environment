@@ -19,26 +19,28 @@
 # SOFTWARE.
 
 require_relative '../../spec_helper'
-require 'pi_customizer/workspace/local_config'
 require 'fileutils'
 require 'pathname'
+require 'pi_customizer/workspace/remote_workspace'
 
 module PiCustomizer
-  module Workspace
-    RSpec.describe LocalConfig do
 
-      it 'uses default values when no path is specified' do
-        local_config = LocalConfig.new('', '')
-        expect(local_config.config_path).to eq LocalConfig::DEFAULT_CONFIG_PATH
-        expect(local_config.tmp_directory).to eq LocalConfig::DEFAULT_TMP_DIRECTORY
-      end
+  RSpec.describe Workspace::RemoteWorkspace do
 
-      it 'initializes fields with given parameters' do
-        local_config = LocalConfig.new('a', 'b')
-        expect(local_config.config_path).to eq 'a'
-        expect(local_config.tmp_directory).to eq 'b'
-      end
+    let(:git_path) {'../pi-gen-test'}
+    let(:default_git) {'https://github.com/ottenwbe/pi_customizer.git'}
 
+    it 'allows us to check for parameter equality' do
+      remote_workspace_1 = Workspace::RemoteWorkspace.new('a', 'b')
+      remote_workspace_2 = Workspace::RemoteWorkspace.new('a', 'b')
+      expect(remote_workspace_1==remote_workspace_2).to be true
     end
+
+    it 'allows us to check for parameter inequality' do
+      remote_workspace_1 = Workspace::RemoteWorkspace.new('a', 'b')
+      remote_workspace_2 = Workspace::RemoteWorkspace.new('c', 'd')
+      expect(remote_workspace_1==remote_workspace_2).to be false
+    end
+
   end
 end

@@ -73,6 +73,8 @@
     
     <li ><a href="#method-c-new">::new</a>
     
+    <li ><a href="#method-i-3D-3D">#==</a>
+    
   </ul>
 </div>
 
@@ -86,6 +88,9 @@
 
   <section class="description">
     
+<p>The RemoteWorkspace class encapsulates the configuration of the workspace
+in the build environment</p>
+
   </section>
 
   
@@ -96,25 +101,6 @@
 
     
 
-    
-    <section class="constants-list">
-      <header>
-        <h3>Constants</h3>
-      </header>
-      <dl>
-      
-        <dt id="DEFAULT_GIT_PATH">DEFAULT_GIT_PATH
-        
-        <dd>
-        
-      
-        <dt id="DEFAULT_WORKSPACE_DIRECTORY">DEFAULT_WORKSPACE_DIRECTORY
-        
-        <dd>
-        
-      
-      </dl>
-    </section>
     
 
     
@@ -164,7 +150,7 @@
         
         <div class="method-heading">
           <span class="method-name">new</span><span
-            class="method-args">(workspace_dir = DEFAULT_WORKSPACE_DIRECTORY, git_path = DEFAULT_GIT_PATH)</span>
+            class="method-args">(workspace_dir = '', git_path = '')</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -179,8 +165,8 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/workspace/workspace.rb, line 33</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">workspace_dir</span> = <span class="ruby-constant">DEFAULT_WORKSPACE_DIRECTORY</span>, <span class="ruby-identifier">git_path</span> = <span class="ruby-constant">DEFAULT_GIT_PATH</span>)
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/workspace/remote_workspace.rb, line 37</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">workspace_dir</span> = <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-identifier">git_path</span> = <span class="ruby-string">&#39;&#39;</span>)
   <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Workspace at &#39;#{workspace_dir}&#39; with source &#39;#{git_path}&#39;&quot;</span>
   <span class="ruby-ivar">@workspace_directory</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">workspace_dir</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">workspace_dir</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;&#39;</span>
                            <span class="ruby-constant">DEFAULT_WORKSPACE_DIRECTORY</span>
@@ -193,6 +179,48 @@
                 <span class="ruby-identifier">git_path</span>.<span class="ruby-identifier">to_s</span>
               <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Workspace at &#39;#{@workspace_directory}&#39; with source &#39;#{@git_path}&#39;&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-3D-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">==</span><span
+            class="method-args">(other)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Checks for value equality between a pair of RemoteWorkspace&#39;s
+attributes</p>
+          
+          
+
+          
+          <div class="method-source-code" id="3D-3D-source">
+            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/workspace/remote_workspace.rb, line 55</span>
+<span class="ruby-keyword">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">other</span>)
+  (<span class="ruby-ivar">@git_path</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">git_path</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-ivar">@workspace_directory</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">workspace_directory</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           

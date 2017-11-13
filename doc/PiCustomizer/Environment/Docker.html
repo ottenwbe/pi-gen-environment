@@ -77,13 +77,7 @@
     
     <li ><a href="#method-i-clean_up">#clean_up</a>
     
-    <li ><a href="#method-i-ensure_docker">#ensure_docker</a>
-    
     <li ><a href="#method-i-prepare">#prepare</a>
-    
-    <li ><a href="#method-i-prepare_configuration">#prepare_configuration</a>
-    
-    <li ><a href="#method-i-prepare_workspace">#prepare_workspace</a>
     
     <li ><a href="#method-i-start">#start</a>
     
@@ -169,9 +163,9 @@
             <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/docker/docker.rb, line 48</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">build_image</span>
   <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Build| Docker] customization of build sources&#39;</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;docker exec --tty \&quot;$(cat cid)\&quot; bash -c \&quot;sudo pi_build_modifier modify #{CONFIG_PATH_IN_DOCKER}/config.json #{@workspace.workspace_directory}\&quot;&quot;</span>
+  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;sudo docker exec --tty \&quot;$(cat cid)\&quot; bash -c \&quot;sudo pi_build_modifier modify #{CONFIG_PATH_IN_DOCKER}/config.json #{@workspace.workspace_directory}\&quot;&quot;</span>
   <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Build| Docker] pi-image build step&#39;</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;docker exec --tty \&quot;$(cat cid)\&quot; bash -c \&quot;cd #{@workspace.workspace_directory} &amp;&amp; sudo ./build.sh\&quot;&quot;</span> <span class="ruby-comment">#sudo chown docker #{@workspace.workspace_directory} &amp;&amp;</span>
+  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;sudo docker exec --tty \&quot;$(cat cid)\&quot; bash -c \&quot;cd #{@workspace.workspace_directory} &amp;&amp; sudo ./build.sh\&quot;&quot;</span> <span class="ruby-comment">#sudo chown docker #{@workspace.workspace_directory} &amp;&amp;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -250,41 +244,6 @@
       </div>
 
     
-      <div id="method-i-ensure_docker" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">ensure_docker</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-
-          
-          <div class="method-source-code" id="ensure_docker-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/docker/docker.rb, line 66</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">ensure_docker</span>
-  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;docker -v&#39;</span>
-    <span class="ruby-identifier">raise</span> <span class="ruby-string">&#39;Docker is not installed. Please ensure that Docker is running.&#39;</span>
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
       <div id="method-i-prepare" class="method-detail ">
         
         <div class="method-heading">
@@ -308,80 +267,6 @@
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">prepare</span>
   <span class="ruby-identifier">prepare_workspace</span>
   <span class="ruby-identifier">prepare_configuration</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-prepare_configuration" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">prepare_configuration</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-
-          
-          <div class="method-source-code" id="prepare_configuration-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/docker/docker.rb, line 72</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">prepare_configuration</span>
-  <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;[Prepare | Docker] Copy the configuration file from #{@config.config_path} to #{CONFIG_PATH_IN_DOCKER}/config.json in container&quot;</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;docker exec --tty \&quot;$(cat cid)\&quot; bash -c \&quot;sudo mkdir -p #{CONFIG_PATH_IN_DOCKER}\&quot;&quot;</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;docker cp #{@config.config_path} \&quot;$(cat cid)\&quot;:#{CONFIG_PATH_IN_DOCKER}/config.json&quot;</span>
-  <span class="ruby-identifier">gem_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-keyword">__FILE__</span>), <span class="ruby-string">&#39;/../../../../envs/pi_build_modifier.gem&#39;</span>)
-  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;docker cp #{gem_path} \&quot;$(cat cid)\&quot;:#{CONFIG_PATH_IN_DOCKER}/pi_build_modifier.gem&quot;</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;docker exec --tty \&quot;$(cat cid)\&quot; bash -c \&quot;sudo gem install #{CONFIG_PATH_IN_DOCKER}/pi_build_modifier.gem\&quot;&quot;</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-prepare_workspace" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">prepare_workspace</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-
-          
-          <div class="method-source-code" id="prepare_workspace-source">
-            <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/docker/docker.rb, line 81</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">prepare_workspace</span>
-  <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;[Prepare | Docker] Clone git project: #{@workspace}&quot;</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;docker exec --tty \&quot;$(cat cid)\&quot; bash -c \&quot;sudo mkdir -p #{@workspace.workspace_directory}\&quot;&quot;</span>
-  <span class="ruby-comment">#TODO: git clone vs git pull when code exists...</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;docker exec --tty \&quot;$(cat cid)\&quot; bash -c \&quot;sudo git clone #{@workspace.git_path} #{@workspace.workspace_directory}\&quot;&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -417,7 +302,7 @@
   <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;[Start | Docker] Build docker image: #{DOCKERFILE}&quot;</span>
   <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;docker build --rm=true --file=#{DOCKERFILE} --tag=pi:build #{DOCKERFILE_PATH}&quot;</span>
   <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;[Start | Docker] Start docker image with volume #{@config.tmp_directory}:#{@workspace.workspace_directory}&quot;</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;docker run --volume=#{@config.tmp_directory}:#{@workspace.workspace_directory}:rw --privileged --detach pi:build \&quot;/sbin/init\&quot; &gt; cid&quot;</span>
+  <span class="ruby-identifier">system</span> <span class="ruby-node">&quot;sudo docker run -v #{@config.tmp_directory}:#{@workspace.workspace_directory}:rw -v /dev:/dev -v /lib/modules:/lib/modules --cap-add=ALL --privileged=true --detach  --security-opt label:disable pi:build \&quot;/sbin/init\&quot; &gt; cid&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -451,9 +336,10 @@
             <pre><span class="ruby-comment"># File pi_customizer/lib/pi_customizer/environment/docker/docker.rb, line 59</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">stop</span>
   <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Stop | Docker] Stop pi:build container&#39;</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;docker stop &quot;$(cat cid)&quot;&#39;</span>
+  <span class="ruby-comment">#system &#39;docker stop &quot;$(cat cid)&quot;&#39;</span>
   <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&#39;[Stop | Docker] RM pi:build container&#39;</span>
-  <span class="ruby-identifier">system</span> <span class="ruby-string">&#39;docker rm &quot;$(cat cid)&quot;&#39;</span>
+  <span class="ruby-comment">#system &#39;docker rm &quot;$(cat cid)&quot;&#39;</span>
+  <span class="ruby-comment">#TODO: rm cid file!</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
