@@ -27,5 +27,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '~> 0.15'
   spec.add_development_dependency 'rdoc', '~> 5.1'
   spec.add_runtime_dependency 'thor', '~> 0.20'
-  spec.add_runtime_dependency 'json', '~> 2.1'
 end

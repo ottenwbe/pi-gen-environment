@@ -20,17 +20,17 @@ This project is still under construction and in a pre release phase.
 
 # Install
 
-### Prerequisites
+## Prerequisites
 
 To customize the build process the following prerequisites are expected:
 * The _pi_customizer_ gem is installed (see the [__Deploy Gem__](#deploy_gem) section for details) 
 * One of the supported build environments is accessible (see the [__Environments__](#environments) section):  
-    * Docker (feature is still in development)
     * Vagrant 
+    * Docker (feature is still in development)    
     * AWS (feature is still in development)
 
 <a name="deploy_gem"></a>
-### Deploy Gem
+## Deploy Gem
 
 To customize your Raspbian image the pi_customizer gem must be installed on the machine that coordinates the build process.
 This is typically your local machine.
@@ -114,6 +114,10 @@ An example of the json config file with all current configuration options
       "ssh" : {
         "enabled" : true
       },
+      "locale": {
+        "gen" : ["en_GB.UTF-8 UTF-8", "de_DE.UTF-8 UTF-8"],
+        "sys" : "en_GB.UTF-8"
+      },
       "wifi": {
         "networks": [
           {
@@ -134,6 +138,11 @@ An example of the json config file with all current configuration options
 ### The ssh section
 
 * To disable ssh by default, set __enabled__ to false.
+
+### The locale section
+
+* Select one or more locales to be generated: e.g., "en_GB.UTF-8 UTF-8", "de_DE.UTF-8 UTF-8", ...
+* Select the default locale, typically en_GB.UTF-8, which is the default.
 
 ### The wifi section
 

@@ -75,6 +75,8 @@
     
     <li ><a href="#method-i-map">#map</a>
     
+    <li ><a href="#method-i-mapper">#mapper</a>
+    
     <li ><a href="#method-i-modify">#modify</a>
     
   </ul>
@@ -149,7 +151,7 @@
         
         <div class="method-heading">
           <span class="method-name">new</span><span
-            class="method-args">(workspace)</span>
+            class="method-args">()</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -165,11 +167,9 @@
           
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/system/system_type.rb, line 35</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">workspace</span>)
-  <span class="ruby-ivar">@workspace</span> = <span class="ruby-identifier">workspace</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
   <span class="ruby-ivar">@name</span> = <span class="ruby-string">&#39;custompi&#39;</span>
   <span class="ruby-ivar">@type</span> = <span class="ruby-constant">Type</span><span class="ruby-operator">::</span><span class="ruby-constant">FULL</span>
-  <span class="ruby-ivar">@relative_output_path</span> = <span class="ruby-ivar">@workspace</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -208,7 +208,7 @@
 
           
           <div class="method-source-code" id="map-source">
-            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/system/system_type.rb, line 42</span>
+            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/system/system_type.rb, line 46</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">map</span>(<span class="ruby-identifier">json_data</span>)
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">json_data</span>.<span class="ruby-identifier">nil?</span>
     <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">json_data</span>[<span class="ruby-string">&#39;system&#39;</span>][<span class="ruby-string">&#39;name&#39;</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">json_data</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">&#39;system&#39;</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">json_data</span>[<span class="ruby-string">&#39;system&#39;</span>].<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">&#39;name&#39;</span>)
@@ -216,6 +216,41 @@
   <span class="ruby-keyword">else</span>
     <span class="ruby-comment"># TODO: log error</span>
   <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-mapper" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">mapper</span><span
+            class="method-args">(workspace)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="mapper-source">
+            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/system/system_type.rb, line 40</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">mapper</span>(<span class="ruby-identifier">workspace</span>)
+  <span class="ruby-ivar">@workspace</span> = <span class="ruby-identifier">workspace</span>
+  <span class="ruby-ivar">@relative_output_path</span> = <span class="ruby-ivar">@workspace</span>
+  <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -246,7 +281,7 @@
 
           
           <div class="method-source-code" id="modify-source">
-            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/system/system_type.rb, line 51</span>
+            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/system/system_type.rb, line 55</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">modify</span>
   <span class="ruby-identifier">write_name</span>
   <span class="ruby-identifier">modify_type</span>

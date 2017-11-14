@@ -27,6 +27,9 @@ module PiCustomizer
     class AWS < EnvironmentControl
 
       def build
+
+        puts 'NOTE: AWS is not yet officially supported!'
+
         create_ssh_folder
         create_keys
         begin

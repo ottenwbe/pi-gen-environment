@@ -12,8 +12,8 @@ Gem::Specification.new do |spec|
   spec.author = 'Beate Ottenwälder'
   spec.email = 'ottenwbe.public@gmail.com'
   spec.homepage = 'https://github.com/ottenwbe/pi-gen-environment.git'
-  spec.summary = 'Modify Rapbian image builds.'
-  spec.description = 'Modifies the build process of a Rapbian image.'
+  spec.summary = 'Modify builds of Raspbian images.'
+  spec.description = 'Modifies the build process of a Raspbian image.'
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})

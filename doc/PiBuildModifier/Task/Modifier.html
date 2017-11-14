@@ -155,9 +155,9 @@
   <span class="ruby-ivar">@pi_modifier</span>.<span class="ruby-identifier">with_json_configuration</span>(<span class="ruby-identifier">config</span>)
 
   <span class="ruby-ivar">@pi_modifier</span>.<span class="ruby-identifier">with_mapper</span>(<span class="ruby-constant">ERBMapper</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">WPASupplicant</span>.<span class="ruby-identifier">new</span>, <span class="ruby-identifier">workspace</span>))
-  <span class="ruby-ivar">@pi_modifier</span>.<span class="ruby-identifier">with_mapper</span>(<span class="ruby-constant">System</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">workspace</span>))
-  <span class="ruby-ivar">@pi_modifier</span>.<span class="ruby-identifier">with_mapper</span>(<span class="ruby-constant">ERBMapper</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Ssh</span>.<span class="ruby-identifier">new</span>, <span class="ruby-identifier">workspace</span>))
-  <span class="ruby-ivar">@pi_modifier</span>.<span class="ruby-identifier">with_mapper</span>(<span class="ruby-constant">RunModifier</span>.<span class="ruby-identifier">instance</span>.<span class="ruby-identifier">with_workspace</span>(<span class="ruby-identifier">workspace</span>).<span class="ruby-identifier">mapper</span>)
+  <span class="ruby-ivar">@pi_modifier</span>.<span class="ruby-identifier">with_mapper</span>(<span class="ruby-constant">System</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">mapper</span>(<span class="ruby-identifier">workspace</span>))
+  <span class="ruby-ivar">@pi_modifier</span>.<span class="ruby-identifier">with_mapper</span>(<span class="ruby-constant">Ssh</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">mapper</span>(<span class="ruby-identifier">workspace</span>))
+  <span class="ruby-ivar">@pi_modifier</span>.<span class="ruby-identifier">with_mapper</span>(<span class="ruby-constant">RunModifier</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">mapper</span>(<span class="ruby-identifier">workspace</span>))
 <span class="ruby-keyword">end</span></pre>
           </div>
           
