@@ -36,7 +36,7 @@ module PiBuildModifier
         @pi_modifier.with_json_configuration(config)
 
         @pi_modifier.with_mapper(ERBMapper.new(WPASupplicant.new, workspace))
-        @pi_modifier.with_mapper(System.new(workspace))
+        @pi_modifier.with_mapper(System.new.mapper(workspace))
         @pi_modifier.with_mapper(Ssh.new.mapper(workspace))
         @pi_modifier.with_mapper(RunModifier.new.mapper(workspace))
       end

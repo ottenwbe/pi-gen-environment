@@ -32,11 +32,15 @@ module PiBuildModifier
 
     attr_reader :name, :type
 
-    def initialize(workspace)
-      @workspace = workspace
+    def initialize
       @name = 'custompi'
       @type = Type::FULL
+    end
+
+    def mapper(workspace)
+      @workspace = workspace
       @relative_output_path = @workspace
+      self
     end
 
     def map(json_data)

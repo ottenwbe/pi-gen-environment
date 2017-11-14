@@ -18,49 +18,41 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../../spec_helper'
-require 'rspec'
-require 'fileutils'
-require 'pi_build_modifier/system/system_type'
-require 'pi_build_modifier/modifier/mapper'
+require 'erb'
+require 'json'
 
-RSpec.describe PiBuildModifier::System do
+module PiBuildModifier
+  class Locale
 
-  EXPECTED_SYSTEM_NAME = 'chiipi_test'
-  EXPECTED_SYSTEM_TYPE = 'lite'
-  let(:config) {{'system' => {'name' => EXPECTED_SYSTEM_NAME, 'type' => EXPECTED_SYSTEM_TYPE}}}
-  let(:workspace) {"#{File.dirname(__FILE__)}/workspace"}
+    LOCALE = 'locale'
 
+    GEN = 'gen'
 
-  after(:each) do
-    FileUtils.rm_rf(workspace) if Dir.exist?(workspace)
-  end
+    SYS = 'sys'
 
+    attr_accessor :gen_locales, :sys_locales, :template
 
-  it 'should map the name and type given in a hash to corresponding members' do
-    #Given
-    system = PiBuildModifier::System.new.mapper(workspace)
+    attr_reader :template_path, :relative_output_path
 
-    #When
-    system.map(config)
-
-    #Then
-    expect(system.name).to eq(EXPECTED_SYSTEM_NAME)
-    expect(system.type).to eq(EXPECTED_SYSTEM_TYPE)
-  end
-
-  it 'should map the name and type to variables' do
-    #Given
-    system = PiBuildModifier::System.new.mapper(workspace)
-
-    #When
-    system.map(config)
-    system.modify
-
-    #Then
-    %w(/config /stage3/SKIP /stage4/SKIP /stage5/SKIP).each do |file|
-      expect(Pathname.new(workspace + file)).to be_file
+    def initialize(gen_locales = ['en_GB.UTF-8 UTF-8'], sys_locale = 'en_GB.UTF-8')
+      @gen_locales = gen_locales
+      @sys_locale = sys_locale
+      @template_path = File.join(File.dirname(__FILE__), '/templates/00-debconf.erb').to_s
+      @relative_output_path = 'stage0/01-locale/00-debconf'
     end
+
+    def map(json_data)
+      unless json_data.nil?
+        @gen_locales = json_data[LOCALE][GEN].map {|rd| rd} if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(GEN)
+        @sys_locale = json_data[LOCALE][SYS] if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(SYS)
+      end
+    end
+
+    def get_binding
+      binding
+    end
+
   end
 
 end
+

@@ -29,6 +29,9 @@ module PiCustomizer
       CONFIG_PATH_IN_DOCKER = '/config'
 
       def check
+
+        puts 'NOTE: Docker is not yet officially supported!'
+
         $logger.info '[Check | Docker] Pre-flight checks are executing...'
         ensure_docker
       end

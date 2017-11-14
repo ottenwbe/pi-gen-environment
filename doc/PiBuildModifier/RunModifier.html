@@ -63,18 +63,7 @@
   
 </div>
 
-    <div id="includes-section" class="nav-section">
-  <h3>Included Modules</h3>
-
-  <ul class="link-list">
-  
-  
-    <li><span class="include">Singleton</span>
-  
-  
-  </ul>
-</div>
-
+    
     
     <!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
@@ -92,8 +81,6 @@
     
     <li ><a href="#method-i-modify">#modify</a>
     
-    <li ><a href="#method-i-with_workspace">#with_workspace</a>
-    
   </ul>
 </div>
 
@@ -107,8 +94,8 @@
 
   <section class="description">
     
-<p><a href="RunModifier.html">RunModifier</a> is a Singleton which appends
-lines to the stage2/01-sys-tweaks/01-run.sh file in the pi gen build
+<p><a href="RunModifier.html">RunModifier</a> is a class which appends lines
+to the &#39;stage2/01-sys-tweaks/01-run.sh&#39; file in the pi gen build
 repository</p>
 
   </section>
@@ -130,9 +117,9 @@ repository</p>
       </header>
 
       
-      <div id="attribute-i-append_lines" class="method-detail">
+      <div id="attribute-i-appender" class="method-detail">
         <div class="method-heading attribute-method-heading">
-          <span class="method-name">append_lines</span><span
+          <span class="method-name">appender</span><span
             class="attribute-access-type">[R]</span>
         </div>
 
@@ -185,9 +172,9 @@ repository</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/sys_tweaks/run_modifier.rb, line 36</span>
+            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/sys_tweaks/run_modifier.rb, line 34</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
-  <span class="ruby-ivar">@append_lines</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@appender</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@workspace</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@relative_output_path</span> = <span class="ruby-string">&#39;stage2/01-sys-tweaks/01-run.sh&#39;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -213,7 +200,7 @@ repository</p>
         
         <div class="method-heading">
           <span class="method-name">append</span><span
-            class="method-args">(append_line)</span>
+            class="method-args">(appender)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -228,9 +215,9 @@ repository</p>
 
           
           <div class="method-source-code" id="append-source">
-            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/sys_tweaks/run_modifier.rb, line 51</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">append</span>(<span class="ruby-identifier">append_line</span>)
-  <span class="ruby-ivar">@append_lines</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">append_line</span>
+            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/sys_tweaks/run_modifier.rb, line 45</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">append</span>(<span class="ruby-identifier">appender</span>)
+  <span class="ruby-ivar">@appender</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">appender</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -261,7 +248,7 @@ repository</p>
 
           
           <div class="method-source-code" id="map-source">
-            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/sys_tweaks/run_modifier.rb, line 55</span>
+            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/sys_tweaks/run_modifier.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">map</span>(<span class="ruby-identifier">json_data</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -278,7 +265,7 @@ repository</p>
         
         <div class="method-heading">
           <span class="method-name">mapper</span><span
-            class="method-args">()</span>
+            class="method-args">(workspace)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -293,8 +280,9 @@ repository</p>
 
           
           <div class="method-source-code" id="mapper-source">
-            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/sys_tweaks/run_modifier.rb, line 42</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">mapper</span>
+            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/sys_tweaks/run_modifier.rb, line 40</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">mapper</span>(<span class="ruby-identifier">workspace</span>)
+  <span class="ruby-ivar">@workspace</span> = <span class="ruby-identifier">workspace</span>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -326,49 +314,14 @@ repository</p>
 
           
           <div class="method-source-code" id="modify-source">
-            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/sys_tweaks/run_modifier.rb, line 58</span>
+            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/sys_tweaks/run_modifier.rb, line 52</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">modify</span>
-  <span class="ruby-identifier">puts</span> <span class="ruby-ivar">@append_lines</span>.<span class="ruby-identifier">to_s</span>
   <span class="ruby-identifier">open</span>(<span class="ruby-node">&quot;#{@workspace}/#{@relative_output_path}&quot;</span>, <span class="ruby-string">&#39;a&#39;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&#39;&#39;</span>
-    <span class="ruby-ivar">@append_lines</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span>
-      <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;source #{@workspace}/#{a}&quot;</span>
+    <span class="ruby-ivar">@appender</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;source #{@workspace}/#{a.append_line}&quot;</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-with_workspace" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">with_workspace</span><span
-            class="method-args">(workspace)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-
-          
-          <div class="method-source-code" id="with_workspace-source">
-            <pre><span class="ruby-comment"># File pi_build_modifier/lib/pi_build_modifier/sys_tweaks/run_modifier.rb, line 46</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">with_workspace</span>(<span class="ruby-identifier">workspace</span>)
-  <span class="ruby-ivar">@workspace</span> = <span class="ruby-identifier">workspace</span>
-  <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

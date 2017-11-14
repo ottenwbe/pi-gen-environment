@@ -49,7 +49,7 @@ module PiCustomizer
       #When
       v_file_builder.create_from_template
       #Then
-      expect(File.read(tmp_dir+'/Vagrantfile').to_s).to match(/config.vm.provision 'file', source: [-a-zA-Z0-9'\/]+#{gem_name}/)
+      expect(File.read(tmp_dir+'/Vagrantfile').to_s).to match(/config.vm.provision 'file', source: [-a-zA-Z0-9'\/_]+#{gem_name}/)
     end
 
     it 'raises an error if the Vagrantfile.erb does not exist' do
