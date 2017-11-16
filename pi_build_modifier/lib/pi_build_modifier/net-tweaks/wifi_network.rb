@@ -20,6 +20,7 @@
 
 require 'erb'
 require 'json'
+require 'pi_build_modifier/modifier/erb_mapper'
 
 module PiBuildModifier
   class WifiNetwork
@@ -50,6 +51,10 @@ module PiBuildModifier
       @wpa_country = wpa_country
       @template_path = File.join(File.dirname(__FILE__), '/templates/wpa_supplicant.conf.erb').to_s
       @relative_output_path = 'stage2/02-net-tweaks/files/wpa_supplicant.conf'
+    end
+
+    def mapper(workspace)
+      ERBMapper.new(self,workspace)
     end
 
     def map(json_data)

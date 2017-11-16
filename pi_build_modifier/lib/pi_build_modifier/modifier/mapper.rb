@@ -37,7 +37,7 @@ module PiBuildModifier
     end
 
     def modify
-      @data.map unless @data.nil?
+      @data.modify unless @data.nil?
     end
 
   end

@@ -33,7 +33,7 @@ module PiCustomizer
   class PiCustomizer < Thor
 
     ##
-    # The build command can be called to trigger a build of a pi image
+    # The build command can be called by a user to trigger a build of a pi image
 
     desc 'build ENV', 'Build pi image on environment ENV (valid environments are DOCKER, AWS or VAGRANT).'
     method_option :git_build_sources, :default => Workspace::DEFAULT_GIT_PATH, :aliases => '-g'
@@ -54,9 +54,19 @@ module PiCustomizer
     end
 
     ##
-    # The version command prints the current version of the pi_customizer gem to the command line
+    # The
 
-    desc 'version', 'Shows the version number.'
+    desc 'flash', 'Write the image to an sd card.'
+    method_option :device, :default => '', :aliases => '-d'
+    method_option :image, :default => '', :aliases => '-i'
+    def flash
+      raise 'write a test case'
+    end
+
+    ##
+    # The version command allows users to query for the current version of the pi_customizer gem. It is printed on the command line.
+
+    desc 'v, version', 'Shows the version number.'
     def version
       puts VERSION
     end

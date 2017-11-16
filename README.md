@@ -91,12 +91,14 @@ After the image is built, undo the changes.
 
 Note: feature still in development
 
-## Usage
+# Usage
 
-To simply build a default image in a Vagrant box, simply call
+To build a default image in a Vagrant box, simply execute on the command line
 
     pi_customizer build VAGRANT
 
+
+To customize your build:
 1. Any customizations have to be specified in a json configuration file (see the [__Config File__](#config_file) section for details).
 1. The build process itself is then configured with command line options (see `pi_customizer help build` for details)   
      

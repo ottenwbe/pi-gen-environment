@@ -24,6 +24,7 @@ require 'pi_build_modifier/net-tweaks/wifi_network'
 require 'pi_build_modifier/system/system_type'
 require 'pi_build_modifier/sys_tweaks/run_modifier'
 require 'pi_build_modifier/sys_tweaks/ssh'
+require 'pi_build_modifier/locale/locale_debconf'
 
 module PiBuildModifier
   module Task
@@ -32,13 +33,26 @@ module PiBuildModifier
       attr_reader :pi_modifier
 
       def initialize(config, workspace, pi_modifier = PiModifier.new)
+        @mappers = create_mappers
+        @mappers[:run_modifier].append(@mappers[:ssh]) #TODO: This connection has to be established somewhere else
         @pi_modifier = pi_modifier
-        @pi_modifier.with_json_configuration(config)
+        configure_pi_modifier(config, workspace)
+      end
 
-        @pi_modifier.with_mapper(ERBMapper.new(WPASupplicant.new, workspace))
-        @pi_modifier.with_mapper(System.new.mapper(workspace))
-        @pi_modifier.with_mapper(Ssh.new.mapper(workspace))
-        @pi_modifier.with_mapper(RunModifier.new.mapper(workspace))
+      private def create_mappers
+        {:wpa_supplicant => WPASupplicant.new,
+         :system => System.new,
+         :ssh => Ssh.new,
+         :run_modifier => RunModifier.new,
+         :locale => Locale.new
+        }
+      end
+
+      private def configure_pi_modifier(config, workspace)
+        @pi_modifier.with_json_configuration(config)
+        @mappers.each do |*, mapper_data|
+          @pi_modifier.with_mapper(mapper_data.mapper(workspace))
+        end
       end
 
       def execute

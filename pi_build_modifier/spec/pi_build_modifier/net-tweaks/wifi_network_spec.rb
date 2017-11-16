@@ -75,7 +75,7 @@ require 'pi_build_modifier/modifier/pi_modifier'
       #Given
       modifier = PiBuildModifier::PiModifier.new
       wpa_supplicant = PiBuildModifier::WPASupplicant.new
-      mapper = PiBuildModifier::ERBMapper.new(wpa_supplicant, workspace)
+      mapper = wpa_supplicant.mapper(workspace)
 
       #When
       modifier.with_json_configuration(json_config)
