@@ -54,7 +54,7 @@ require 'pi_build_modifier/modifier/pi_modifier'
       FileUtils.rm_rf workspace
     end
 
-    it 'should create a default "WPAsupplication".conf ' do
+    it 'should create a default wpa_supplicant.conf ' do
 
       #Given
       modifier = PiBuildModifier::PiModifier.new
@@ -70,7 +70,7 @@ require 'pi_build_modifier/modifier/pi_modifier'
       expect(Pathname.new(workspace + '/' + wpa_supplicant.relative_output_path)).to be_file
     end
 
-    it 'should create a "WPAsupplication".conf with all attributes set' do
+    it 'should create a wpa_supplicant.conf with all attributes set' do
 
       #Given
       modifier = PiBuildModifier::PiModifier.new

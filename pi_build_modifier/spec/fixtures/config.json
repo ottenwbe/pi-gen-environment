@@ -14,7 +14,8 @@
     "networks": [
       {
         "ssid": "ssid_test",
-        "wpsk": "wpsk_test"
+        "passphrase": "wpsk_test",
+        "wpa_passphrase": "wpsk_test"
       }
     ],
     "wpa_country": "DE"

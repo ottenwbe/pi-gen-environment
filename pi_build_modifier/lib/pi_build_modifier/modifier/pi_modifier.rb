@@ -45,8 +45,8 @@ module PiBuildModifier
 
     def modify
       load_config
-      map
-      modify_mapper
+      map_all
+      modify_all
     end
 
     private def load_config
@@ -59,13 +59,13 @@ module PiBuildModifier
       end
     end
 
-    private def map
+    private def map_all
       @mappers.each do |c|
         c.map(@json_data)
       end
     end
 
-    private def modify_mapper
+    private def modify_all
       @mappers.each do |c|
         c.modify
       end

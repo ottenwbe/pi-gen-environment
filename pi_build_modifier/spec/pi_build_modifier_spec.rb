@@ -23,14 +23,22 @@ require 'pi_build_modifier'
 require 'pi_build_modifier/version'
 require 'pi_build_modifier/modifier_task'
 
-
-RSpec.describe PiBuildModifier::PiBuildModifier do
+RSpec.describe PiBuildModifier do
   it 'has a version number' do
     expect(PiBuildModifier::VERSION).not_to be nil
   end
+end
 
-  it 'prints commands to stderr when called' do
-    expect {PiBuildModifier::PiBuildModifier.start(ARGV)}.to output.to_stderr
+RSpec.describe PiBuildModifier::PiBuildModifier do
+
+  it 'informs about valid commands when called with no arguments' do
+    expect {PiBuildModifier::PiBuildModifier.start([])}.to output(/Commands/).to_stdout
+  end
+
+  context '#version' do
+    it 'informs about the current version' do
+      expect {PiBuildModifier::PiBuildModifier.start(%w(version))}.to output(/#{PiBuildModifier::VERSION}/).to_stdout
+    end
   end
 
   context '#modify' do
@@ -48,14 +56,15 @@ RSpec.describe PiBuildModifier::PiBuildModifier do
       FileUtils.rm_rf tmp_workspace
     end
 
-    it 'to be called by thor' do
-      expect_any_instance_of(PiBuildModifier::PiBuildModifier).to receive(:modify).with(tmp_json_config, tmp_workspace) #.and_return(test_task)
+    it 'is called by thor, when "pi_build_modifier modify" is called' do
+      expect_any_instance_of(PiBuildModifier::PiBuildModifier).to receive(:modify).with(tmp_json_config, tmp_workspace)
       PiBuildModifier::PiBuildModifier.start(['modify', tmp_json_config, tmp_workspace])
     end
 
-    it 'to call the modifier task' do
+    it 'triggers the modifier task' do
       expect(PiBuildModifier::Task::Modifier).to receive(:new).with(tmp_json_config, tmp_workspace).and_return(PiBuildModifier::Task::Modifier.new(tmp_json_config, tmp_workspace))
-      expect_any_instance_of(PiBuildModifier::Task::Modifier).to receive(:execute)
+      expect_any_instance_of(PiBuildModifier::Task::Modifier).to recei
+      ve(:execute)
       PiBuildModifier::PiBuildModifier.start(['modify', tmp_json_config, tmp_workspace])
     end
   end

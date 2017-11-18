@@ -19,7 +19,7 @@
 # SOFTWARE.
 
 require 'fileutils'
-require_relative 'vagrant_file'
+require 'pi_customizer/environment/vagrant/vagrant_file'
 require 'pi_customizer/utils/logex'
 require 'pi_customizer/environment/environment'
 

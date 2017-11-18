@@ -123,8 +123,8 @@ An example of the json config file with all current configuration options
       "wifi": {
         "networks": [
           {
-            "ssid": "your_secret_ssid",
-            "wpsk": "your_secret_psk"
+            "ssid": "your_ssid",            
+            "wpa_passphrase": "your_secret_psk" // Alternative: "wpa_passphrase": "your_wpa_passpharse"
           }
         ],
         "wpa_country": "DE"
@@ -148,7 +148,7 @@ An example of the json config file with all current configuration options
 
 ### The wifi section
 
-* The wifi section allows you to specify networks and passkeys as well as the wpa_country.
+* The wifi section allows you to specify networks and passphrase __OR__ wpa_passpharse as well as the wpa_country.
 
 # Development
 

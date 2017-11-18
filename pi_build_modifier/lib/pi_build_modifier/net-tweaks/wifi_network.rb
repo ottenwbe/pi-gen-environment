@@ -20,16 +20,15 @@
 
 require 'erb'
 require 'json'
+require 'openssl'
 require 'pi_build_modifier/modifier/erb_mapper'
 
 module PiBuildModifier
   class WifiNetwork
 
-    attr_accessor :ssid, :psk, :template
+    attr_reader :ssid, :psk
 
-    attr_reader :file
-
-    def initialize(ssid = 'no_ssid', psk = 'no_psk')
+    def initialize(ssid, psk)
       @ssid = ssid
       @psk = psk
     end
@@ -37,31 +36,60 @@ module PiBuildModifier
     def to_s
       sprintf('{
   ssid="%s"
-  psk="%s"
+  psk=%s
 }', ssid, psk)
     end
   end
 
   class WPASupplicant
 
+    PASSKEY = 'passphrase'
+
+    WPA_PASSKEY = 'wpa_passphrase'
+
+    SSID = 'ssid'
+
     attr_reader :template_path, :relative_output_path
 
-    def initialize(networks = Array.new(0), wpa_country = 'DE')
-      @networks = networks
-      @wpa_country = wpa_country
+    def initialize
+      @networks = map_network(nil)
+      @wpa_country = 'DE'
       @template_path = File.join(File.dirname(__FILE__), '/templates/wpa_supplicant.conf.erb').to_s
       @relative_output_path = 'stage2/02-net-tweaks/files/wpa_supplicant.conf'
     end
 
     def mapper(workspace)
-      ERBMapper.new(self,workspace)
+      ERBMapper.new(self, workspace)
     end
 
     def map(json_data)
       unless json_data.nil?
-        @networks = json_data['wifi']['networks'].map {|rd| WifiNetwork.new(rd['ssid'], rd['wpsk'])} if json_data.has_key?('wifi') && json_data['wifi'].has_key?('networks')
+        @networks = map_network(json_data['wifi']) if json_data.has_key?('wifi')
         @wpa_country = json_data['wifi']['wpa_country'] if json_data.has_key?('wifi') && json_data['wifi'].has_key?('wpa_country')
       end
+    end
+
+    private def map_network(json_data)
+      if json_data.nil?
+        networks = Array.new(0)
+      else
+        networks = json_data['networks'].map do |rd|
+          ssid = if rd.has_key?(SSID)
+                   rd[SSID]
+                 else
+                   'no_ssid'
+                 end
+          psk = if rd.has_key?(PASSKEY)
+                  OpenSSL::PKCS5.pbkdf2_hmac_sha1(rd[PASSKEY], ssid, 4096, 32).unpack("H*").first
+                elsif rd.has_key?(WPA_PASSKEY)
+                  rd[WPA_PASSKEY]
+                else
+                  'no_psk'
+                end
+          WifiNetwork.new(ssid, psk)
+        end
+      end
+      networks
     end
 
     def get_binding
