@@ -149,6 +149,10 @@ An example of the json config file with all current configuration options
 * Select one or more locales to be generated: e.g., "en_GB.UTF-8 UTF-8", "de_DE.UTF-8 UTF-8", ...
 * Select the default locale, typically en_GB.UTF-8, which is the default.
 
+### The cgroups section
+
+* To enable the cgroup memory, enable __memory__, otherwise leave it out.
+
 ### The wifi section
 
 * The wifi section allows you to specify networks and passphrase __OR__ wpa_passpharse as well as the wpa_country.

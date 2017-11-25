@@ -25,6 +25,7 @@ require 'pi_build_modifier/system/system_type'
 require 'pi_build_modifier/sys_tweaks/run_modifier'
 require 'pi_build_modifier/sys_tweaks/ssh'
 require 'pi_build_modifier/locale/locale_debconf'
+require 'pi_build_modifier/boot-files/boot'
 
 module PiBuildModifier
   module Task
@@ -40,11 +41,13 @@ module PiBuildModifier
       end
 
       private def create_mappers
-        {:wpa_supplicant => WPASupplicant.new,
-         :system => System.new,
-         :ssh => Ssh.new,
-         :run_modifier => RunModifier.new,
-         :locale => Locale.new
+        {
+            :wpa_supplicant => WPASupplicant.new,
+            :system => System.new,
+            :ssh => Ssh.new,
+            :run_modifier => RunModifier.new,
+            :locale => Locale.new,
+            :boot => Boot.new
         }
       end
 
