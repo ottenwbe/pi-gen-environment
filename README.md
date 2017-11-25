@@ -120,6 +120,9 @@ An example of the json config file with all current configuration options
         "gen" : ["en_GB.UTF-8 UTF-8", "de_DE.UTF-8 UTF-8"],
         "sys" : "en_GB.UTF-8"
       },
+      "cgroups": {
+        "memory": true
+      },
       "wifi": {
         "networks": [
           {

@@ -21,5 +21,4 @@ cid
 config
 coverage/
 tmp/
-config.json
 *.log
