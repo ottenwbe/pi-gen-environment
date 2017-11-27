@@ -25,6 +25,7 @@ require 'pi_customizer'
 require 'pi_customizer/utils/logex'
 require 'pi_customizer/version'
 require 'pi_customizer/workspace/local_workspace'
+require 'pi_customizer/utils/logex'
 
 
 describe PiCustomizer::PiCustomizer do
@@ -36,19 +37,35 @@ describe PiCustomizer::PiCustomizer do
     end
     it 'reads the modifier_gem_path parameter' do
       expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), PiCustomizer::Workspace::LocalWorkspace.new('', '', 'mod'), anything())
-      PiCustomizer::PiCustomizer.start(%w(build ECHO --modifier_gem_path=mod))
+      PiCustomizer::PiCustomizer.start(%w(build ECHO --modifier_gem=mod))
     end
-    it 'reads the tmp_dir parameter' do
+    it 'reads the local_workspace_dir parameter' do
       expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), PiCustomizer::Workspace::LocalWorkspace.new('', 'tmp', ''), anything())
-      PiCustomizer::PiCustomizer.start(%w(build ECHO --tmp_folder=tmp))
+      PiCustomizer::PiCustomizer.start(%w(build ECHO --local_workspace_dir=tmp))
     end
-    it 'reads the config_path variable' do
+    it 'reads the config_path parameter' do
       expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), PiCustomizer::Workspace::LocalWorkspace.new('cfg', '', ''), anything())
       PiCustomizer::PiCustomizer.start(%w(build ECHO --config_file=cfg))
     end
-    it 'reads the git_build_sources variable' do
+    it 'reads the remote_workspace_dir parameter' do
+      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), anything(), PiCustomizer::Workspace::RemoteWorkspace.new('rdir', ''))
+      PiCustomizer::PiCustomizer.start(%w(build ECHO --remote_workspace_dir=rdir))
+    end
+    it 'reads the build_sources_git_url parameter' do
       expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), anything(), PiCustomizer::Workspace::RemoteWorkspace.new('', 'git'))
-      PiCustomizer::PiCustomizer.start(%w(build ECHO --git_build_sources=git))
+      PiCustomizer::PiCustomizer.start(%w(build ECHO --build_sources_git_url=git))
+    end
+    it 'logs unexpected errors' do
+      expect($logger).to receive(:error).with(anything())
+      allow(PiCustomizer::Environment).to receive(:environment_builder_factory).and_throw('test throw')
+      PiCustomizer::PiCustomizer.start(%w(build NONE))
+    end
+  end
+
+  context 'v' do
+    it 'returns the app\'s version' do
+      expect(STDOUT).to receive(:puts).with(PiCustomizer::VERSION)
+      PiCustomizer::PiCustomizer.start(%w(v))
     end
   end
 
@@ -57,6 +74,5 @@ describe PiCustomizer::PiCustomizer do
       expect(STDOUT).to receive(:puts).with(PiCustomizer::VERSION)
       PiCustomizer::PiCustomizer.start(%w(version))
     end
-
   end
 end

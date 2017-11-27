@@ -33,7 +33,7 @@ module PiCustomizer
         local_config = LocalWorkspace.new('', '', '')
         #Then
         expect(local_config.config_path.to_s).to eq DEFAULT_CONFIG_PATH
-        expect(local_config.tmp_directory.to_s).to eq DEFAULT_TMP_DIRECTORY
+        expect(local_config.workspace_directory.to_s).to eq DEFAULT_WORKSPACE_DIRECTORY
         expect(local_config.modifier_gem_path).to be nil
       end
 
@@ -46,14 +46,14 @@ module PiCustomizer
         local_config = LocalWorkspace.new(expected_cfg, expected_tmp, expected_mod)
         #Then
         expect(local_config.config_path.to_s).to eq expected_cfg
-        expect(local_config.tmp_directory.to_s).to eq expected_tmp
+        expect(local_config.workspace_directory.to_s).to eq expected_tmp
         expect(local_config.modifier_gem_path.to_s).to eq expected_mod
       end
 
       it 'accepts relative paths for config_path and stores them as absolute paths' do
         local_config = LocalWorkspace.new('a', 'b', 'c')
         expect(local_config.config_path.to_s).to eq File.join(Dir.pwd, '/a')
-        expect(local_config.tmp_directory.to_s).to eq File.join(Dir.pwd, '/b')
+        expect(local_config.workspace_directory.to_s).to eq File.join(Dir.pwd, '/b')
         expect(local_config.modifier_gem_path.to_s).to eq File.join(Dir.pwd, '/c')
       end
 

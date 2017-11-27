@@ -50,7 +50,7 @@ RSpec.describe PiBuildModifier::Boot do
     FileUtils.rm_rf workspace
   end
 
-  it 'should create a cmdline.txt file with all cgroups enabled when they are specified in the config.json' do
+  it 'should create a cmdline.txt file with all cgroups enabled when they are specified in the resources.json' do
     #Given
     modifier = PiBuildModifier::PiModifier.new
     boot = PiBuildModifier::Boot.new
@@ -66,7 +66,7 @@ RSpec.describe PiBuildModifier::Boot do
     expect(File.read(workspace + '/' + boot.relative_output_path)).to match(/ cgroup_memory=1 /)
   end
 
-  it 'should create a cmdline.txt file without cgroups enabled when they are disabled in the config.json' do
+  it 'should create a cmdline.txt file without cgroups enabled when they are disabled in the resources.json' do
     #Given
     modifier = PiBuildModifier::PiModifier.new
     boot = PiBuildModifier::Boot.new

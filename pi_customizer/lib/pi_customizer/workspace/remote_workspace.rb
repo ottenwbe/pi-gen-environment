@@ -35,7 +35,6 @@ module PiCustomizer
       attr_reader :git_path, :workspace_directory
 
       def initialize(workspace_dir = '', git_path = '')
-        $logger.debug "Workspace at '#{workspace_dir}' with source '#{git_path}'"
         @workspace_directory = if workspace_dir.nil? or workspace_dir == ''
                                  DEFAULT_WORKSPACE_DIRECTORY
                                else
@@ -46,7 +45,7 @@ module PiCustomizer
                     else
                       git_path.to_s
                     end
-        $logger.debug "Workspace at '#{@workspace_directory}' with source '#{@git_path}'"
+        $logger.debug "Workspace at '#{@workspace_directory}' with sources from '#{@git_path}'"
       end
 
       ##

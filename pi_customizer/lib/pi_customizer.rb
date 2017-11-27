@@ -24,6 +24,7 @@ require 'pi_customizer/version'
 require 'pi_customizer/environment/environment_builder_factory'
 require 'pi_customizer/workspace/remote_workspace'
 require 'pi_customizer/workspace/local_workspace'
+require 'pi_customizer/utils/logex'
 
 module PiCustomizer
 
@@ -36,31 +37,21 @@ module PiCustomizer
     # The build command can be called by a user to trigger a build of a pi image
 
     desc 'build ENV', 'Build pi image on environment ENV (valid environments are DOCKER, AWS or VAGRANT).'
-    method_option :git_build_sources, :default => Workspace::DEFAULT_GIT_PATH, :aliases => '-g'
-    method_option :workspace, :default => Workspace::DEFAULT_WORKSPACE_DIRECTORY, :aliases => '-w'
-    method_option :deploy_dir, :default => Dir.getwd, :aliases => '-d'
+    method_option :build_sources_git_url, :default => Workspace::DEFAULT_GIT_PATH, :aliases => '-g'
+    method_option :remote_workspace_dir, :default => Workspace::DEFAULT_WORKSPACE_DIRECTORY, :aliases => '-w'
     method_option :config_file, :default => Workspace::DEFAULT_CONFIG_PATH, :aliases => '-c'
-    method_option :tmp_folder, :default => Workspace::DEFAULT_TMP_DIRECTORY, :aliases => '-t'
-    method_option :modifier_gem_path, :default => '', :aliases => '-m'
+    method_option :local_workspace_dir, :default => Workspace::DEFAULT_WORKSPACE_DIRECTORY, :aliases => '-t'
+    method_option :modifier_gem, :default => '', :aliases => '-m', :desc => 'Path to the modifier_gem. If not specified, the most recent gem from rubygems.org is downloaded.'
+    method_option :deploy_dir, :default => Dir.getwd, :aliases => '-d'
     def build(env)
       begin
-        remote_workspace = Workspace::RemoteWorkspace.new("#{options[:workspace]}", "#{options[:git_build_sources]}")
-        local_workspace = Workspace::LocalWorkspace.new("#{options[:config_file]}", "#{options[:tmp_folder]}", "#{options[:modifier_gem_path]}")
+        remote_workspace = Workspace::RemoteWorkspace.new("#{options[:remote_workspace_dir]}", "#{options[:build_sources_git_url]}")
+        local_workspace = Workspace::LocalWorkspace.new("#{options[:config_file]}", "#{options[:local_workspace_dir]}", "#{options[:modifier_gem]}")
         builder = Environment::environment_builder_factory(env, local_workspace, remote_workspace)
         builder.build
       rescue Exception => e
         $logger.error e.message
       end
-    end
-
-    ##
-    # The
-
-    desc 'flash', 'Write the image to an sd card.'
-    method_option :device, :default => '', :aliases => '-d'
-    method_option :image, :default => '', :aliases => '-i'
-    def flash
-      raise 'write a test case'
     end
 
     ##

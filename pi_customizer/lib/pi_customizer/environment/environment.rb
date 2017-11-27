@@ -26,33 +26,41 @@ module PiCustomizer
 
       attr_reader :workspace, :config
 
-      def initialize(workspace, config)
-        @workspace = workspace
-        @config = config
+      def initialize(remote_workspace, local_workspace)
+        @workspace = remote_workspace
+        @config = local_workspace
       end
 
       def check
-        $logger.warn '[Check] Pre-flight checks are skipped...'
+        $logger.warn '[Check] skipped...'
       end
 
       def prepare
-        $logger.warn '[Prepare] Preparation steps are skipped...'
+        $logger.warn '[Prepare] skipped...'
       end
 
       def start
-        $logger.warn '[Start] Environment is not started...'
+        $logger.warn '[Start] skipped...'
       end
 
       def build_image
-        $logger.warn '[Build Image] Missing build_image command'
+        $logger.warn '[Build Image] skipped...'
+      end
+
+      def publish
+        $logger.warn '[Publish] skipped...'
       end
 
       def clean_up
-        $logger.warn '[Clean up] Missing clean_up command'
+        $logger.warn '[Clean up] skipped...'
       end
 
       def stop
-        $logger.warn '[Stop] Missing stop command'
+        $logger.warn '[Stop] skipped...'
+      end
+
+      def ensure
+        $logger.info '[Ensure] skipped...'
       end
 
     end

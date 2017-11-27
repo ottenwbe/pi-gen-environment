@@ -27,7 +27,7 @@ module PiCustomizer
   module Environment
 
     ##
-    # VagrantFile describes the dynamic attributes of the Vagrantfile which is used to start up the vagrant environment
+    # VagrantFile describes the dynamic attributes of a Vagrantfile which is used to start up the vagrant environment
 
     class VagrantFile
 
@@ -36,17 +36,17 @@ module PiCustomizer
       def initialize(config, workspace)
         @vagrant_template_path = File.join(File.dirname(__FILE__), '/templates/Vagrantfile.erb')
         @disk_size = '40GB'
-        @config_file_destination = '/vagrant/conf.json'
-        if config.nil?
-          @config = Workspace::LocalWorkspace.new
-        else
-          @config = config
-        end
-        if workspace.nil?
-          @workspace = Workspace::RemoteWorkspace.new
-        else
-          @workspace = workspace
-        end
+        @config_file_destination = '/vagrant/config.json'
+        @config = if config.nil?
+                    Workspace::LocalWorkspace.new
+                  else
+                    config
+                  end
+        @workspace = if workspace.nil?
+                       Workspace::RemoteWorkspace.new
+                     else
+                       workspace
+                     end
       end
 
       def get_binding
@@ -85,8 +85,8 @@ module PiCustomizer
       end
 
       private def write_vagrantfile
-        FileUtils.mkdir_p @vagrant_file.config.tmp_directory
-        File.open(@vagrant_file.config.tmp_directory.to_s + '/Vagrantfile', 'w+') do |f|
+        FileUtils.mkdir_p @vagrant_file.config.workspace_directory
+        File.open(@vagrant_file.config.workspace_directory.to_s + '/Vagrantfile', 'w+') do |f|
           f.write(render)
         end
       end

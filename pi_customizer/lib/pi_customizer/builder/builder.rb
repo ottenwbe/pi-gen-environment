@@ -19,40 +19,32 @@
 # SOFTWARE.
 
 require 'pi_customizer/environment/environment_builder_factory'
+require 'pi_customizer/builder/build_executor'
 
 module PiCustomizer
   module Builder
     class PiBuilder
 
-      def initialize(environment)
-        @env = environment
+      attr_reader :build_executor
+
+      def initialize(environment, skip_build_steps = Hash.new)
+        @build_executor = BuildExecutor.new(environment,skip_build_steps)
       end
 
       def build
-        check_builder
         begin
-          start
-          execute
+          execute_builder
         rescue Exception => e
           $logger.error e.message
         ensure
-          stop
+          ensure_builder
         end
       end
 
-      protected def check_builder
-        if @env.nil?
-          raise 'No environment specified, please specify the "environment", e.g. Vagrant'
-        end
+      protected def ensure_builder
       end
 
-      protected def start
-      end
-
-      protected def execute
-      end
-
-      protected def stop
+      protected def execute_builder
       end
 
     end

@@ -18,27 +18,55 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/builder/builder'
+require 'pi_customizer/environment/environment_builder_factory'
 
 module PiCustomizer
   module Builder
-    class StartExecuteBuilder < PiBuilder
+    class BuildExecutor
 
-      protected def execute_builder
-        @build_executor.check
-        @build_executor.start
-        @build_executor.prepare
-        @build_executor.build_image
-        @build_executor.publish
-        @build_executor.clean_up
-        @build_executor.stop
+      def initialize(environment, skip_build_steps)
+        @env = environment
+        @skip_build_steps = skip_build_steps
       end
 
-
-      protected def ensure_builder
-        @build_executor.ensure
+      def check
+        check_env
+        @env.check
       end
 
+      def prepare
+        @env.prepare
+      end
+
+      def start
+        @env.start
+      end
+
+      def build_image
+        @env.build_image
+      end
+
+      def publish
+        @env.publish
+      end
+
+      def clean_up
+        @env.clean_up
+      end
+
+      def stop
+        @env.stop
+      end
+
+      def ensure
+        @env.ensure
+      end
+
+      private def check_env
+        if @env.nil?
+          raise 'No environment specified, please specify the "environment", e.g. Vagrant'
+        end
+      end
     end
   end
 end

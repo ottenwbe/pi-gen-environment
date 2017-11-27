@@ -93,8 +93,8 @@ end
 namespace :run do
 
   desc 'run the pi_customizer and build the pi image in a docker container'
-  task :docker, [:config] do |t, args|
-    system ("ruby pi_customizer/bin/pi_customizer build DOCKER #{args[:config]}")
+  task :docker, [:resources] do |t, args|
+    system ("ruby pi_customizer/bin/pi_customizer build DOCKER #{args[:resources]}")
   end
 
 end

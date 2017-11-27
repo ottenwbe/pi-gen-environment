@@ -28,32 +28,32 @@ module PiCustomizer
     ##
     # The default path which points to the configuration file
 
-    DEFAULT_CONFIG_PATH = File.join(File.dirname(__FILE__), '/../../../envs/config.json')
+    DEFAULT_CONFIG_PATH = File.join(File.dirname(__FILE__), '/../../../resources/config.json')
 
     ##
     # The default directory which is used to store temporary build files, e.g., the Vagrantfile for a build with vagrant
 
-    DEFAULT_TMP_DIRECTORY = Dir.pwd + '/tmp'
+    DEFAULT_WORKSPACE_DIRECTORY = Dir.pwd + '/tmp'
 
     ##
     # The LocalWorkspace class encapsulates the configuration of the workspace on the machine where the build of the pi image is triggered
 
     class LocalWorkspace
 
-      attr_reader :config_path, :tmp_directory, :modifier_gem_path
+      attr_reader :config_path, :workspace_directory, :modifier_gem_path
 
-      def initialize(config_path = '', tmp_directory = '', modifier_gem_path = '')
+      def initialize(config_path = '', workspace_directory = '', modifier_gem_path = '')
         self.config_path = config_path
-        self.tmp_directory = tmp_directory
+        self.workspace_directory = workspace_directory
         self.modifier_gem_path = modifier_gem_path
-        $logger.debug "Local Workspace is at '#{@config_path}' with tmp directory '#{@tmp_directory}' and modifier_gem_path '#{@modifier_gem_path}'"
+        $logger.debug "Local Workspace is at '#{@config_path}' with tmp directory '#{@workspace_directory}' and modifier_gem_path '#{@modifier_gem_path}'"
       end
 
       ##
       # Checks for value equality between a pair of LocalWorkspace's attributes
 
       def ==(other)
-        (@tmp_directory == other.tmp_directory) && (@modifier_gem_path == other.modifier_gem_path) && (@config_path == other.config_path)
+        (@workspace_directory == other.workspace_directory) && (@modifier_gem_path == other.modifier_gem_path) && (@config_path == other.config_path)
       end
 
       private def config_path=(config_path)
@@ -64,11 +64,11 @@ module PiCustomizer
                        end
       end
 
-      private def tmp_directory=(tmp_directory)
-        @tmp_directory = if tmp_directory.nil? or tmp_directory == ''
-                           Pathname.new(DEFAULT_TMP_DIRECTORY)
+      private def workspace_directory=(workspace_directory)
+        @workspace_directory = if workspace_directory.nil? or workspace_directory == ''
+                           Pathname.new(DEFAULT_WORKSPACE_DIRECTORY)
                          else
-                           absolute_path_name(tmp_directory)
+                           absolute_path_name(workspace_directory)
                          end
       end
 

@@ -24,19 +24,19 @@ module PiCustomizer
   module Builder
     class PrepareExecuteBuilder < PiBuilder
 
-      protected def start
-        @env.check
-        @env.prepare
-        @env.start
+      protected def execute_builder
+        @build_executor.check
+        @build_executor.prepare
+        @build_executor.publish
+        @build_executor.clean_up
+        @build_executor.start
+        @build_executor.build_image
+        @build_executor.stop
       end
 
-      protected def execute
-        @env.build_image
-      end
 
-      protected def stop
-        @env.clean_up
-        @env.stop
+      protected def ensure_builder
+        @build_executor.ensure
       end
 
     end
