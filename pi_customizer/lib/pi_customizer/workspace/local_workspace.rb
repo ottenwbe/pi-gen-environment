@@ -33,7 +33,7 @@ module PiCustomizer
     ##
     # The default directory which is used to store temporary build files, e.g., the Vagrantfile for a build with vagrant
 
-    DEFAULT_WORKSPACE_DIRECTORY = Dir.pwd + '/tmp'
+    DEFAULT_LOCAL_WORKSPACE_DIRECTORY = Dir.pwd + '/tmp'
 
     ##
     # The LocalWorkspace class encapsulates the configuration of the workspace on the machine where the build of the pi image is triggered
@@ -66,7 +66,7 @@ module PiCustomizer
 
       private def workspace_directory=(workspace_directory)
         @workspace_directory = if workspace_directory.nil? or workspace_directory == ''
-                           Pathname.new(DEFAULT_WORKSPACE_DIRECTORY)
+                           Pathname.new(DEFAULT_LOCAL_WORKSPACE_DIRECTORY)
                          else
                            absolute_path_name(workspace_directory)
                          end

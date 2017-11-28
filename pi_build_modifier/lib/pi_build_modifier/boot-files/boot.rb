@@ -38,8 +38,8 @@ module PiBuildModifier
 
     def initialize(c_groups = [''])
       @c_groups = c_groups
-      @template_path = File.join(File.dirname(__FILE__), '/templates/cmdline.txt.erb').to_s
-      @relative_output_path = 'stage1/00-boot-files/files/cmdline.txt'
+      @template_path = File.join(File.dirname(__FILE__), '/templates/07-resize-init.diff.erb').to_s
+      @relative_output_path = 'stage2/01-sys-tweaks/00-patches/07-resize-init.diff'
     end
 
     def mapper(workspace)

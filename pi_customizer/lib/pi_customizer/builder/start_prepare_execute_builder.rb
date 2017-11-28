@@ -34,7 +34,6 @@ module PiCustomizer
         @build_executor.stop
       end
 
-
       protected def ensure_builder
         @build_executor.ensure
       end

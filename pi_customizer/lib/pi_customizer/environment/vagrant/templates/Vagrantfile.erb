@@ -30,7 +30,8 @@ $modify = <<SCRIPT
 cd  <%= workspace.workspace_directory %>
 pi_build_modifier modify <%= config_file_destination %> <%= workspace.workspace_directory %>
 sudo ./build.sh
-cp -r deploy /vagrant
+cp -r <%= workspace.workspace_directory %>/deploy /vagrant
+echo "Pi Image copied to your local workspace <%= config.workspace_directory.to_s %>"
 SCRIPT
 
 Vagrant.configure('2') do |config|

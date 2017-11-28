@@ -33,7 +33,7 @@ module PiCustomizer
         local_config = LocalWorkspace.new('', '', '')
         #Then
         expect(local_config.config_path.to_s).to eq DEFAULT_CONFIG_PATH
-        expect(local_config.workspace_directory.to_s).to eq DEFAULT_WORKSPACE_DIRECTORY
+        expect(local_config.workspace_directory.to_s).to eq DEFAULT_LOCAL_WORKSPACE_DIRECTORY
         expect(local_config.modifier_gem_path).to be nil
       end
 

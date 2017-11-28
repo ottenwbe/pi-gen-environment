@@ -19,14 +19,28 @@
 # SOFTWARE.
 
 require 'pi_customizer/environment/environment_builder_factory'
+require 'pi_customizer/utils/logex'
 
 module PiCustomizer
   module Builder
     class BuildExecutor
 
-      def initialize(environment, skip_build_steps)
+      attr_reader :env, :skip_build_steps
+
+      def initialize(environment, skip_build_steps = Array.new)
         @env = environment
-        @skip_build_steps = skip_build_steps
+        @skip_build_steps = convert_to_skip(skip_build_steps)
+      end
+
+      def convert_to_skip(skip_build_steps)
+        if skip_build_steps.nil?
+          skip_build_steps = Array.new
+        else
+          # convert every key to a symbol
+          skip_build_steps = skip_build_steps.collect {|k| k.to_sym}
+        end
+        $logger.debug "Skipping the following build steps: #{skip_build_steps}"
+        skip_build_steps
       end
 
       def check
@@ -35,27 +49,39 @@ module PiCustomizer
       end
 
       def prepare
-        @env.prepare
+        unless @skip_build_steps.include?(:prepare)
+          @env.prepare
+        end
       end
 
       def start
-        @env.start
+        unless @skip_build_steps.include?(:start)
+          @env.start
+        end
       end
 
       def build_image
-        @env.build_image
+        unless @skip_build_steps.include?(:build_image)
+          @env.build_image
+        end
       end
 
       def publish
-        @env.publish
+        unless @skip_build_steps.include?(:publish)
+          @env.publish
+        end
       end
 
       def clean_up
-        @env.clean_up
+        unless @skip_build_steps.include?(:clean_up)
+          @env.clean_up
+        end
       end
 
       def stop
-        @env.stop
+        unless @skip_build_steps.include?(:stop)
+          @env.stop
+        end
       end
 
       def ensure

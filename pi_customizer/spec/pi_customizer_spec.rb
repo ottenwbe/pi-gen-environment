@@ -32,27 +32,27 @@ describe PiCustomizer::PiCustomizer do
 
   context 'build' do
     it 'starts a build when the command line parameter \'build\' is passed' do
-      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), anything(), anything())
+      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), anything(), anything(), anything())
       PiCustomizer::PiCustomizer.start(%w(build ECHO))
     end
     it 'reads the modifier_gem_path parameter' do
-      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), PiCustomizer::Workspace::LocalWorkspace.new('', '', 'mod'), anything())
+      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), PiCustomizer::Workspace::LocalWorkspace.new('', '', 'mod'), anything(), anything())
       PiCustomizer::PiCustomizer.start(%w(build ECHO --modifier_gem=mod))
     end
     it 'reads the local_workspace_dir parameter' do
-      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), PiCustomizer::Workspace::LocalWorkspace.new('', 'tmp', ''), anything())
+      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), PiCustomizer::Workspace::LocalWorkspace.new('', 'tmp', ''), anything(), anything())
       PiCustomizer::PiCustomizer.start(%w(build ECHO --local_workspace_dir=tmp))
     end
     it 'reads the config_path parameter' do
-      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), PiCustomizer::Workspace::LocalWorkspace.new('cfg', '', ''), anything())
+      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), PiCustomizer::Workspace::LocalWorkspace.new('cfg', '', ''), anything(), anything())
       PiCustomizer::PiCustomizer.start(%w(build ECHO --config_file=cfg))
     end
     it 'reads the remote_workspace_dir parameter' do
-      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), anything(), PiCustomizer::Workspace::RemoteWorkspace.new('rdir', ''))
+      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), anything(), PiCustomizer::Workspace::RemoteWorkspace.new('rdir', ''), anything())
       PiCustomizer::PiCustomizer.start(%w(build ECHO --remote_workspace_dir=rdir))
     end
     it 'reads the build_sources_git_url parameter' do
-      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), anything(), PiCustomizer::Workspace::RemoteWorkspace.new('', 'git'))
+      expect(PiCustomizer::Environment).to receive(:environment_builder_factory).with(anything(), anything(), PiCustomizer::Workspace::RemoteWorkspace.new('', 'git'), anything())
       PiCustomizer::PiCustomizer.start(%w(build ECHO --build_sources_git_url=git))
     end
     it 'logs unexpected errors' do

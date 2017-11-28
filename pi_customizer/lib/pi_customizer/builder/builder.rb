@@ -27,7 +27,7 @@ module PiCustomizer
 
       attr_reader :build_executor
 
-      def initialize(environment, skip_build_steps = Hash.new)
+      def initialize(environment, skip_build_steps)
         @build_executor = BuildExecutor.new(environment,skip_build_steps)
       end
 

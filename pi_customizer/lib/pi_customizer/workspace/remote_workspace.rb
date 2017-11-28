@@ -24,7 +24,7 @@ require 'pi_customizer/utils/logex'
 module PiCustomizer
   module Workspace
 
-    DEFAULT_WORKSPACE_DIRECTORY = '/build/pi-gen'
+    DEFAULT_REMOTE_WORKSPACE_DIRECTORY = '/build/pi-gen'
     DEFAULT_GIT_PATH = 'https://github.com/ottenwbe/pi-gen.git'
 
     ##
@@ -36,7 +36,7 @@ module PiCustomizer
 
       def initialize(workspace_dir = '', git_path = '')
         @workspace_directory = if workspace_dir.nil? or workspace_dir == ''
-                                 DEFAULT_WORKSPACE_DIRECTORY
+                                 DEFAULT_REMOTE_WORKSPACE_DIRECTORY
                                else
                                  workspace_dir.to_s
                                end
