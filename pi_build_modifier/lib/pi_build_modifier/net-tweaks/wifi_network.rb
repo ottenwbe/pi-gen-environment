@@ -24,6 +24,10 @@ require 'openssl'
 require 'pi_build_modifier/modifier/erb_mapper'
 
 module PiBuildModifier
+
+  ##
+  # WifiNetwork represents a network in the wpa_supplicant configuration
+
   class WifiNetwork
 
     attr_reader :ssid, :psk
@@ -40,6 +44,9 @@ module PiBuildModifier
 }', ssid, psk)
     end
   end
+
+  ##
+  # WPASupplicant represents the wpa_supplicant's configuration
 
   class WPASupplicant
 

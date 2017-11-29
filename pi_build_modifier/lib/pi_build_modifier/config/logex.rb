@@ -18,26 +18,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/builder/builder'
+require 'logger'
 
-module PiCustomizer
-  module Builder
-    class PrepareExecuteBuilder < PiBuilder
-
-      protected def execute_builder
-        @build_executor.check
-        @build_executor.prepare
-        @build_executor.publish
-        @build_executor.clean_up
-        @build_executor.start
-        @build_executor.build_image
-        @build_executor.stop
-      end
-
-      protected def ensure_builder
-        @build_executor.ensure
-      end
-
-    end
-  end
+module PiBuildModifier
+  $logger = Logger.new(STDOUT)
 end

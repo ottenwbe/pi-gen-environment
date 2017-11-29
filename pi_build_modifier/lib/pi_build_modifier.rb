@@ -23,6 +23,7 @@ require 'pi_build_modifier/net-tweaks/wifi_network'
 require 'pi_build_modifier/modifier/erb_mapper'
 require 'pi_build_modifier/version'
 require 'pi_build_modifier/modifier_task'
+require 'pi_build_modifier/config/logex'
 
 module PiBuildModifier
 
@@ -33,7 +34,7 @@ module PiBuildModifier
 
     desc 'modify CONFIG WORKSPACE', 'Modify the pi image sources at the specified WORKSPACE with the specified configuration file CONFIG.'
     def modify(config, workspace)
-      puts config + ' ' + workspace
+      $logger.debug "modify #{config} #{workspace}"
       task = Task::Modifier.new(config, workspace)
       task.execute
     end

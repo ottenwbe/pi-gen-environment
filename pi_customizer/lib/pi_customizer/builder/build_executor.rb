@@ -32,17 +32,6 @@ module PiCustomizer
         @skip_build_steps = convert_to_skip(skip_build_steps)
       end
 
-      def convert_to_skip(skip_build_steps)
-        if skip_build_steps.nil?
-          skip_build_steps = Array.new
-        else
-          # convert every key to a symbol
-          skip_build_steps = skip_build_steps.collect {|k| k.to_sym}
-        end
-        $logger.debug "Skipping the following build steps: #{skip_build_steps}"
-        skip_build_steps
-      end
-
       def check
         check_env
         @env.check
@@ -88,6 +77,17 @@ module PiCustomizer
         @env.ensure
       end
 
+      private def convert_to_skip(skip_build_steps)
+        if skip_build_steps.nil?
+          skip_build_steps = Array.new
+        else
+          # convert every key to a symbol
+          skip_build_steps = skip_build_steps.collect {|k| k.to_sym}
+        end
+        $logger.debug "Skipping the following build steps: #{skip_build_steps}"
+        skip_build_steps
+      end
+
       private def check_env
         if @env.nil?
           raise 'No environment specified, please specify the "environment", e.g. Vagrant'
@@ -96,3 +96,20 @@ module PiCustomizer
     end
   end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
