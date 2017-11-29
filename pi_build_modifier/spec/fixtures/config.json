@@ -10,11 +10,15 @@
     "gen" : ["en_GB.UTF-8 UTF-8", "de_DE.UTF-8 UTF-8"],
     "sys" : "en_GB.UTF-8"
   },
+  "cgroups": {
+    "memory": true
+  },
   "wifi": {
     "networks": [
       {
         "ssid": "ssid_test",
-        "wpsk": "wpsk_test"
+        "passphrase": "wpsk_test",
+        "wpa_passphrase": "wpsk_test"
       }
     ],
     "wpa_country": "DE"

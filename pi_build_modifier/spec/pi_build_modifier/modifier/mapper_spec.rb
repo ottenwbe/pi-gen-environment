@@ -41,8 +41,8 @@ module PiBuildModifier
     let(:test_text) {'Test Text'}
     let(:json_path) {'test.json'}
     let(:template_path) {'template.erb'}
-    let(:output_path) {File.dirname(__FILE__) + '/' + 'output.conf'}
-    let(:output_file_name) {'output.conf'}
+    let(:output_path) {File.dirname(__FILE__) + '/' + 'output.config'}
+    let(:output_file_name) {'output.config'}
 
     @json_data = nil
 
@@ -65,7 +65,7 @@ module PiBuildModifier
       expect {ERBMapper.new(nil, '')}.to raise_error
     end
 
-    it 'should map a json configuration and an erb template to a conf file' do
+    it 'should map a json configuration and an erb template to a config file' do
 
       #Given
       mapper = ERBMapper.new(TestData.new(template_path, output_file_name), File.dirname(__FILE__))

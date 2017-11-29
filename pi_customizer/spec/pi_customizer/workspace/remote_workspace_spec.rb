@@ -23,24 +23,22 @@ require 'fileutils'
 require 'pathname'
 require 'pi_customizer/workspace/remote_workspace'
 
-module PiCustomizer
 
-  RSpec.describe Workspace::RemoteWorkspace do
+RSpec.describe PiCustomizer::Workspace::RemoteWorkspace do
 
-    let(:git_path) {'../pi-gen-test'}
-    let(:default_git) {'https://github.com/ottenwbe/pi_customizer.git'}
+  let(:git_path) {'../pi-gen-test'}
+  let(:default_git) {'https://github.com/ottenwbe/pi_customizer.git'}
 
-    it 'allows us to check for parameter equality' do
-      remote_workspace_1 = Workspace::RemoteWorkspace.new('a', 'b')
-      remote_workspace_2 = Workspace::RemoteWorkspace.new('a', 'b')
-      expect(remote_workspace_1==remote_workspace_2).to be true
-    end
-
-    it 'allows us to check for parameter inequality' do
-      remote_workspace_1 = Workspace::RemoteWorkspace.new('a', 'b')
-      remote_workspace_2 = Workspace::RemoteWorkspace.new('c', 'd')
-      expect(remote_workspace_1==remote_workspace_2).to be false
-    end
-
+  it 'allows us to check for parameter equality' do
+    remote_workspace_1 = PiCustomizer::Workspace::RemoteWorkspace.new('a', 'b')
+    remote_workspace_2 = PiCustomizer::Workspace::RemoteWorkspace.new('a', 'b')
+    expect(remote_workspace_1==remote_workspace_2).to be true
   end
+
+  it 'allows us to check for parameter inequality' do
+    remote_workspace_1 = PiCustomizer::Workspace::RemoteWorkspace.new('a', 'b')
+    remote_workspace_2 = PiCustomizer::Workspace::RemoteWorkspace.new('c', 'd')
+    expect(remote_workspace_1==remote_workspace_2).to be false
+  end
+
 end

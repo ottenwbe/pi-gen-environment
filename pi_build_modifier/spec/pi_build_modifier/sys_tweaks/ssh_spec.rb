@@ -42,6 +42,19 @@ RSpec.describe PiBuildModifier::Ssh do
     FileUtils.rm_rf workspace
   end
 
+  it 'does not accept an invalid config' do
+    #Given
+    modifier = PiBuildModifier::PiModifier.new
+    ssh = PiBuildModifier::Ssh.new
+    mapper = ssh.mapper(workspace)
+
+    #When
+    modifier.with_json_configuration('cfg')
+    modifier.with_mapper(mapper)
+
+    expect{ modifier.modify }.to raise_error()
+  end
+
   it 'should create a default ssh.sh file' do
     #Given
     modifier = PiBuildModifier::PiModifier.new
@@ -55,7 +68,6 @@ RSpec.describe PiBuildModifier::Ssh do
 
     #Then
     expect(Pathname.new(workspace + '/' + ssh.relative_output_path)).to be_file
-
   end
 end
 

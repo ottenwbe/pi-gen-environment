@@ -23,17 +23,23 @@ require 'pi_build_modifier/net-tweaks/wifi_network'
 require 'pi_build_modifier/modifier/erb_mapper'
 require 'pi_build_modifier/version'
 require 'pi_build_modifier/modifier_task'
+require 'pi_build_modifier/config/logex'
 
 module PiBuildModifier
+
+  ##
+  # PiBuildModifier implements all cli commands of pi_build_modifier.
+
   class PiBuildModifier < Thor
 
-    desc 'modify CONFIG WORKSPACE', 'Modify the pi image sources at the specified WORKSPACE with the specified configuration file.'
+    desc 'modify CONFIG WORKSPACE', 'Modify the pi image sources at the specified WORKSPACE with the specified configuration file CONFIG.'
     def modify(config, workspace)
+      $logger.debug "modify #{config} #{workspace}"
       task = Task::Modifier.new(config, workspace)
       task.execute
     end
 
-    desc 'version', 'Show the version of the modifier.'
+    desc 'v, version', 'Show the version of the modifier.'
     def version
       puts VERSION
     end

@@ -46,9 +46,6 @@ module PiBuildModifier
       @appender << appender
     end
 
-    def map(json_data)
-    end
-
     def modify
       open("#{@workspace}/#{@relative_output_path}", 'a') do |f|
         f.puts ''

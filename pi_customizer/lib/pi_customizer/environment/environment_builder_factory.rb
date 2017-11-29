@@ -38,16 +38,16 @@ module PiCustomizer
     ENV_DOCKER = 'DOCKER'
     ENV_ECHO = 'ECHO'
 
-    def Environment.environment_builder_factory(env, local_workspace, remote_workspace)
+    def Environment.environment_builder_factory(env, local_workspace, remote_workspace, skip_build_steps)
 
       environment = environment_factory(env, local_workspace, remote_workspace)
 
       case env
         when ENV_AWS, ENV_VAGRANT
-          env_builder = Builder::PrepareExecuteBuilder.new(environment)
+          env_builder = Builder::PrepareExecuteBuilder.new(environment, skip_build_steps)
         when ENV_DOCKER, ENV_ECHO
-          puts "Echo: - Git Path: #{remote_workspace.git_path}, Workspace Path: #{remote_workspace.workspace_directory}, Config Path: #{local_workspace.config_path}"
-          env_builder = Builder::StartExecuteBuilder.new(environment)
+          puts "Echo: - Git Path: #{remote_workspace.git_path}, Workspace Path: #{remote_workspace.workspace_directory}, Config Path: #{local_workspace.config_path}, #{skip_build_steps}"
+          env_builder = Builder::StartExecuteBuilder.new(environment, skip_build_steps)
         else
           $logger.warn 'No valid build environment defined!'
           env_builder = Builder::PiBuilder.new(environment)
@@ -66,7 +66,7 @@ module PiCustomizer
         when ENV_ECHO
           environment = EnvironmentControl.new(remote_workspace, local_workspace)
         else
-          $logger.info 'NO valid environment (e.g., AWS or VAGRANT) defined!'
+          $logger.info 'No valid environment (e.g., AWS or VAGRANT) defined!'
           environment = EnvironmentControl.new(remote_workspace, local_workspace)
       end
       environment

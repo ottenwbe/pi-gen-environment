@@ -21,6 +21,7 @@
 require 'fileutils'
 require 'pi_build_modifier/modifier/mapper'
 require 'pi_build_modifier/sys_tweaks/run_modifier'
+require 'pi_build_modifier/config/logex'
 
 module PiBuildModifier
 
@@ -48,7 +49,7 @@ module PiBuildModifier
       unless json_data.nil?
         @enable = 'disable' if json_data.has_key?('ssh') && json_data['ssh'].has_key?('enabled') && (not json_data['ssh']['enabled'])
       else
-        # TODO: log error
+        $logger.error 'Invalid json data.'
       end
     end
 

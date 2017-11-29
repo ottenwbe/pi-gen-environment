@@ -91,12 +91,14 @@ After the image is built, undo the changes.
 
 Note: feature still in development
 
-## Usage
+# Usage
 
-To simply build a default image in a Vagrant box, simply call
+To build a default image in a Vagrant box, simply execute on the command line
 
     pi_customizer build VAGRANT
 
+
+To customize your build:
 1. Any customizations have to be specified in a json configuration file (see the [__Config File__](#config_file) section for details).
 1. The build process itself is then configured with command line options (see `pi_customizer help build` for details)   
      
@@ -118,11 +120,14 @@ An example of the json config file with all current configuration options
         "gen" : ["en_GB.UTF-8 UTF-8", "de_DE.UTF-8 UTF-8"],
         "sys" : "en_GB.UTF-8"
       },
+      "cgroups": {
+        "memory": true
+      },
       "wifi": {
         "networks": [
           {
-            "ssid": "your_secret_ssid",
-            "wpsk": "your_secret_psk"
+            "ssid": "your_ssid",            
+            "wpa_passphrase": "your_secret_psk" // Alternative: "wpa_passphrase": "your_wpa_passpharse"
           }
         ],
         "wpa_country": "DE"
@@ -144,9 +149,13 @@ An example of the json config file with all current configuration options
 * Select one or more locales to be generated: e.g., "en_GB.UTF-8 UTF-8", "de_DE.UTF-8 UTF-8", ...
 * Select the default locale, typically en_GB.UTF-8, which is the default.
 
+### The cgroups section
+
+* To enable the cgroup memory, enable __memory__, otherwise leave it out.
+
 ### The wifi section
 
-* The wifi section allows you to specify networks and passkeys as well as the wpa_country.
+* The wifi section allows you to specify networks and passphrase __OR__ wpa_passpharse as well as the wpa_country.
 
 # Development
 

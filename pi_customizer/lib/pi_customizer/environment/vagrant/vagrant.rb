@@ -19,7 +19,7 @@
 # SOFTWARE.
 
 require 'fileutils'
-require_relative 'vagrant_file'
+require 'pi_customizer/environment/vagrant/vagrant_file'
 require 'pi_customizer/utils/logex'
 require 'pi_customizer/environment/environment'
 
@@ -41,7 +41,7 @@ module PiCustomizer
 
       def start
         $logger.info '[Start] pi-image in local vagrant environment'
-        Dir.chdir(@config.tmp_directory) do
+        Dir.chdir(@config.workspace_directory) do
           system 'vagrant destroy -f' # cleanup old environment
           system 'vagrant up --provider=virtualbox --no-provision'
         end
@@ -49,7 +49,7 @@ module PiCustomizer
 
       def build_image
         $logger.info '[Build] pi-image in local vagrant environment'
-        Dir.chdir(@config.tmp_directory) do
+        Dir.chdir(@config.workspace_directory) do
           system 'vagrant provision'
         end
       end
@@ -60,7 +60,7 @@ module PiCustomizer
 
       def stop
         $logger.info '[Stop] pi-image in local vagrant environment'
-        Dir.chdir(@config.tmp_directory) do
+        Dir.chdir(@config.workspace_directory) do
           system 'vagrant destroy -f'
         end
       end

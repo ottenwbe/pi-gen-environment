@@ -26,7 +26,7 @@ module PiCustomizer
 
       DOCKERFILE_PATH = File.join(File.dirname(__FILE__), '/../../../../envs/docker')
       DOCKERFILE = "#{DOCKERFILE_PATH}/Dockerfile"
-      CONFIG_PATH_IN_DOCKER = '/config'
+      CONFIG_PATH_IN_DOCKER = '/resources'
 
       def check
 
@@ -50,7 +50,7 @@ module PiCustomizer
 
       def build_image
         $logger.info '[Build| Docker] customization of build sources'
-        system "sudo docker exec --tty \"$(cat cid)\" bash -c \"sudo pi_build_modifier modify #{CONFIG_PATH_IN_DOCKER}/config.json #{@workspace.workspace_directory}\""
+        system "sudo docker exec --tty \"$(cat cid)\" bash -c \"sudo pi_build_modifier modify #{CONFIG_PATH_IN_DOCKER}/resources.json #{@workspace.workspace_directory}\""
         $logger.info '[Build| Docker] pi-image build step'
         system "sudo docker exec --tty \"$(cat cid)\" bash -c \"cd #{@workspace.workspace_directory} && sudo ./build.sh\"" #sudo chown docker #{@workspace.workspace_directory} &&
       end
@@ -74,9 +74,9 @@ module PiCustomizer
       end
 
       private def prepare_configuration
-        $logger.info "[Prepare | Docker] Copy the configuration file from #{@config.config_path} to #{CONFIG_PATH_IN_DOCKER}/config.json in container"
+        $logger.info "[Prepare | Docker] Copy the configuration file from #{@config.config_path} to #{CONFIG_PATH_IN_DOCKER}/resources.json in container"
         system "docker exec --tty \"$(cat cid)\" bash -c \"sudo mkdir -p #{CONFIG_PATH_IN_DOCKER}\""
-        system "docker cp #{@config.config_path} \"$(cat cid)\":#{CONFIG_PATH_IN_DOCKER}/config.json"
+        system "docker cp #{@config.config_path} \"$(cat cid)\":#{CONFIG_PATH_IN_DOCKER}/resources.json"
         gem_path = File.join(File.dirname(__FILE__), '/../../../../envs/pi_build_modifier.gem')
         system "docker cp #{gem_path} \"$(cat cid)\":#{CONFIG_PATH_IN_DOCKER}/pi_build_modifier.gem"
         system "docker exec --tty \"$(cat cid)\" bash -c \"sudo gem install #{CONFIG_PATH_IN_DOCKER}/pi_build_modifier.gem\""

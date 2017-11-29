@@ -1,0 +1,12 @@
+{
+  "system": {
+    "name" : "custompi",
+    "type" : "lite"
+  },
+  "ssh" : {
+    "enabled" : true
+  },
+  "wifi": {
+    "wpa_country": "DE"
+  }
+}

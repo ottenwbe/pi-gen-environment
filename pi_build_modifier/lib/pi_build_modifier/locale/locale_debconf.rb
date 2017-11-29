@@ -22,6 +22,10 @@ require 'erb'
 require 'json'
 
 module PiBuildModifier
+
+  ##
+  # The Locale class is used to customize the locales
+
   class Locale
 
     LOCALE = 'locale'
@@ -41,9 +45,13 @@ module PiBuildModifier
       @relative_output_path = 'stage0/01-locale/00-debconf'
     end
 
+    def mapper(workspace)
+      ERBMapper.new(self,workspace)
+    end
+
     def map(json_data)
       unless json_data.nil?
-        @gen_locales = json_data[LOCALE][GEN].map {|rd| rd} if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(GEN)
+        @gen_locales = json_data[LOCALE][GEN].map {|gen| gen} if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(GEN)
         @sys_locale = json_data[LOCALE][SYS] if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(SYS)
       end
     end

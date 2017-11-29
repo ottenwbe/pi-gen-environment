@@ -18,6 +18,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require 'logger'
+
 module PiBuildModifier
-  VERSION = '0.2.0-alpha'
+  $logger = Logger.new(STDOUT)
 end

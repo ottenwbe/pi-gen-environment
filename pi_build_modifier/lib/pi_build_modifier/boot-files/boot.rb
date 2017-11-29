@@ -18,6 +18,47 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require 'erb'
+require 'json'
+
 module PiBuildModifier
-  VERSION = '0.2.0-alpha'
+
+  ##
+  # The Locale class is used to customize the locales
+
+  class Boot
+
+    C_GROUPS = 'cgroups'
+
+    C_GROUP_MEMORY = 'memory'
+
+    attr_accessor :c_groups
+
+    attr_reader :template_path, :relative_output_path
+
+    def initialize(c_groups = [''])
+      @c_groups = c_groups
+      @template_path = File.join(File.dirname(__FILE__), '/templates/07-resize-init.diff.erb').to_s
+      @relative_output_path = 'stage2/01-sys-tweaks/00-patches/07-resize-init.diff'
+    end
+
+    def mapper(workspace)
+      ERBMapper.new(self,workspace)
+    end
+
+    def map(json_data)
+      unless json_data.nil? || !json_data.has_key?(C_GROUPS)
+        if json_data[C_GROUPS].has_key?(C_GROUP_MEMORY) && json_data[C_GROUPS][C_GROUP_MEMORY]
+          @c_groups << 'cgroup_memory=1'
+        end
+      end
+    end
+
+    def get_binding
+      binding
+    end
+
+  end
+
 end
+
