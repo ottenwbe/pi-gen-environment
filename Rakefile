@@ -29,6 +29,17 @@ end
 
 task :default => :spec
 
+# release task
+
+desc 'Release and upload to Rubygems.org'
+task :release do
+  all_gems.each do |p|
+    Dir.chdir p do
+      system 'rake release'
+    end
+  end
+end
+
 # doc tasks
 
 begin
