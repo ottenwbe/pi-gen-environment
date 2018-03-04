@@ -34,10 +34,13 @@ module PiBuildModifier
 
     desc 'modify CONFIG WORKSPACE', 'Modify the pi image sources at the specified WORKSPACE with the specified configuration file CONFIG.'
     def modify(config, workspace)
-      $logger.debug "modify #{config} #{workspace}"
+      $logger.debug "Modifying with a configuration read from '#{config}' in the workspace '#{workspace}'"
       task = Task::Modifier.new(config, workspace)
       task.execute
     end
+
+    ##
+    # The version command allows users to query for the current version of the pi_customizer gem. It is printed on the command line.
 
     desc 'v, version', 'Show the version of the modifier.'
     def version

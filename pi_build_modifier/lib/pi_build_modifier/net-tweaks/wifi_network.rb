@@ -58,6 +58,12 @@ module PiBuildModifier
 
     attr_reader :template_path, :relative_output_path
 
+    ##
+    # By default, WPASupplicant is configured with:
+    # wpa_country: DE
+    # template: '/templates/wpa_supplicant.conf.erb'
+    # output path: 'stage2/02-net-tweaks/files/wpa_supplicant.conf'
+
     def initialize
       @networks = map_network(nil)
       @wpa_country = 'DE'
@@ -68,6 +74,9 @@ module PiBuildModifier
     def mapper(workspace)
       ERBMapper.new(self, workspace)
     end
+
+    ##
+    # map the json configuration to the configuration of the build process
 
     def map(json_data)
       unless json_data.nil?

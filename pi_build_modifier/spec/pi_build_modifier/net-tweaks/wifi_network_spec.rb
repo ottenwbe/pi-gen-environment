@@ -26,16 +26,16 @@ require 'pi_build_modifier/modifier/erb_mapper'
 require 'pi_build_modifier/modifier/pi_modifier'
 
 
-  RSpec.describe PiBuildModifier::WPASupplicant do
+RSpec.describe PiBuildModifier::WPASupplicant do
 
-    let(:empty_json_config) {'config_empty.json'}
-    let(:json_config) {'config_full.json'}
-    let(:workspace) {File.dirname(__FILE__) + '/workspace'}
+  let(:empty_json_config) {'config_empty.json'}
+  let(:json_config) {'config_full.json'}
+  let(:workspace) {File.dirname(__FILE__) + '/workspace'}
 
-    before do
-      FileUtils.mkdir_p workspace
-      File.open(empty_json_config, 'w') {|file| file.write('{}')}
-      File.open(json_config, 'w') {|file| file.write(' {"wifi" : {
+  before do
+    FileUtils.mkdir_p workspace
+    File.open(empty_json_config, 'w') {|file| file.write('{}')}
+    File.open(json_config, 'w') {|file| file.write(' {"wifi" : {
     "wpa_country" : "DE_test",
     "networks": [
       {
@@ -46,46 +46,46 @@ require 'pi_build_modifier/modifier/pi_modifier'
   }
 }
 ')}
-    end
-
-    after do
-      FileUtils.rm(empty_json_config)
-      FileUtils.rm(json_config)
-      FileUtils.rm_rf workspace
-    end
-
-    it 'should create a default wpa_supplicant.config ' do
-
-      #Given
-      modifier = PiBuildModifier::PiModifier.new
-      wpa_supplicant = PiBuildModifier::WPASupplicant.new
-      mapper = PiBuildModifier::ERBMapper.new(wpa_supplicant, workspace)
-
-      #When
-      modifier.with_json_configuration(empty_json_config)
-      modifier.with_mapper(mapper)
-      modifier.modify
-
-      #Then
-      expect(Pathname.new(workspace + '/' + wpa_supplicant.relative_output_path)).to be_file
-    end
-
-    it 'should create a wpa_supplicant.config with all attributes set' do
-
-      #Given
-      modifier = PiBuildModifier::PiModifier.new
-      wpa_supplicant = PiBuildModifier::WPASupplicant.new
-      mapper = wpa_supplicant.mapper(workspace)
-
-      #When
-      modifier.with_json_configuration(json_config)
-      modifier.with_mapper(mapper)
-      modifier.modify
-
-      #Then
-      wpa_supplicant_file = File.read(workspace + '/' + wpa_supplicant.relative_output_path)
-      expect(wpa_supplicant_file).to match(/network/)
-    end
-
   end
+
+  after do
+    FileUtils.rm(empty_json_config)
+    FileUtils.rm(json_config)
+    FileUtils.rm_rf workspace
+  end
+
+  it 'should create a default wpa_supplicant.config when no change is specified in the json configuration file' do
+
+    #Given
+    modifier = PiBuildModifier::PiModifier.new
+    wpa_supplicant = PiBuildModifier::WPASupplicant.new
+    mapper = PiBuildModifier::ERBMapper.new(wpa_supplicant, workspace)
+
+    #When
+    modifier.with_json_configuration(empty_json_config)
+    modifier.with_mapper(mapper)
+    modifier.modify
+
+    #Then
+    expect(Pathname.new(workspace + '/' + wpa_supplicant.relative_output_path)).to be_file
+  end
+
+  it 'should create a wpa_supplicant.config with all changes that are specified in the json configuration file' do
+
+    #Given
+    modifier = PiBuildModifier::PiModifier.new
+    wpa_supplicant = PiBuildModifier::WPASupplicant.new
+    mapper = wpa_supplicant.mapper(workspace)
+
+    #When
+    modifier.with_json_configuration(json_config)
+    modifier.with_mapper(mapper)
+    modifier.modify
+
+    #Then
+    wpa_supplicant_file = File.read(workspace + '/' + wpa_supplicant.relative_output_path)
+    expect(wpa_supplicant_file).to match(/network/)
+  end
+
+end
 

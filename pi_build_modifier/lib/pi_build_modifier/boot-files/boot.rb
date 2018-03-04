@@ -24,7 +24,7 @@ require 'json'
 module PiBuildModifier
 
   ##
-  # The Locale class is used to customize the locales
+  # The Locale class is used to customize locales
 
   class Boot
 

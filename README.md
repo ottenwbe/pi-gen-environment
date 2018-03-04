@@ -13,6 +13,7 @@ To this end, the Raspbian image is be built from [scratch](https://github.com/ot
 with all customizations baked in.
 
 The core of the project is a set of Ruby gems which adapt the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
+The build script is then used to actually create the image in an isolated environment, e.g., in a vagrant box.
 
 # WIP Notice
 

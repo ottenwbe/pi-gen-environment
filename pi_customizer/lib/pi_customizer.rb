@@ -34,7 +34,7 @@ module PiCustomizer
   class PiCustomizer < Thor
 
     ##
-    # The build command can be called by a user to trigger a build of a pi image
+    # The build command can be called by a user to trigger a customized build of a pi image
 
     desc 'build ENV', 'Build pi image on environment ENV (valid environments are DOCKER, AWS or VAGRANT).'
     method_option :build_sources_git_url, :default => Workspace::DEFAULT_GIT_PATH, :aliases => '-g'
