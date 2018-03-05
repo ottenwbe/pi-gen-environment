@@ -24,6 +24,7 @@ require 'pi_customizer/version'
 require 'pi_customizer/environment/environment_builder_factory'
 require 'pi_customizer/workspace/remote_workspace'
 require 'pi_customizer/workspace/local_workspace'
+require 'pi_customizer/flash/image_writer'
 require 'pi_customizer/utils/logex'
 
 module PiCustomizer
@@ -44,6 +45,7 @@ module PiCustomizer
     method_option :modifier_gem, :default => '', :aliases => '-m', :desc => 'Path to the modifier_gem. If not specified, the most recent gem from rubygems.org is downloaded.'
     method_option :deploy_dir, :default => Dir.getwd, :aliases => '-d'
     method_option :skip_steps, :type => :array, :aliases => '-s'
+
     def build(env)
       begin
         remote_workspace = Workspace::RemoteWorkspace.new("#{options[:remote_workspace_dir]}", "#{options[:build_sources_git_url]}")
@@ -59,8 +61,23 @@ module PiCustomizer
     # The version command allows users to query for the current version of the pi_customizer gem. It is printed on the command line.
 
     desc 'v, version', 'Shows the version number.'
+
     def version
       puts VERSION
     end
+
+    ##
+    # Write an image to a SD card
+
+    desc 'write IMAGE DEVICE', 'Write an image to a device.'
+
+    def write_image(image, device)
+      begin
+        ImageWriter.write(image, device)
+      rescue Exception => e
+        $logger.error e.message
+      end
+    end
+
   end
 end

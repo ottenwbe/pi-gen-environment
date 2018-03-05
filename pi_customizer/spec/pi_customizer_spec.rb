@@ -75,4 +75,12 @@ describe PiCustomizer::PiCustomizer do
       PiCustomizer::PiCustomizer.start(%w(version))
     end
   end
+
+  context 'write' do
+    it 'triggers the write of a given image to a given device' do
+      expect(PiCustomizer::ImageWriter).to receive(:write).with(anything(), anything())
+      PiCustomizer::PiCustomizer.start(%w(write test.img /dev/null))
+    end
+  end
+
 end
