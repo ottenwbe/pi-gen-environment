@@ -25,19 +25,34 @@ require 'pi_customizer/utils/logex'
 
 describe PiCustomizer::ImageWriter do
 
-  let(:zip_img_file) {File.dirname(__FILE__) + '/../fixtures/image.zip'}
-  let(:img_file) {File.dirname(__FILE__) + '/../fixtures/image.img'}
+  let(:zip_img_file) {File.dirname(__FILE__) + '/../../fixtures/image.zip'}
+  let(:img_file) {File.dirname(__FILE__) + '/../../fixtures/image.img'}
+  let(:tmp_folder) {File.dirname(__FILE__) + '/tmp'}
+
+  before do
+    FileUtils.mkdir_p tmp_folder
+  end
+
+  after do
+    FileUtils.rm_rf(tmp_folder)
+  end
 
   it 'raises an error when the format is not correct' do
-    expect{PiCustomizer::ImageWriter.write('test.txt', '/dev/null')}.to raise_error
+    expect {PiCustomizer::ImageWriter.write('test.txt', '/dev/null', false)}.to raise_error
   end
 
   it 'uses dd to write an image to a device' do
-
+    #When
+    PiCustomizer::ImageWriter.write(img_file, tmp_folder + '/img.img', false)
+    #Then
+    expect(Pathname.new(tmp_folder + '/img.img')).to be_file
   end
 
   it 'uses dd to write a zipped image to a device' do
-
+    #When
+    PiCustomizer::ImageWriter.write(zip_img_file, tmp_folder + '/zip.img', false)
+    #Then
+    expect(Pathname.new(tmp_folder + '/zip.img')).to be_file
   end
 
 end

@@ -27,12 +27,27 @@ module PiCustomizer
 
   class ImageWriter
 
-    def initialize
+    def self.write(image, device, check_root = true)
+      check(check_root)
+      initialize
+      dispatch_write(image, device)
+    end
+
+    ##
+    # Check prerequisites, e.g., root access
+
+    def self.check(check_root)
+      if check_root
+        raise 'Must run as root' unless Process.uid == 0
+      end
+    end
+
+    def self.initialize
       @zip_formats = ['.zip']
       @img_formats = ['.img']
     end
 
-    def self.write(image, device)
+    def self.dispatch_write(image, device)
       extension = File.extname(image)
       if @zip_formats.include? extension
         write_zip(image, device)
@@ -44,12 +59,16 @@ module PiCustomizer
     end
 
     def self.write_zip(image, device)
-      system "unzip -p #{image} | sudo dd of=#{device} bs=4M conv=fsync"
+      system "unzip -p #{image} | dd of=#{device} bs=4M conv=fsync"
     end
 
     def self.write_img(image, device)
-      system "sudo dd -if=#{image} of=#{device} bs=4M conv=fsync"
+      system "dd if=#{image} of=#{device} bs=4M conv=fsync"
     end
+
+    private_class_method :write_zip
+    private_class_method :write_img
+    private_class_method :initialize
 
   end
 end
