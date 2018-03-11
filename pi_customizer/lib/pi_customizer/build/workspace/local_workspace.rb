@@ -28,7 +28,7 @@ module PiCustomizer
     ##
     # The default path which points to the configuration file
 
-    DEFAULT_CONFIG_PATH = File.join(File.dirname(__FILE__), '/../../../resources/config.json')
+    DEFAULT_CONFIG_PATH = File.join(File.dirname(__FILE__), '/../../../../resources/config.json')
 
     ##
     # The default directory which is used to store temporary build files, e.g., the Vagrantfile for a build with vagrant

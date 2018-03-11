@@ -77,7 +77,7 @@ module PiBuildModifier
 
     #TODO: test
     def check(json_data)
-      if not File.file?(@relative_output_path)
+      unless File.file?(@relative_output_path)
         raise "File #{relative_output_path} does not exist"
       end
     end
@@ -93,7 +93,7 @@ module PiBuildModifier
     end
 
     private def map_network(json_data)
-      if json_data.nil?
+      if json_data.nil? or not json_data.has_key?('networks')
         networks = Array.new(0)
       else
         networks = json_data['networks'].map do |rd|

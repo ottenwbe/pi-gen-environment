@@ -1,17 +1,20 @@
-build_projects = %w(pi_build_modifier)
-install_projects = %w(pi_customizer)
+PI_CUSTOMIZER = 'pi_customizer'
+PI_BUILD_MODIFIER = 'pi_build_modifier'
+
+build_projects = [PI_CUSTOMIZER]
+install_projects = [PI_BUILD_MODIFIER]
 all_gems = (build_projects+install_projects).uniq
 files = %w(pi_build_modifier/lib/**/*.rb pi_customizer/lib/**/*.rb)
 
 ##
 # The spec task executes rspec tests for all gems of the pi_customizer project.
-# This task is executed by default when 'rspec' is called.
+# This task is executed by default when 'rake' is called on the command line
 
 begin
   require 'rspec/core/rake_task'
 
   RSpec::Core::RakeTask.new(:spec) do |t|
-
+    # find all spec files (for all gems)
     pattern = ''
     all_gems.each do |gem|
       if pattern == ''
@@ -20,6 +23,7 @@ begin
         pattern = pattern + ',' + "#{gem}/spec/**{,/*/**}/*_spec.rb"
       end
     end
+    # tell rspec to execute tests on all spec files
     t.pattern = pattern
   end
 rescue LoadError
@@ -29,16 +33,25 @@ end
 
 task :default => :spec
 
-# integration test with QEMU
+# acceptance testing
 
-desc 'Release and upload to Rubygems.org'
-task :release do
-  all_gems.each do |p|
-    Dir.chdir p do
-      system 'rake release'
-    end
+desc 'Run acceptance tests by building an image and starting it in QEMU.
+      NOTE: Use with caution. Makes changes to your local file system.'
+task :acceptance do
+
+  #TODO: create qemu environments
+  Dir.mkdir_p '/mnt/custompi'
+
+  #system 'pi_customizer build VAGRANT --modifier-gem=pi_build_modifier/pkg/pi_build_modifier-0.3.0.pre.alpha.gem'
+  Dir.chdir 'tmp/deploy' do
+    d = DateTime.now
+    image_name = d.strftime('%Y-%m-%d-custompi-lite')
+    system 'unzip -f image_' + image_name + '.zip'
+    system 'qemu-system-arm -kernel ~/VMs/qemu/kernel-qemu-4.4.34-jessie -cpu arm1176 -m 256 -M versatilepb -serial stdio -append "root=/dev/sda2 rootfstype=ext4 rw" -hda ' + image_name + '.img -redir tcp:5022::22 -no-reboot'
   end
 end
+
+task :acceptance => [:spec, 'install:local']
 
 # release task
 
@@ -68,7 +81,7 @@ end
 
 # build tasks
 
-desc 'Build all sub all_gems'
+desc "Build all gems (i.e., #{PI_BUILD_MODIFIER} and #{PI_CUSTOMIZER})"
 task :build do
   all_gems.each do |p|
     Dir.chdir p do
