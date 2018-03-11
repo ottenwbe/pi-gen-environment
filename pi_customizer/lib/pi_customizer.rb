@@ -21,10 +21,10 @@
 require 'thor'
 require 'fileutils'
 require 'pi_customizer/version'
-require 'pi_customizer/environment/environment_builder_factory'
-require 'pi_customizer/workspace/remote_workspace'
-require 'pi_customizer/workspace/local_workspace'
-require 'pi_customizer/flash/image_writer'
+require 'pi_customizer/build/environment/environment_builder_factory'
+require 'pi_customizer/build/workspace/remote_workspace'
+require 'pi_customizer/build/workspace/local_workspace'
+require 'pi_customizer/write/image_writer'
 require 'pi_customizer/utils/logex'
 
 module PiCustomizer
@@ -73,7 +73,7 @@ module PiCustomizer
 
     def write_image(image, device)
       begin
-        ImageWriter.write(image, device)
+        ImageWriter.new(false).write(image, device)
       rescue Exception => e
         $logger.error e.message
       end

@@ -50,9 +50,9 @@ module PiBuildModifier
 
   class WPASupplicant
 
-    PASSKEY = 'passphrase'
+    PASSPHRASE = 'passphrase'
 
-    WPA_PASSKEY = 'wpa_passphrase'
+    WPA_PASSPHRASE = 'wpa_passphrase'
 
     SSID = 'ssid'
 
@@ -60,9 +60,9 @@ module PiBuildModifier
 
     ##
     # By default, WPASupplicant is configured with:
-    # wpa_country: DE
-    # template: '/templates/wpa_supplicant.conf.erb'
-    # output path: 'stage2/02-net-tweaks/files/wpa_supplicant.conf'
+    # wpa_country:  DE
+    # template:     './templates/wpa_supplicant.conf.erb'
+    # output path:  'stage2/02-net-tweaks/files/wpa_supplicant.conf'
 
     def initialize
       @networks = map_network(nil)
@@ -75,8 +75,15 @@ module PiBuildModifier
       ERBMapper.new(self, workspace)
     end
 
+    #TODO: test
+    def check(json_data)
+      if not File.file?(@relative_output_path)
+        raise "File #{relative_output_path} does not exist"
+      end
+    end
+
     ##
-    # map the json configuration to the configuration of the build process
+    # map the 'wifi' section in the json configuration to the instance variables.
 
     def map(json_data)
       unless json_data.nil?
@@ -95,10 +102,10 @@ module PiBuildModifier
                  else
                    'no_ssid'
                  end
-          psk = if rd.has_key?(PASSKEY)
-                  OpenSSL::PKCS5.pbkdf2_hmac_sha1(rd[PASSKEY], ssid, 4096, 32).unpack("H*").first
-                elsif rd.has_key?(WPA_PASSKEY)
-                  rd[WPA_PASSKEY]
+          psk = if rd.has_key?(PASSPHRASE)
+                  OpenSSL::PKCS5.pbkdf2_hmac_sha1(rd[PASSPHRASE], ssid, 4096, 32).unpack("H*").first
+                elsif rd.has_key?(WPA_PASSPHRASE)
+                  rd[WPA_PASSPHRASE]
                 else
                   'no_psk'
                 end

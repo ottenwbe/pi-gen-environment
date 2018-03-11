@@ -21,7 +21,7 @@
 require_relative '../../spec_helper'
 require 'fileutils'
 require 'pathname'
-require 'pi_customizer/workspace/remote_workspace'
+require 'pi_customizer/build/workspace/remote_workspace'
 
 
 RSpec.describe PiCustomizer::Workspace::RemoteWorkspace do

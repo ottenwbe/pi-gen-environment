@@ -18,59 +18,56 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'fileutils'
 require 'pi_customizer/utils/logex'
-require 'pi_customizer/environment/environment'
 
 module PiCustomizer
   module Environment
-    class AWS < EnvironmentControl
 
-      def build
+    ##
+    # EnvironmentControl defines the build steps that must be supported for a concrete environment
 
-        puts 'NOTE: AWS is not yet officially supported!'
+    class EnvironmentControl
 
-        create_ssh_folder
-        create_keys
-        begin
-          terraform
-        ensure
-          del_keys
-        end
+      attr_reader :workspace, :config
+
+      def initialize(remote_workspace, local_workspace)
+        @workspace = remote_workspace
+        @config = local_workspace
       end
 
-      def terraform
-        puts 'Build env with terraform'
-        Dir.chdir 'envs/aws' do
-          system 'terraform plan'
-          system 'terraform apply'
-        end
+      def check
+        $logger.warn '[Check] skipped...'
       end
 
-      def create_keys(key_name = 'pi-builder')
-        $logger.info 'Create AWS key unless it exists'
-        FileUtils.mkdir_p 'ssh'
-        unless File.file?("ssh/#{key_name}.pub")
-          system "ssh-keygen -t rsa -C pi-builder -P '' -f ssh/#{key_name} -b 4096"
-          FileUtils.mv "ssh/#{key_name}", "ssh/#{key_name}.pem"
-          FileUtils.chmod 400, "ssh/#{key_name}.pem"
-        end
+      def prepare
+        $logger.warn '[Prepare] skipped...'
       end
 
-      def del_keys(key_name = 'pi-builder')
-        if File.file?("ssh/#{key_name}.pub")
-          FileUtils.rm "ssh/#{key_name}.pub"
-        end
-        if File.file?("ssh/#{key_name}.pem")
-          FileUtils.rm "ssh/#{key_name}.pem"
-        end
+      def start
+        $logger.warn '[Start] skipped...'
       end
 
-      def create_ssh_folder
-        unless File.directory?('ssh')
-          FileUtils.mkdir_p 'ssh'
-        end
+      def build_image
+        $logger.warn '[Build Image] skipped...'
       end
+
+      def publish
+        $logger.warn '[Publish] skipped...'
+      end
+
+      def clean_up
+        $logger.warn '[Clean up] skipped...'
+      end
+
+      def stop
+        $logger.warn '[Stop] skipped...'
+      end
+
+      def ensure
+        $logger.info '[Ensure] skipped...'
+      end
+
     end
   end
 end
+

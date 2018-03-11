@@ -18,15 +18,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/environment/environment'
-require 'pi_customizer/environment/aws/aws'
-require 'pi_customizer/environment/vagrant/vagrant'
-require 'pi_customizer/environment/docker/docker'
-require 'pi_customizer/builder/builder'
-require 'pi_customizer/builder/prepare_start_execute_builder'
-require 'pi_customizer/builder/start_prepare_execute_builder'
-require 'pi_customizer/workspace/remote_workspace'
-require 'pi_customizer/workspace/local_workspace'
+require 'pi_customizer/build/environment/environment'
+require 'pi_customizer/build/environment/aws/aws'
+require 'pi_customizer/build/environment/vagrant/vagrant'
+require 'pi_customizer/build/environment/docker/docker'
+require 'pi_customizer/build/builder/builder'
+require 'pi_customizer/build/builder/prepare_start_execute_builder'
+require 'pi_customizer/build/builder/start_prepare_execute_builder'
+require 'pi_customizer/build/workspace/remote_workspace'
+require 'pi_customizer/build/workspace/local_workspace'
 require 'pi_customizer/utils/logex'
 
 
@@ -50,7 +50,7 @@ module PiCustomizer
           env_builder = Builder::StartExecuteBuilder.new(environment, skip_build_steps)
         else
           $logger.warn 'No valid build environment defined!'
-          env_builder = Builder::PiBuilder.new(environment)
+          env_builder = Builder::PiBuilder.new(environment, skip_build_steps)
       end
       env_builder
     end

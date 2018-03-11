@@ -24,7 +24,7 @@ require 'rspec'
 require 'pi_customizer'
 require 'pi_customizer/utils/logex'
 require 'pi_customizer/version'
-require 'pi_customizer/workspace/local_workspace'
+require 'pi_customizer/build/workspace/local_workspace'
 require 'pi_customizer/utils/logex'
 
 
@@ -78,8 +78,10 @@ describe PiCustomizer::PiCustomizer do
 
   context 'write' do
     it 'triggers the write of a given image to a given device' do
-      expect(PiCustomizer::ImageWriter).to receive(:write).with(anything(), anything())
-      PiCustomizer::PiCustomizer.start(%w(write test.img /dev/null))
+      expected_img = 'test.img'
+      expected_dev = '/dev/null'
+      expect_any_instance_of(PiCustomizer::ImageWriter).to receive(:write).with(expected_img, expected_dev)
+      PiCustomizer::PiCustomizer.start(['write', "#{expected_img}", "#{expected_dev}"])
     end
   end
 

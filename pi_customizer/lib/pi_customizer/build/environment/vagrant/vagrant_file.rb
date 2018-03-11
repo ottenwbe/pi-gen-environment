@@ -20,8 +20,8 @@
 
 require 'erb'
 require 'fileutils'
-require 'pi_customizer/workspace/remote_workspace'
-require 'pi_customizer/workspace/local_workspace'
+require 'pi_customizer/build/workspace/remote_workspace'
+require 'pi_customizer/build/workspace/local_workspace'
 
 module PiCustomizer
   module Environment

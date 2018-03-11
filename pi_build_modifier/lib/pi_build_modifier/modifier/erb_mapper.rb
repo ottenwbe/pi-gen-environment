@@ -35,6 +35,10 @@ module PiBuildModifier
       @output_path = working_dir + '/' + @data.relative_output_path
     end
 
+    def check(json_data)
+      @data.check(json_data)
+    end
+
     def map(json_data)
       @data.map(json_data)
     end

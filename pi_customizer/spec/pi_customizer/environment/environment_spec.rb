@@ -20,7 +20,7 @@
 
 require_relative '../../spec_helper'
 require 'rspec'
-require 'pi_customizer/environment/environment'
+require 'pi_customizer/build/environment/environment'
 require 'pi_customizer/utils/logex'
 
 RSpec.describe PiCustomizer::Environment::EnvironmentControl do

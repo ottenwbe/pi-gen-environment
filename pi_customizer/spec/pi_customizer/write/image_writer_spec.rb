@@ -18,35 +18,41 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/environment/environment_builder_factory'
-require 'pi_customizer/builder/build_executor'
+require_relative '../../spec_helper'
+require 'pi_customizer/write/image_writer'
+require 'pi_customizer/utils/logex'
 
-module PiCustomizer
-  module Builder
-    class PiBuilder
 
-      attr_reader :build_executor
+describe PiCustomizer::ImageWriter do
 
-      def initialize(environment, skip_build_steps)
-        @build_executor = BuildExecutor.new(environment,skip_build_steps)
-      end
+  let(:zip_img_file) {File.dirname(__FILE__) + '/../../fixtures/image.zip'}
+  let(:img_file) {File.dirname(__FILE__) + '/../../fixtures/image.img'}
+  let(:tmp_folder) {File.dirname(__FILE__) + '/tmp'}
 
-      def build
-        begin
-          execute_builder
-        rescue Exception => e
-          $logger.error e.message
-        ensure
-          ensure_builder
-        end
-      end
-
-      protected def ensure_builder
-      end
-
-      protected def execute_builder
-      end
-
-    end
+  before do
+    FileUtils.mkdir_p tmp_folder
   end
+
+  after do
+    FileUtils.rm_rf(tmp_folder)
+  end
+
+  it 'raises an error when the format is not correct' do
+    expect {PiCustomizer::ImageWriter.new(false).write('test.txt', '/dev/null')}.to raise_error
+  end
+
+  it 'uses dd to write an image to a device' do
+    #When
+    PiCustomizer::ImageWriter.new(false).write(img_file, tmp_folder + '/img.img')
+    #Then
+    expect(Pathname.new(tmp_folder + '/img.img')).to be_file
+  end
+
+  it 'uses dd to write a zipped image to a device' do
+    #When
+    PiCustomizer::ImageWriter.new(false).write(zip_img_file, tmp_folder + '/zip.img')
+    #Then
+    expect(Pathname.new(tmp_folder + '/zip.img')).to be_file
+  end
+
 end

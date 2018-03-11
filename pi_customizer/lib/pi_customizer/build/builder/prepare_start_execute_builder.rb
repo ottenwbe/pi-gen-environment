@@ -18,58 +18,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/utils/logex'
+require 'pi_customizer/build/builder/builder'
 
 module PiCustomizer
+  module Builder
+    class PrepareExecuteBuilder < PiBuilder
 
-  ##
-  # ImageWriter writes raspberry pi images to devices (e.g., SD cards)
-
-  class ImageWriter
-
-    def self.write(image, device, check_root = true)
-      check(check_root)
-      initialize
-      dispatch_write(image, device)
-    end
-
-    ##
-    # Check prerequisites, e.g., root access
-
-    def self.check(check_root)
-      if check_root
-        raise 'Must run as root' unless Process.uid == 0
+      protected def execute_builder
+        @build_executor.check
+        @build_executor.prepare
+        @build_executor.publish
+        @build_executor.clean_up
+        @build_executor.start
+        @build_executor.build_image
+        @build_executor.stop
       end
-    end
 
-    def self.initialize
-      @zip_formats = ['.zip']
-      @img_formats = ['.img']
-    end
-
-    def self.dispatch_write(image, device)
-      extension = File.extname(image)
-      if @zip_formats.include? extension
-        write_zip(image, device)
-      elsif @img_formats.include? extension
-        write_img(image, device)
-      else
-        raise 'No valid Image Format'
+      protected def ensure_builder
+        @build_executor.ensure
       end
+
     end
-
-    def self.write_zip(image, device)
-      system "unzip -p #{image} | dd of=#{device} bs=4M conv=fsync"
-    end
-
-    def self.write_img(image, device)
-      system "dd if=#{image} of=#{device} bs=4M conv=fsync"
-    end
-
-    private_class_method :write_zip
-    private_class_method :write_img
-    private_class_method :initialize
-
   end
 end
-

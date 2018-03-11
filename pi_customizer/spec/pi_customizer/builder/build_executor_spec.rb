@@ -20,8 +20,8 @@
 
 require_relative '../../spec_helper'
 require 'rspec'
-require 'pi_customizer/builder/build_executor'
-require 'pi_customizer/environment/environment'
+require 'pi_customizer/build/builder/build_executor'
+require 'pi_customizer/build/environment/environment'
 
 describe PiCustomizer::Builder::BuildExecutor do
 

@@ -18,26 +18,53 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/builder/builder'
+require 'pi_customizer/utils/logex'
 
 module PiCustomizer
-  module Builder
-    class PrepareExecuteBuilder < PiBuilder
 
-      protected def execute_builder
-        @build_executor.check
-        @build_executor.prepare
-        @build_executor.publish
-        @build_executor.clean_up
-        @build_executor.start
-        @build_executor.build_image
-        @build_executor.stop
-      end
+  ##
+  # ImageWriter writes raspberry pi images to devices (e.g., SD cards)
 
-      protected def ensure_builder
-        @build_executor.ensure
-      end
+  class ImageWriter
 
+    def initialize(as_root)
+      @zip_formats = ['.zip']
+      @img_formats = ['.img']
+      @as_root = as_root
     end
+
+    def write(image, device)
+      dispatch_write(image, device)
+    end
+
+    private def dispatch_write(image, device)
+      extension = File.extname(image)
+      if @zip_formats.include? extension
+        write_zip(image, device)
+      elsif @img_formats.include? extension
+        write_img(image, device)
+      else
+        raise 'No valid image format'
+      end
+    end
+
+    private def write_zip(image, device)
+      run("unzip -p #{image} | dd of=#{device} bs=4M conv=fsync", @as_root)
+    end
+
+    private def write_img(image, device)
+      run("dd if=#{image} of=#{device} bs=4M conv=fsync", @as_root)
+    end
+
+    private def run(command, as_root)
+      $logger.info 'Executing run as_root=' + as_root.to_s
+      if as_root
+        system 'sudo ' + command
+      else
+        system command
+      end
+    end
+
   end
 end
+

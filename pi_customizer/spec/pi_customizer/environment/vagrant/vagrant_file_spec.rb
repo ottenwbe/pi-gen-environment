@@ -19,8 +19,8 @@
 # SOFTWARE.
 
 require_relative '../../../spec_helper'
-require 'pi_customizer/environment/vagrant/vagrant_file'
-require 'pi_customizer/workspace/local_workspace'
+require 'pi_customizer/build/environment/vagrant/vagrant_file'
+require 'pi_customizer/build/workspace/local_workspace'
 require 'fileutils'
 require 'pathname'
 

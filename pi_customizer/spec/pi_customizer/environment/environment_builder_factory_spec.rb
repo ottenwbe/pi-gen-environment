@@ -20,9 +20,9 @@
 
 require_relative '../../spec_helper'
 require 'rspec'
-require 'pi_customizer/environment/environment_builder_factory'
-require 'pi_customizer/environment/docker/docker'
-require 'pi_customizer/environment/aws/aws'
+require 'pi_customizer/build/environment/environment_builder_factory'
+require 'pi_customizer/build/environment/docker/docker'
+require 'pi_customizer/build/environment/aws/aws'
 
 module PiCustomizer
   module Environment

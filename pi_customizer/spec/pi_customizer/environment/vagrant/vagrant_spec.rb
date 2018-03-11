@@ -21,7 +21,7 @@
 require_relative '../../../spec_helper'
 require 'fileutils'
 require 'pathname'
-require 'pi_customizer/environment/vagrant/vagrant'
+require 'pi_customizer/build/environment/vagrant/vagrant'
 
 module PiCustomizer
   module Environment

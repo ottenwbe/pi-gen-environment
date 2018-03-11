@@ -19,7 +19,7 @@
 # SOFTWARE.
 
 require_relative '../../spec_helper'
-require 'pi_customizer/environment/aws/aws'
+require 'pi_customizer/build/environment/aws/aws'
 require 'fileutils'
 require 'pathname'
 

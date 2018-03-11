@@ -18,41 +18,40 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../../spec_helper'
-require 'pi_customizer/flash/image_writer'
-require 'pi_customizer/utils/logex'
+require 'pi_customizer/build/environment/environment_builder_factory'
+require 'pi_customizer/build/builder/build_executor'
 
+module PiCustomizer
+  module Builder
 
-describe PiCustomizer::ImageWriter do
+    ##
+    # PiBuilder defines abstractly the steps of a build process.
+    # However, the concrete orchestration of the build process's steps is done by its sub-classes.
 
-  let(:zip_img_file) {File.dirname(__FILE__) + '/../../fixtures/image.zip'}
-  let(:img_file) {File.dirname(__FILE__) + '/../../fixtures/image.img'}
-  let(:tmp_folder) {File.dirname(__FILE__) + '/tmp'}
+    class PiBuilder
 
-  before do
-    FileUtils.mkdir_p tmp_folder
+      attr_reader :build_executor
+
+      def initialize(environment, skip_build_steps)
+        @build_executor = BuildExecutor.new(environment,skip_build_steps)
+      end
+
+      def build
+        begin
+          execute_builder
+        rescue Exception => e
+          $logger.error e.message
+        ensure
+          ensure_builder
+        end
+      end
+
+      protected def ensure_builder
+      end
+
+      protected def execute_builder
+      end
+
+    end
   end
-
-  after do
-    FileUtils.rm_rf(tmp_folder)
-  end
-
-  it 'raises an error when the format is not correct' do
-    expect {PiCustomizer::ImageWriter.write('test.txt', '/dev/null', false)}.to raise_error
-  end
-
-  it 'uses dd to write an image to a device' do
-    #When
-    PiCustomizer::ImageWriter.write(img_file, tmp_folder + '/img.img', false)
-    #Then
-    expect(Pathname.new(tmp_folder + '/img.img')).to be_file
-  end
-
-  it 'uses dd to write a zipped image to a device' do
-    #When
-    PiCustomizer::ImageWriter.write(zip_img_file, tmp_folder + '/zip.img', false)
-    #Then
-    expect(Pathname.new(tmp_folder + '/zip.img')).to be_file
-  end
-
 end

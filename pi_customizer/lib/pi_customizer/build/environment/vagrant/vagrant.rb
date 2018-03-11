@@ -19,9 +19,9 @@
 # SOFTWARE.
 
 require 'fileutils'
-require 'pi_customizer/environment/vagrant/vagrant_file'
+require 'pi_customizer/build/environment/vagrant/vagrant_file'
+require 'pi_customizer/build/environment/environment'
 require 'pi_customizer/utils/logex'
-require 'pi_customizer/environment/environment'
 
 module PiCustomizer
   module Environment

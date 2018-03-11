@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/builder/builder'
+require 'pi_customizer/build/builder/builder'
 
 module PiCustomizer
   module Builder
