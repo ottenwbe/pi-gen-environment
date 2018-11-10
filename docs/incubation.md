@@ -1,14 +1,14 @@
 Potential improvements:
 
 
+* As a builder of a pi image I want to add ssh-keys and bake them into the image (hostkey, admin users public key, ...) to avoid adding it afterwards manually
+* As a builder of a pi image I want to be able to disable the swap file for my image, e.g., to be able to install kubernetes on it
+    * sudo systemctl disable dphys-swapfile
+* As a maintainer of the pi image build sources fork I want to be informed if the templates used for the pi_build_modifier are out of date, to avoid inconsistencies
+
 * Add users
 
-* Add ssh-keys (hostkey, user, ...)
-
 * Change hostname
-
-* Disable swapfile 
-    * sudo systemctl disable dphys-swapfile
 
 * Install Docker
      * echo deb https://apt.dockerproject.org/repo debian-stretch main > /etc/apt/sources.list.d/docker.list; apt update

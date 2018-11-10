@@ -49,7 +49,7 @@ module PiBuildModifier
     def map(json_data)
       unless json_data.nil? || !json_data.has_key?(C_GROUPS)
         if json_data[C_GROUPS].has_key?(C_GROUP_MEMORY) && json_data[C_GROUPS][C_GROUP_MEMORY]
-          @c_groups << 'cgroup_memory=1'
+          @c_groups << 'cgroup_enable=memory cgroup_memory=1 swapaccount=1'
         end
       end
     end
