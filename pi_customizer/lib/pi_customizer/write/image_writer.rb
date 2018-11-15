@@ -27,33 +27,32 @@ module PiCustomizer
 
   class ImageWriter
 
-    def initialize(as_root)
+    def initialize()
       @zip_formats = ['.zip']
       @img_formats = ['.img']
-      @as_root = as_root
     end
 
-    def write(image, device)
-      dispatch_write(image, device)
+    def write(image, device, as_root)
+      dispatch_write(image, device, as_root)
     end
 
-    private def dispatch_write(image, device)
+    private def dispatch_write(image, device, as_root)
       extension = File.extname(image)
       if @zip_formats.include? extension
-        write_zip(image, device)
+        write_zip(image, device, as_root)
       elsif @img_formats.include? extension
-        write_img(image, device)
+        write_img(image, device, as_root)
       else
         raise 'No valid image format'
       end
     end
 
-    private def write_zip(image, device)
-      run("unzip -p #{image} | dd of=#{device} bs=4M conv=fsync", @as_root)
+    private def write_zip(image, device, as_root)
+      run("unzip -p #{image} | dd of=#{device} bs=4M conv=fsync", as_root)
     end
 
-    private def write_img(image, device)
-      run("dd if=#{image} of=#{device} bs=4M conv=fsync", @as_root)
+    private def write_img(image, device, as_root)
+      run("dd if=#{image} of=#{device} bs=4M conv=fsync", as_root)
     end
 
     private def run(command, as_root)

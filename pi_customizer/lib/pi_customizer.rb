@@ -70,10 +70,12 @@ module PiCustomizer
     # Write an image to a SD card
 
     desc 'write IMAGE DEVICE', 'Write an image to a device.'
+    method_option :as_root, :default => false
 
     def write_image(image, device)
       begin
-        ImageWriter.new(false).write(image, device)
+        puts "hi there"
+        ImageWriter.new().write(image, device, "#{options[:as_root]}" == 'as_root')
       rescue Exception => e
         $logger.error e.message
       end

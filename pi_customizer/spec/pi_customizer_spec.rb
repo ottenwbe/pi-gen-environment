@@ -80,8 +80,15 @@ describe PiCustomizer::PiCustomizer do
     it 'triggers the write of a given image to a given device' do
       expected_img = 'test.img'
       expected_dev = '/dev/null'
-      expect_any_instance_of(PiCustomizer::ImageWriter).to receive(:write).with(expected_img, expected_dev)
+      expect_any_instance_of(PiCustomizer::ImageWriter).to receive(:write).with(expected_img, expected_dev, false)
       PiCustomizer::PiCustomizer.start(['write', "#{expected_img}", "#{expected_dev}"])
+    end
+    it 'can trigger the write with a root flag' do
+      allow(PiCustomizer::ImageWriter).to receive(:dispatch_write)
+      expected_img = 'test.img'
+      expected_dev = '/dev/null'
+      expect_any_instance_of(PiCustomizer::ImageWriter).to receive(:write).with(expected_img, expected_dev, true)
+      PiCustomizer::PiCustomizer.start(['write', "#{expected_img}", "#{expected_dev}", '--as_root'])
     end
   end
 
