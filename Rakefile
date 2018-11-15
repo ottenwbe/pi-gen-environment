@@ -51,7 +51,7 @@ task :acceptance do
   end
 end
 
-task :acceptancrae => [:spec, 'install:local']
+task :acceptance => [:spec, 'install:local']
 
 # release task
 
