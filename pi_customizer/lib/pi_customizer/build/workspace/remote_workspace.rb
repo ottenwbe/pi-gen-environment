@@ -24,7 +24,14 @@ require 'pi_customizer/utils/logex'
 module PiCustomizer
   module Workspace
 
+    ##
+    # the default directory at the build environment where the build sources are cloned to
+
     DEFAULT_REMOTE_WORKSPACE_DIRECTORY = '/build/pi-gen'
+
+    ##
+    # the default directory for the build sources
+
     DEFAULT_GIT_PATH = 'https://github.com/ottenwbe/pi-gen.git'
 
     ##

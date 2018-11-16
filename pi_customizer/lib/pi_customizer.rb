@@ -67,7 +67,7 @@ module PiCustomizer
     end
 
     ##
-    # Write an image to a SD card
+    # Allow uswers to write an image to a SD card
 
     desc 'write IMAGE DEVICE', 'Write an image to a device.'
     method_option :as_root, :default => false
