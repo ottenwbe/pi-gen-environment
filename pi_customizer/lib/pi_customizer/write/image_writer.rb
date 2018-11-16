@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,9 @@ module PiCustomizer
       @zip_formats = ['.zip']
       @img_formats = ['.img']
     end
+
+    ##
+    # writes zipped (or unzipped) images to a given device
 
     def write(image, device, as_root)
       dispatch_write(image, device, as_root)
