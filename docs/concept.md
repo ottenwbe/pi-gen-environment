@@ -18,5 +18,7 @@
 1. Delete Environment
 
 # Modes
-1. Prepare and Run
-1. Start and Adapt
+1. Prepare and Run - Prepare everything for the environment (e.g., a Vagrantfile) and then simply run the Vagrantfile to build the image
+    1. Example: Vagrant
+1. Start and Adapt - Start an Environment (e.g., a VM in AWS) and then simply run then orchestrate the environment to build it
+    1. Examples: AWS, Docker 

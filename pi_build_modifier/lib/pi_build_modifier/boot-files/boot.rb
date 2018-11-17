@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ require 'json'
 module PiBuildModifier
 
   ##
-  # The Locale class is used to customize the locales
+  # The Locale class is used to customize locales
 
   class Boot
 
@@ -49,7 +49,7 @@ module PiBuildModifier
     def map(json_data)
       unless json_data.nil? || !json_data.has_key?(C_GROUPS)
         if json_data[C_GROUPS].has_key?(C_GROUP_MEMORY) && json_data[C_GROUPS][C_GROUP_MEMORY]
-          @c_groups << 'cgroup_memory=1'
+          @c_groups << 'cgroup_enable=memory cgroup_memory=1 swapaccount=1'
         end
       end
     end

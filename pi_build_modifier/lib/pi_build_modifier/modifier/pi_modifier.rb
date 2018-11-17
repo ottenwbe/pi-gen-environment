@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -43,8 +43,9 @@ module PiBuildModifier
       end
     end
 
-    def modify
+    def modify(do_check = false)
       load_config
+      check_all if do_check
       map_all
       modify_all
     end
@@ -59,15 +60,21 @@ module PiBuildModifier
       end
     end
 
+    private def check_all
+      @mappers.each do |mapper|
+        mapper.check(@json_data)
+      end
+    end
+
     private def map_all
-      @mappers.each do |c|
-        c.map(@json_data)
+      @mappers.each do |mapper|
+        mapper.map(@json_data)
       end
     end
 
     private def modify_all
-      @mappers.each do |c|
-        c.modify
+      @mappers.each do |mapper|
+        mapper.modify
       end
     end
   end

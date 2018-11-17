@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,8 @@ require 'pi_build_modifier/modifier/mapper'
 module PiBuildModifier
 
   ##
-  # RunModifier is a class which appends lines to the 'stage2/01-sys-tweaks/01-run.sh' file in the pi gen build repository
+  # RunModifier is a class which appends lines to the sys-tweaks run file in the pi-gen build directory.
+  # By default this is the file 'stage2/01-sys-tweaks/01-run.sh'.
 
   class RunModifier < Mapper
 
@@ -45,6 +46,9 @@ module PiBuildModifier
     def append(appender)
       @appender << appender
     end
+
+    ##
+    # modify the sys-tweaks run file by adding lines at the end of the file
 
     def modify
       open("#{@workspace}/#{@relative_output_path}", 'a') do |f|

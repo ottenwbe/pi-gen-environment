@@ -10,9 +10,12 @@
 
 The _pi_customizer_ allows you to adapt Raspbian images to your needs.
 To this end, the Raspbian image is be built from [scratch](https://github.com/ottenwbe/pi-gen.git) 
-with all customizations baked in.
+with all customizations baked into the image. 
 
-The core of the project is a set of Ruby gems which adapt the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
+The image is built in an isolated [build environment](#environments), e.g., 
+a vagrant box, which is orchestrated by the pi_customizer.
+The customization is performed by a Ruby Gem (_pi_build_modifier_) in the build environment by adapting the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
+
 
 # WIP Notice
 
@@ -95,7 +98,7 @@ Note: feature still in development
 
 To build a default image in a Vagrant box, simply execute on the command line
 
-    pi_customizer build VAGRANT
+    pi_customizer build VAGRANT -c <your-config-file>
 
 
 To customize your build:
@@ -127,7 +130,7 @@ An example of the json config file with all current configuration options
         "networks": [
           {
             "ssid": "your_ssid",            
-            "wpa_passphrase": "your_secret_psk" // Alternative: "wpa_passphrase": "your_wpa_passpharse"
+            "passphrase": "your_secret_psk" // Alternative: "wpa_passphrase": "your_wpa_passpharse"
           }
         ],
         "wpa_country": "DE"

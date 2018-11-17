@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
 require_relative '../../spec_helper'
 require 'fileutils'
 require 'pathname'
-require 'pi_customizer/workspace/remote_workspace'
+require 'pi_customizer/build/workspace/remote_workspace'
 
 
 RSpec.describe PiCustomizer::Workspace::RemoteWorkspace do

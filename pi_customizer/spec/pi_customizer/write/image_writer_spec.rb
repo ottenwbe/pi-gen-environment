@@ -18,24 +18,42 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../../../spec_helper'
-require 'fileutils'
-require 'pathname'
-require 'pi_customizer/build/environment/vagrant/vagrant'
+require_relative '../../spec_helper'
+require 'pi_customizer/write/image_writer'
+require 'pi_customizer/utils/logex'
 
-module PiCustomizer
-  module Environment
-    RSpec.describe Vagrant do
 
-      let(:vagrant_env) {Vagrant.new(nil, nil)}
+describe PiCustomizer::ImageWriter do
 
-      describe '#check' do
-        it 'checks for the existence of vagrant' do
-          expect(vagrant_env).to receive(:system).with('vagrant -v').and_return(true)
-          vagrant_env.check
-        end
-      end
+  let(:zip_img_file) {File.dirname(__FILE__) + '/../../fixtures/image.zip'}
+  let(:img_file) {File.dirname(__FILE__) + '/../../fixtures/image.img'}
+  let(:tmp_folder) {File.dirname(__FILE__) + '/tmp'}
 
-    end
+  before do
+    FileUtils.mkdir_p tmp_folder
   end
+
+  after do
+    FileUtils.rm_rf(tmp_folder)
+  end
+
+  it 'raises an error when the format is not correct' do
+    allow(PiCustomizer::ImageWriter).to receive(:dispatch_write)
+    expect {PiCustomizer::ImageWriter.new().write('test.txt', '/dev/null')}.to raise_error
+  end
+
+  it 'uses dd to write an image to a device' do
+    #When
+    PiCustomizer::ImageWriter.new().write(img_file, tmp_folder + '/img.img')
+    #Then
+    expect(Pathname.new(tmp_folder + '/img.img')).to be_file
+  end
+
+  it 'uses dd to write a zipped image to a device' do
+    #When
+    PiCustomizer::ImageWriter.new().write(zip_img_file, tmp_folder + '/zip.img')
+    #Then
+    expect(Pathname.new(tmp_folder + '/zip.img')).to be_file
+  end
+
 end

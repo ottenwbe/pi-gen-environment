@@ -1,17 +1,20 @@
-build_projects = %w(pi_build_modifier)
-install_projects = %w(pi_customizer)
-all_gems = (build_projects+install_projects).uniq
+PI_CUSTOMIZER = 'pi_customizer'
+PI_BUILD_MODIFIER = 'pi_build_modifier'
+
+build_projects = [PI_CUSTOMIZER]
+install_projects = [PI_BUILD_MODIFIER]
+all_gems = (build_projects + install_projects).uniq
 files = %w(pi_build_modifier/lib/**/*.rb pi_customizer/lib/**/*.rb)
 
 ##
 # The spec task executes rspec tests for all gems of the pi_customizer project.
-# This task is executed by default when 'rspec' is called.
+# This task is executed by default when 'rake' is called on the command line
 
 begin
   require 'rspec/core/rake_task'
 
   RSpec::Core::RakeTask.new(:spec) do |t|
-
+    # find all spec files (for all gems)
     pattern = ''
     all_gems.each do |gem|
       if pattern == ''
@@ -20,6 +23,7 @@ begin
         pattern = pattern + ',' + "#{gem}/spec/**{,/*/**}/*_spec.rb"
       end
     end
+    # tell rspec to execute tests on all spec files
     t.pattern = pattern
   end
 rescue LoadError
@@ -28,6 +32,7 @@ rescue LoadError
 end
 
 task :default => :spec
+
 
 # release task
 
@@ -57,7 +62,7 @@ end
 
 # build tasks
 
-desc 'Build all sub all_gems'
+desc "Build all gems (i.e., #{PI_BUILD_MODIFIER} and #{PI_CUSTOMIZER})"
 task :build do
   all_gems.each do |p|
     Dir.chdir p do

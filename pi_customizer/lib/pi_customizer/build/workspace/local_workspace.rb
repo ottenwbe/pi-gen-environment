@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ module PiCustomizer
     ##
     # The default path which points to the configuration file
 
-    DEFAULT_CONFIG_PATH = File.join(File.dirname(__FILE__), '/../../../resources/config.json')
+    DEFAULT_CONFIG_PATH = File.join(File.dirname(__FILE__), '/../../../../resources/config.json')
 
     ##
     # The default directory which is used to store temporary build files, e.g., the Vagrantfile for a build with vagrant

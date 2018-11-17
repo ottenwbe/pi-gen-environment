@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,9 @@
 module PiBuildModifier
 
   ##
-  # Mapper represents an abstract class that is used by the modifier to call the necessary steps in order to map values
-  # to an object and then modify it
+  # Mapper represents a container that is used by the pi_build_modifier to call
+  # the necessary steps to modify a build configuration.
+  # It triggers check, mapping, and modification steps for one build configuration.
 
   class Mapper
 
@@ -30,6 +31,10 @@ module PiBuildModifier
 
     def initialize(data)
       @data = data
+    end
+
+    def check(json_data)
+      @data.check(json_data) unless @data.nil?
     end
 
     def map(json_data)

@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,10 @@ module PiBuildModifier
       @data = data
       @template_path = @data.template_path
       @output_path = working_dir + '/' + @data.relative_output_path
+    end
+
+    def check(json_data)
+      @data.check(json_data)
     end
 
     def map(json_data)

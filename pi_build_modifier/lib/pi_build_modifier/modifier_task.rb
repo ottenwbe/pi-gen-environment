@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,12 @@ require 'pi_build_modifier/boot-files/boot'
 
 module PiBuildModifier
   module Task
+
+    ##
+    # Modifier triggers all changes specified in the config. To this end,
+    # it configures and calls specialized mappers which map the config to
+    # the the individual pi-gen build scripts.
+
     class Modifier
 
       attr_reader :pi_modifier

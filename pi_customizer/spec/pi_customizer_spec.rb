@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ require 'rspec'
 require 'pi_customizer'
 require 'pi_customizer/utils/logex'
 require 'pi_customizer/version'
-require 'pi_customizer/workspace/local_workspace'
+require 'pi_customizer/build/workspace/local_workspace'
 require 'pi_customizer/utils/logex'
 
 
@@ -75,4 +75,15 @@ describe PiCustomizer::PiCustomizer do
       PiCustomizer::PiCustomizer.start(%w(version))
     end
   end
+
+  context 'write' do
+    it 'triggers the write of a given image to a given device' do
+      allow(PiCustomizer::ImageWriter).to receive(:dispatch_write)
+      expected_img = 'test.img'
+      expected_dev = '/dev/null'
+      expect_any_instance_of(PiCustomizer::ImageWriter).to receive(:write).with(expected_img, expected_dev)
+      PiCustomizer::PiCustomizer.start(['write', "#{expected_img}", "#{expected_dev}"])
+    end
+  end
+
 end

@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -49,7 +49,7 @@ module PiBuildModifier
       unless json_data.nil?
         @enable = 'disable' if json_data.has_key?('ssh') && json_data['ssh'].has_key?('enabled') && (not json_data['ssh']['enabled'])
       else
-        $logger.error 'Invalid json data.'
+        $logger.error 'Ssh could not be configured: Invalid json data.'
       end
     end
 

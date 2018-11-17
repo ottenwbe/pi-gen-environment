@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,11 +18,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/environment/environment_builder_factory'
+require 'pi_customizer/build/environment/environment_builder_factory'
 require 'pi_customizer/utils/logex'
 
 module PiCustomizer
   module Builder
+
+    ##
+    # BuildExecutor triggers the steps of a build process in a given environment (e.g., a vagrant box).
+    # It skips individual steps in the build process when they are defined as skip_build_steps.
+
     class BuildExecutor
 
       attr_reader :env, :skip_build_steps

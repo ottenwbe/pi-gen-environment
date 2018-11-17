@@ -18,22 +18,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../../../spec_helper'
-require 'fileutils'
-require 'pathname'
-require 'pi_customizer/build/environment/vagrant/vagrant'
+require 'pi_customizer/build/builder/builder'
 
 module PiCustomizer
-  module Environment
-    RSpec.describe Vagrant do
+  module Builder
+    class StartExecuteBuilder < PiBuilder
 
-      let(:vagrant_env) {Vagrant.new(nil, nil)}
+      protected def execute_builder
+        @build_executor.check
+        @build_executor.start
+        @build_executor.prepare
+        @build_executor.build_image
+        @build_executor.publish
+        @build_executor.clean_up
+        @build_executor.stop
+      end
 
-      describe '#check' do
-        it 'checks for the existence of vagrant' do
-          expect(vagrant_env).to receive(:system).with('vagrant -v').and_return(true)
-          vagrant_env.check
-        end
+      protected def ensure_builder
+        @build_executor.ensure
       end
 
     end

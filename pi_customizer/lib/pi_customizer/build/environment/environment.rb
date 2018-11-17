@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,26 +18,56 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/builder/builder'
+require 'pi_customizer/utils/logex'
 
 module PiCustomizer
-  module Builder
-    class PrepareExecuteBuilder < PiBuilder
+  module Environment
 
-      protected def execute_builder
-        @build_executor.check
-        @build_executor.prepare
-        @build_executor.publish
-        @build_executor.clean_up
-        @build_executor.start
-        @build_executor.build_image
-        @build_executor.stop
+    ##
+    # EnvironmentControl defines the build steps that must be supported for a concrete environment
+
+    class EnvironmentControl
+
+      attr_reader :workspace, :config
+
+      def initialize(remote_workspace, local_workspace)
+        @workspace = remote_workspace
+        @config = local_workspace
       end
 
-      protected def ensure_builder
-        @build_executor.ensure
+      def check
+        $logger.warn '[Check] skipped...'
+      end
+
+      def prepare
+        $logger.warn '[Prepare] skipped...'
+      end
+
+      def start
+        $logger.warn '[Start] skipped...'
+      end
+
+      def build_image
+        $logger.warn '[Build Image] skipped...'
+      end
+
+      def publish
+        $logger.warn '[Publish] skipped...'
+      end
+
+      def clean_up
+        $logger.warn '[Clean up] skipped...'
+      end
+
+      def stop
+        $logger.warn '[Stop] skipped...'
+      end
+
+      def ensure
+        $logger.info '[Ensure] skipped...'
       end
 
     end
   end
 end
+

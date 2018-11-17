@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,7 +19,7 @@
 # SOFTWARE.
 
 require_relative '../../spec_helper'
-require 'pi_customizer/environment/aws/aws'
+require 'pi_customizer/build/environment/aws/aws'
 require 'fileutils'
 require 'pathname'
 

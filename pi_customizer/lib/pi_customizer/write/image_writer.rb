@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,49 +21,47 @@
 require 'pi_customizer/utils/logex'
 
 module PiCustomizer
-  module Environment
-    class EnvironmentControl
 
-      attr_reader :workspace, :config
+  ##
+  # ImageWriter writes raspberry pi images to devices (e.g., SD cards)
 
-      def initialize(remote_workspace, local_workspace)
-        @workspace = remote_workspace
-        @config = local_workspace
-      end
+  class ImageWriter
 
-      def check
-        $logger.warn '[Check] skipped...'
-      end
-
-      def prepare
-        $logger.warn '[Prepare] skipped...'
-      end
-
-      def start
-        $logger.warn '[Start] skipped...'
-      end
-
-      def build_image
-        $logger.warn '[Build Image] skipped...'
-      end
-
-      def publish
-        $logger.warn '[Publish] skipped...'
-      end
-
-      def clean_up
-        $logger.warn '[Clean up] skipped...'
-      end
-
-      def stop
-        $logger.warn '[Stop] skipped...'
-      end
-
-      def ensure
-        $logger.info '[Ensure] skipped...'
-      end
-
+    def initialize()
+      @zip_formats = ['.zip']
+      @img_formats = ['.img']
     end
+
+    ##
+    # writes zipped (or unzipped) images to a given device
+
+    def write(image, device)
+      dispatch_write(image, device)
+    end
+
+    private def dispatch_write(image, device)
+      extension = File.extname(image)
+      if @zip_formats.include? extension
+        write_zip(image, device)
+      elsif @img_formats.include? extension
+        write_img(image, device)
+      else
+        raise 'No valid image format'
+      end
+    end
+
+    private def write_zip(image, device)
+      run("unzip -p #{image} | dd of=#{device} bs=4M conv=fsync")
+    end
+
+    private def write_img(image, device)
+      run("dd if=#{image} of=#{device} bs=4M conv=fsync")
+    end
+
+    private def run(command)
+      system command
+    end
+
   end
 end
 

@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,8 @@
 
 require 'erb'
 require 'fileutils'
-require 'pi_customizer/workspace/remote_workspace'
-require 'pi_customizer/workspace/local_workspace'
+require 'pi_customizer/build/workspace/remote_workspace'
+require 'pi_customizer/build/workspace/local_workspace'
 
 module PiCustomizer
   module Environment

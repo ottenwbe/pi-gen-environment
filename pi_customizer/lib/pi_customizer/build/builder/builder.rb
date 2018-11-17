@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Beate Ottenwälder
+# Copyright (c) 2017-2018 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,11 +18,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/environment/environment_builder_factory'
-require 'pi_customizer/builder/build_executor'
+require 'pi_customizer/build/environment/environment_builder_factory'
+require 'pi_customizer/build/builder/build_executor'
 
 module PiCustomizer
   module Builder
+
+    ##
+    # PiBuilder defines abstractly the steps of a build process.
+    # However, the concrete orchestration of the build process's steps is done by its sub-classes.
+
     class PiBuilder
 
       attr_reader :build_executor
