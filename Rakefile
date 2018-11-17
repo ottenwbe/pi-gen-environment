@@ -3,7 +3,7 @@ PI_BUILD_MODIFIER = 'pi_build_modifier'
 
 build_projects = [PI_CUSTOMIZER]
 install_projects = [PI_BUILD_MODIFIER]
-all_gems = (build_projects+install_projects).uniq
+all_gems = (build_projects + install_projects).uniq
 files = %w(pi_build_modifier/lib/**/*.rb pi_customizer/lib/**/*.rb)
 
 ##
@@ -33,25 +33,6 @@ end
 
 task :default => :spec
 
-# acceptance testing
-
-desc 'Run acceptance tests by building an image and starting it in QEMU.
-      NOTE: Use with caution. Makes changes to your local file system.'
-task :acceptance do
-
-  #TODO: create qemu environments
-  Dir.mkdir_p '/mnt/custompi'
-
-  #system 'pi_customizer build VAGRANT --modifier-gem=pi_build_modifier/pkg/pi_build_modifier-0.3.0.pre.alpha.gem'
-  Dir.chdir 'tmp/deploy' do
-    d = DateTime.now
-    image_name = d.strftime('%Y-%m-%d-custompi-lite')
-    system 'unzip -f image_' + image_name + '.zip'
-    system 'qemu-system-arm -kernel ~/VMs/qemu/kernel-qemu-4.4.34-jessie -cpu arm1176 -m 256 -M versatilepb -serial stdio -append "root=/dev/sda2 rootfstype=ext4 rw" -hda ' + image_name + '.img -redir tcp:5022::22 -no-reboot'
-  end
-end
-
-task :acceptance => [:spec, 'install:local']
 
 # release task
 
@@ -134,11 +115,6 @@ namespace :run do
 
   desc 'run the pi_customizer and build the pi image in a docker container'
   task :docker, [:resources] do |t, args|
-    system ("ruby pi_customizer/bin/pi_customizer build DOCKER #{args[:resources]}")
-  end
-
-  desc 'run the pi_customizer and write an image to a device'
-  task :write, [:resources] do |t, args|
     system ("ruby pi_customizer/bin/pi_customizer build DOCKER #{args[:resources]}")
   end
 
