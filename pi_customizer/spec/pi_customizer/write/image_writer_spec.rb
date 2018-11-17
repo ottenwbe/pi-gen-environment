@@ -38,19 +38,20 @@ describe PiCustomizer::ImageWriter do
   end
 
   it 'raises an error when the format is not correct' do
-    expect {PiCustomizer::ImageWriter.new().write('test.txt', '/dev/null', false)}.to raise_error
+    allow(PiCustomizer::ImageWriter).to receive(:dispatch_write)
+    expect {PiCustomizer::ImageWriter.new().write('test.txt', '/dev/null')}.to raise_error
   end
 
   it 'uses dd to write an image to a device' do
     #When
-    PiCustomizer::ImageWriter.new().write(img_file, tmp_folder + '/img.img', false)
+    PiCustomizer::ImageWriter.new().write(img_file, tmp_folder + '/img.img')
     #Then
     expect(Pathname.new(tmp_folder + '/img.img')).to be_file
   end
 
   it 'uses dd to write a zipped image to a device' do
     #When
-    PiCustomizer::ImageWriter.new().write(zip_img_file, tmp_folder + '/zip.img', false)
+    PiCustomizer::ImageWriter.new().write(zip_img_file, tmp_folder + '/zip.img')
     #Then
     expect(Pathname.new(tmp_folder + '/zip.img')).to be_file
   end

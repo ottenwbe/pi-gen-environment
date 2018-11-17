@@ -137,4 +137,9 @@ namespace :run do
     system ("ruby pi_customizer/bin/pi_customizer build DOCKER #{args[:resources]}")
   end
 
+  desc 'run the pi_customizer and write an image to a device'
+  task :write, [:resources] do |t, args|
+    system ("ruby pi_customizer/bin/pi_customizer build DOCKER #{args[:resources]}")
+  end
+
 end

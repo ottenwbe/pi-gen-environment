@@ -10,11 +10,12 @@
 
 The _pi_customizer_ allows you to adapt Raspbian images to your needs.
 To this end, the Raspbian image is be built from [scratch](https://github.com/ottenwbe/pi-gen.git) 
-with all customizations baked into the image. The image is built in an isolated [build environment](#environments), e.g., 
-a vagrant box, which is orchestrated by the pi_customizer.
+with all customizations baked into the image. 
 
-The customization is done by a Ruby script (_pi_build_modifier_) in the build environment. The adapted script adapts the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
-The build script is then used to actually create the image.
+The image is built in an isolated [build environment](#environments), e.g., 
+a vagrant box, which is orchestrated by the pi_customizer.
+The customization is performed by a Ruby Gem (_pi_build_modifier_) in the build environment by adapting the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
+
 
 # WIP Notice
 
