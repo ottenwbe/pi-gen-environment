@@ -1,8 +1,8 @@
 PI_CUSTOMIZER = 'pi_customizer'
 PI_BUILD_MODIFIER = 'pi_build_modifier'
 
-build_projects = [PI_CUSTOMIZER]
-install_projects = [PI_BUILD_MODIFIER]
+build_projects = [PI_BUILD_MODIFIER]
+install_projects = [PI_CUSTOMIZER]
 all_gems = (build_projects + install_projects).uniq
 files = %w(pi_build_modifier/lib/**/*.rb pi_customizer/lib/**/*.rb)
 
