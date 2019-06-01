@@ -36,10 +36,16 @@ module PiCustomizer
         @skip_build_steps = convert_to_skip(skip_build_steps)
       end
 
+      ##
+      # check if a build environment is specified and then calls the check step for this environment
+
       def check
         check_env
         @env.check
       end
+
+      ##
+      # execute the prepare step for the build environment
 
       def prepare
         unless @skip_build_steps.include?(:prepare)
@@ -47,11 +53,17 @@ module PiCustomizer
         end
       end
 
+      ##
+      # execute the start step for the build environment
+
       def start
         unless @skip_build_steps.include?(:start)
           @env.start
         end
       end
+
+      ##
+      # execute the build_image step for the build environment
 
       def build_image
         unless @skip_build_steps.include?(:build_image)
@@ -59,11 +71,17 @@ module PiCustomizer
         end
       end
 
+      ##
+      # publish the image from the build environment
+
       def publish
         unless @skip_build_steps.include?(:publish)
           @env.publish
         end
       end
+
+      ##
+      # clean_up the build environment
 
       def clean_up
         unless @skip_build_steps.include?(:clean_up)
@@ -71,15 +89,24 @@ module PiCustomizer
         end
       end
 
+      ##
+      # execute the stop step of the environment
+
       def stop
         unless @skip_build_steps.include?(:stop)
           @env.stop
         end
       end
 
+      ##
+      # execute the ensure step of an environment
+
       def ensure
         @env.ensure
       end
+
+      ##
+      # convert a list of stringified build steps to a list of symbols
 
       private def convert_to_skip(skip_build_steps)
         if skip_build_steps.nil?
@@ -91,6 +118,9 @@ module PiCustomizer
         $logger.debug "Skipping the following build steps: #{skip_build_steps}"
         skip_build_steps
       end
+
+      ##
+      # check if an environment is specified
 
       private def check_env
         if @env.nil?

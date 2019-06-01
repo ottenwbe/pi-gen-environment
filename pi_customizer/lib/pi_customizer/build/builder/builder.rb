@@ -35,6 +35,9 @@ module PiCustomizer
         @build_executor = BuildExecutor.new(environment,skip_build_steps)
       end
 
+      ##
+      # build orchestrates an enviroment and therefore the build process of an image
+
       def build
         begin
           execute_builder
