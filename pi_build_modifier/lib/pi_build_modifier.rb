@@ -33,7 +33,7 @@ module PiBuildModifier
   class PiBuildModifier < Thor
 
     ##
-    # The modify command allows users to modify the pi-gen in a workspace
+    # The modify command allows users to modify pi-gen sources in a given workspace based on a given configuration
 
     desc 'modify CONFIG WORKSPACE', 'Modify the pi image sources at the specified WORKSPACE with the specified configuration file CONFIG.'
     def modify(config, workspace)
