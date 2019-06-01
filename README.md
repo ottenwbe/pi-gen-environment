@@ -166,7 +166,7 @@ An example of the json config file with all current configuration options
 
     ```
     sudo dnf group install "C Development Tools and Libraries"
-    sudo dnf install redhat-rpm-config git
+    sudo dnf install redhat-rpm-config git openssl-devel readline-devel
     
     git clone https://github.com/rbenv/rbenv.git ~/.rbenv
     echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.zshrc
