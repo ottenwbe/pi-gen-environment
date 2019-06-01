@@ -56,9 +56,29 @@ begin
   end
 rescue LoadError
   puts 'RSpec is not installed. This means rake is not able to build the documentation!'
-  puts '* Try: gem install rdoc!'
+  puts '* Try: gem install rdoc'
 end
 
+# version tasks
+
+desc "Show the gem's versions"
+task :version do 
+  require_relative "#{PI_CUSTOMIZER}/lib/#{PI_CUSTOMIZER}/version"
+  puts "#{PI_CUSTOMIZER} Versions"  
+  puts " "  
+  puts "*** Dev VERSION ***"
+  puts " "  
+  puts "#{PI_CUSTOMIZER}: #{PiCustomizer::VERSION} "
+  system "gem list #{PI_CUSTOMIZER} --pre --remote"  
+  puts " "    
+  require_relative "#{PI_BUILD_MODIFIER}/lib/#{PI_BUILD_MODIFIER}/version"  
+  puts "#{PI_BUILD_MODIFIER} Versions"
+  puts " "
+  puts "*** Dev VERSION ***"
+  puts " "
+  puts "#{PI_BUILD_MODIFIER}: #{PiBuildModifier::VERSION}"
+  system "gem list #{PI_BUILD_MODIFIER} --pre --remote"  
+end
 
 # build tasks
 

@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 Beate Ottenwälder
+# Copyright (c) 2017-2019 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,9 @@ module PiBuildModifier
   # PiBuildModifier implements all cli commands of pi_build_modifier.
 
   class PiBuildModifier < Thor
+
+    ##
+    # The modify command allows users to modify pi-gen sources in a given workspace based on a given configuration
 
     desc 'modify CONFIG WORKSPACE', 'Modify the pi image sources at the specified WORKSPACE with the specified configuration file CONFIG.'
     def modify(config, workspace)

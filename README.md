@@ -30,7 +30,6 @@ To customize the build process the following prerequisites are expected:
 * One of the supported build environments is accessible (see the [__Environments__](#environments) section):  
     * Vagrant 
     * Docker (feature is still in development)    
-    * AWS (feature is still in development)
 
 <a name="deploy_gem"></a>
 ## Deploy Gem
@@ -53,7 +52,7 @@ This is typically your local machine.
 ## Environments
 
 You may choose to build your pi image in a Vagrant box.
-In the future AWS ec2 and Docker container will also be supported.
+In the future Docker containers will also be supported.
 
 ### Vagrant
 
@@ -90,9 +89,6 @@ After the image is built, undo the changes.
     
     restorecon -v "${PWD}/tmp"
 
-### AWS
-
-Note: feature still in development
 
 # Usage
 
@@ -102,7 +98,7 @@ To build a default image in a Vagrant box, simply execute on the command line
 
 
 To customize your build:
-1. Any customizations have to be specified in a json configuration file (see the [__Config File__](#config_file) section for details).
+1. All customizations have to be specified in a json configuration file (see the [__Config File__](#config_file) section for details).
 1. The build process itself is then configured with command line options (see `pi_customizer help build` for details)   
      
 
@@ -164,15 +160,34 @@ An example of the json config file with all current configuration options
 
 ### Prerequisites
 
-Make sure Ruby is installed (and dependencies to build native extensions)
+* Make sure Ruby is installed (and dependencies to build native extensions). See, https://github.com/rbenv/rbenv and https://github.com/rbenv/ruby-build.
 
-On Fedora:
+  * On Fedora with zsh, this means sth. along the lines of:
 
-
+    ```
     sudo dnf group install "C Development Tools and Libraries"
-    sudo dnf install ruby ruby-devel     
-    sudo dnf install redhat-rpm-config 
+    sudo dnf install redhat-rpm-config git openssl-devel readline-devel
     
+    git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+    echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.zshrc
+    ~/.rbenv/bin/rbenv init
+    exec $SHELL
+
+    git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+    echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.zshrc
+    exec $SHELL
+    
+    rbenv install 2.5.5
+    rbenv global 2.5.5
+    ```
+
+
+* Install Gems    
+
+    ```
+    gem install bundler rake rspec rdoc
+    ```    
+
 ## Test
 
 RSpec tests can be executed for all modules by calling the following rake command in the project root.

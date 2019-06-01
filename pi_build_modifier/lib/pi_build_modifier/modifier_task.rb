@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 Beate Ottenwälder
+# Copyright (c) 2017-2019 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -39,15 +39,20 @@ module PiBuildModifier
 
       attr_reader :pi_modifier
 
+      ##
+      # Initialization and configuration of the mappers that are used to change in the pi-gen build sources
+
       def initialize(config, workspace, pi_modifier = PiModifier.new)
         @mappers = create_mappers
-        @mappers[:run_modifier].append(@mappers[:ssh]) #TODO: This connection has to be established somewhere else
         @pi_modifier = pi_modifier
         configure_pi_modifier(config, workspace)
       end
 
+      ##
+      # Defines all mappers
+
       private def create_mappers
-        {
+        mappers = {
             :wpa_supplicant => WPASupplicant.new,
             :system => System.new,
             :ssh => Ssh.new,
@@ -55,6 +60,8 @@ module PiBuildModifier
             :locale => Locale.new,
             :boot => Boot.new
         }
+        mappers[:run_modifier].append(mappers[:ssh]) #TODO: This connection has to be established somewhere else
+        mappers
       end
 
       private def configure_pi_modifier(config, workspace)

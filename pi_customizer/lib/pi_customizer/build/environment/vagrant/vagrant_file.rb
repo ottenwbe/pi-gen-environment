@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 Beate Ottenwälder
+# Copyright (c) 2017-2019 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,7 @@ module PiCustomizer
 
       def initialize(config, workspace)
         @vagrant_template_path = File.join(File.dirname(__FILE__), '/templates/Vagrantfile.erb')
-        @disk_size = '40GB'
+        @disk_size = '60GB'
         @config_file_destination = '/vagrant/config.json'
         @config = if config.nil?
                     Workspace::LocalWorkspace.new

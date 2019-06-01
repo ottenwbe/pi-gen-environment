@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 Beate Ottenwälder
+# Copyright (c) 2017-2019 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -35,13 +35,18 @@ module PiCustomizer
     DEFAULT_GIT_PATH = 'https://github.com/ottenwbe/pi-gen.git'
 
     ##
+    # the default directory for the build sources
+
+    DEFAULT_GIT_TAG = 'master'    
+
+    ##
     # The RemoteWorkspace class encapsulates the configuration of the workspace in the build environment
 
     class RemoteWorkspace
 
-      attr_reader :git_path, :workspace_directory
+      attr_reader :git_path, :workspace_directory, :git_tag
 
-      def initialize(workspace_dir = '', git_path = '')
+      def initialize(workspace_dir = '', git_path = '', git_tag = '')
         @workspace_directory = if workspace_dir.nil? or workspace_dir == ''
                                  DEFAULT_REMOTE_WORKSPACE_DIRECTORY
                                else
@@ -52,6 +57,11 @@ module PiCustomizer
                     else
                       git_path.to_s
                     end
+        @git_tag = if git_tag.nil? or git_tag == ''
+                      DEFAULT_GIT_TAG
+                    else
+                      git_tag.to_s
+                    end                    
         $logger.debug "Workspace at '#{@workspace_directory}' with sources from '#{@git_path}'"
       end
 
@@ -59,7 +69,7 @@ module PiCustomizer
       # Checks for value equality between a pair of RemoteWorkspace's attributes
 
       def ==(other)
-        (@git_path == other.git_path) && (@workspace_directory == other.workspace_directory)
+        (@git_path == other.git_path) && (@workspace_directory == other.workspace_directory) && (@git_tag == other.git_tag)
       end
 
     end

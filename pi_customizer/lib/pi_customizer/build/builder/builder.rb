@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 Beate Ottenwälder
+# Copyright (c) 2017-2019 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,7 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/build/environment/environment_builder_factory'
 require 'pi_customizer/build/builder/build_executor'
 
 module PiCustomizer
@@ -35,6 +34,9 @@ module PiCustomizer
       def initialize(environment, skip_build_steps)
         @build_executor = BuildExecutor.new(environment,skip_build_steps)
       end
+
+      ##
+      # build orchestrates an environment and therefore the build process of an image
 
       def build
         begin

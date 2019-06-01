@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 Beate Ottenwälder
+# Copyright (c) 2017-2019 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -42,11 +42,6 @@ module PiCustomizer
         env = Environment::environment_factory(ENV_AWS, '', '')
         expect(env).to be_a AWS
       end
-
-      #it 'reads the config_path variable' do
-      #  expect(STDOUT).to receive(:puts).with(match(/Config Path: cfg/)) #'Echo: - Git Path: , Workspace Path: , Config Path: cfg')
-      #  PiCustomizer.start(%w(build ECHO --config_file=cfg))
-      #end
 
     end
   end

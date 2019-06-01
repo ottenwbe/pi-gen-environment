@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 Beate Ottenwälder
+# Copyright (c) 2017-2019 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -31,9 +31,10 @@ module PiCustomizer
     let(:tmp_dir) {'tmp_vagrant_file'}
     let(:vagrant_file) {Environment::VagrantFile.new(Workspace::LocalWorkspace.new('', tmp_dir, ''), nil)}
     let(:vagrant_file_builder) {Environment::VagrantFileRenderer.new(vagrant_file)}
+    let(:test_vagrant_file) {File.dirname(__FILE__) + '/../../../fixtures/TestVagrantfile'}
 
     after(:each) do
-      FileUtils.rm_rf tmp_dir
+      #FileUtils.rm_rf tmp_dir
     end
 
     it 'renders a Vagrantfile in the given temporary directory' do
@@ -50,6 +51,7 @@ module PiCustomizer
       v_file_builder.create_from_template
       #Then
       expect(File.read(tmp_dir+'/Vagrantfile').to_s).to match(/config.vm.provision 'file', source: [-a-zA-Z0-9'\/_]+#{gem_name}/)
+      #expect(File.read(tmp_dir+'/Vagrantfile').to_s).to eq File.read(test_vagrant_file).to_s
     end
 
     it 'raises an error if the Vagrantfile.erb does not exist' do

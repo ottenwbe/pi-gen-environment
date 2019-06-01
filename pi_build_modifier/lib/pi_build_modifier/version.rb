@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 Beate Ottenwälder
+# Copyright (c) 2017-2019 Beate Ottenwälder
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,5 +19,5 @@
 # SOFTWARE.
 
 module PiBuildModifier
-  VERSION = '0.3.0-alpha'
+  VERSION = '0.4.0.pre.alpha'
 end
