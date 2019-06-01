@@ -30,7 +30,6 @@ To customize the build process the following prerequisites are expected:
 * One of the supported build environments is accessible (see the [__Environments__](#environments) section):  
     * Vagrant 
     * Docker (feature is still in development)    
-    * AWS (feature is still in development)
 
 <a name="deploy_gem"></a>
 ## Deploy Gem
@@ -53,7 +52,7 @@ This is typically your local machine.
 ## Environments
 
 You may choose to build your pi image in a Vagrant box.
-In the future AWS ec2 and Docker container will also be supported.
+In the future Docker containers will also be supported.
 
 ### Vagrant
 
@@ -90,9 +89,6 @@ After the image is built, undo the changes.
     
     restorecon -v "${PWD}/tmp"
 
-### AWS
-
-Note: feature still in development
 
 # Usage
 
