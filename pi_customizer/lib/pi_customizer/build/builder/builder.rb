@@ -18,7 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/build/environment/builder_factory'
 require 'pi_customizer/build/builder/build_executor'
 
 module PiCustomizer

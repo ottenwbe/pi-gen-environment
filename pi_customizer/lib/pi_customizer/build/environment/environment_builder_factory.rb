@@ -38,6 +38,9 @@ module PiCustomizer
     ENV_DOCKER = 'DOCKER'
     ENV_ECHO = 'ECHO'
 
+    ##
+    # The builder_factory creates a builder for the selected environment env 
+
     def Environment.builder_factory(env, local_workspace, remote_workspace, skip_build_steps)
 
       environment = environment_factory(env, local_workspace, remote_workspace)
@@ -54,6 +57,9 @@ module PiCustomizer
       end
       env_builder
     end
+
+    ##
+    # The environment_factory creates an environment configuration tailored to the selected build environment env
 
     def Environment.environment_factory(env, local_workspace, remote_workspace)
       case env

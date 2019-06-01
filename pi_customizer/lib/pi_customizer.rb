@@ -21,7 +21,7 @@
 require 'thor'
 require 'fileutils'
 require 'pi_customizer/version'
-require 'pi_customizer/build/environment/builder_factory'
+require 'pi_customizer/build/environment/environment_builder_factory'
 require 'pi_customizer/build/workspace/remote_workspace'
 require 'pi_customizer/build/workspace/local_workspace'
 require 'pi_customizer/write/image_writer'
