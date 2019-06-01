@@ -1,0 +1,61 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$dependencies = <<SCRIPT
+sudo apt update
+sudo apt -y upgrade
+sudo apt -y install quilt parted qemu-user-static debootstrap zerofree pxz zip dosfstools libcap2-bin bsdtar
+sudo apt -y install git curl ruby-full build-essential
+sudo apt -y install wpasupplicant openssl libssl-dev
+SCRIPT
+
+$install_modifier_gem = <<SCRIPT
+# install gem
+gem install /home/ubuntu/pi_build_modifier.gem
+SCRIPT
+
+$prepare = <<SCRIPT
+rm -rf /build/pi-gen
+mkdir -p /build/pi-gen
+echo 'git clone to workspace'
+git clone --branch master https://github.com/ottenwbe/pi-gen.git /build/pi-gen
+SCRIPT
+
+$modify = <<SCRIPT
+# Execute gem with parameters
+cd  /build/pi-gen
+pi_build_modifier modify /vagrant/config.json /build/pi-gen
+sudo ./build.sh
+mkdir -p /build/pi-gen/deploy
+cp -r /build/pi-gen/deploy /vagrant
+echo "Pi Image copied to your local workspace /home/chii/workspace/pi-gen-environment/tmp_vagrant_file"
+SCRIPT
+
+Vagrant.configure('2') do |config|
+
+  config.vm.box = 'ubuntu/xenial64' #Note, that 'debian/stretch64' cannot be resized with the disksize plugin
+
+  unless Vagrant.has_plugin?("vagrant-disksize")
+    raise 'vagrant-disksize plugin is not installed! Use: vagrant plugin install vagrant-disksize'
+  end
+
+  config.disksize.size = '60GB'
+
+  # Prepare environment by updating the dependencies
+  config.vm.provision 'shell', inline: $dependencies
+
+  config.vm.provision 'file', source: '/home/chii/workspace/pi-gen-environment/my_gem.gem', destination: '/home/ubuntu/pi_build_modifier.gem' 
+
+  # Modifier gem is installed
+  config.vm.provision 'shell', inline: $install_modifier_gem
+
+  # Copy config file
+  config.vm.provision 'file', source: '/home/chii/workspace/pi-gen-environment/pi_customizer/lib/pi_customizer/build/workspace/../../../../resources/config.json', destination: '/vagrant/config.json'
+
+  # Prepare the modification
+  config.vm.provision 'shell', inline: $prepare
+
+  # Actually modify the build sources and then build the environment
+  config.vm.provision 'shell', inline: $modify
+
+end
