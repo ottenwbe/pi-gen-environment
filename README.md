@@ -163,13 +163,13 @@ An example of the json config file with all current configuration options
 # Development
 
 ### Prerequisites
-
-* Make sure Ruby is installed (and dependencies to build native extensions). See, https://github.com/rbenv/rbenv and https://github.com/rbenv/ruby-build.
-
-  * On Fedora with zsh, this means sth. along the lines of:
-
-    ```
-    sudo dnf group install "C Development Tools and Libraries"
+0
+0tive extensions). See, https://github.com/rbenv/rbenv and https://github.com/rbenv/ruby-build.
+0
+0
+0
+0
+0es"
     sudo dnf install redhat-rpm-config git
     
     git clone https://github.com/rbenv/rbenv.git ~/.rbenv
@@ -177,8 +177,8 @@ An example of the json config file with all current configuration options
     ~/.rbenv/bin/rbenv init
     exec $SHELL
 
-    echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.zshrc
     git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+    echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.zshrc
     exec $SHELL
     
     rbenv install 2.5.5
