@@ -185,7 +185,7 @@ An example of the json config file with all current configuration options
 * Install Gems    
 
     ```
-    gem install bundler rake rspec
+    gem install bundler rake rspec rdoc
     ```    
 
 ## Test

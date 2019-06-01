@@ -36,7 +36,7 @@ module PiCustomizer
       end
 
       ##
-      # build orchestrates an enviroment and therefore the build process of an image
+      # build orchestrates an environment and therefore the build process of an image
 
       def build
         begin
