@@ -30,8 +30,8 @@ RSpec.describe PiCustomizer::Workspace::RemoteWorkspace do
   let(:default_git) {'https://github.com/ottenwbe/pi_customizer.git'}
 
   it 'allows us to check for parameter equality' do
-    remote_workspace_1 = PiCustomizer::Workspace::RemoteWorkspace.new('a', 'b')
-    remote_workspace_2 = PiCustomizer::Workspace::RemoteWorkspace.new('a', 'b')
+    remote_workspace_1 = PiCustomizer::Workspace::RemoteWorkspace.new('a', 'b', 'd')
+    remote_workspace_2 = PiCustomizer::Workspace::RemoteWorkspace.new('a', 'b', 'd')
     expect(remote_workspace_1==remote_workspace_2).to be true
   end
 
@@ -39,6 +39,13 @@ RSpec.describe PiCustomizer::Workspace::RemoteWorkspace do
     remote_workspace_1 = PiCustomizer::Workspace::RemoteWorkspace.new('a', 'b')
     remote_workspace_2 = PiCustomizer::Workspace::RemoteWorkspace.new('c', 'd')
     expect(remote_workspace_1==remote_workspace_2).to be false
+  end
+
+  it 'initializes with known default values' do
+    remote_workspace = PiCustomizer::Workspace::RemoteWorkspace.new()
+    expect(remote_workspace.workspace_directory).to eq PiCustomizer::Workspace::DEFAULT_REMOTE_WORKSPACE_DIRECTORY            
+    expect(remote_workspace.git_path).to eq PiCustomizer::Workspace::DEFAULT_GIT_PATH
+    expect(remote_workspace.git_tag).to eq PiCustomizer::Workspace::DEFAULT_GIT_TAG
   end
 
 end

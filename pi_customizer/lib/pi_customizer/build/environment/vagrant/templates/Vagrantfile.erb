@@ -15,14 +15,10 @@ $install_modifier_gem = <<SCRIPT
 SCRIPT
 
 $prepare = <<SCRIPT
+rm -rf <%= workspace.workspace_directory %>
 mkdir -p <%= workspace.workspace_directory %>
-if [ -f "<%= workspace.workspace_directory %>" ]; then
-  echo 'git pull to workspace'
-  git pull <%= workspace.git_path %> <%= workspace.workspace_directory %> -r
-else
-  echo 'git clone to workspace'
-  git clone <%= workspace.git_path %> <%= workspace.workspace_directory %>
-fi
+echo 'git clone to workspace'
+git clone --branch <%= workspace.git_tag %> <%= workspace.git_path %> <%= workspace.workspace_directory %>
 SCRIPT
 
 $modify = <<SCRIPT

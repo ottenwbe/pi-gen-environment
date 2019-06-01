@@ -72,7 +72,7 @@ module PiCustomizer
         when ENV_ECHO
           environment = EnvironmentControl.new(remote_workspace, local_workspace)
         else
-          $logger.info 'No valid environment (e.g., AWS or VAGRANT) defined!'
+          $logger.warn 'No valid environment (e.g., AWS or VAGRANT) defined!'
           environment = EnvironmentControl.new(remote_workspace, local_workspace)
       end
       environment

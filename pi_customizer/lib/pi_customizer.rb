@@ -39,16 +39,17 @@ module PiCustomizer
 
     desc 'build ENV', 'Build pi image on environment ENV (valid environments are DOCKER, AWS or VAGRANT).'
     method_option :build_sources_git_url, :default => Workspace::DEFAULT_GIT_PATH, :aliases => '-g'
+    method_option :build_sources_git_tag, :default => Workspace::DEFAULT_GIT_TAG, :aliases => '-t'    
     method_option :remote_workspace_dir, :default => Workspace::DEFAULT_REMOTE_WORKSPACE_DIRECTORY, :aliases => '-w'
-    method_option :config_file, :default => Workspace::DEFAULT_CONFIG_PATH, :aliases => '-c'
-    method_option :local_workspace_dir, :default => Workspace::DEFAULT_LOCAL_WORKSPACE_DIRECTORY, :aliases => '-t'
+    method_option :config_file, :aliases => '-c', :default => Workspace::DEFAULT_CONFIG_PATH, :desc => 'Path to configuration file'
+    method_option :local_workspace_dir, :default => Workspace::DEFAULT_LOCAL_WORKSPACE_DIRECTORY, :aliases => '-l'
     method_option :modifier_gem, :default => '', :aliases => '-m', :desc => 'Path to the modifier_gem. If not specified, the most recent gem from rubygems.org is downloaded.'
     method_option :deploy_dir, :default => Dir.getwd, :aliases => '-d'
     method_option :skip_steps, :type => :array, :aliases => '-s'
 
     def build(env)
       begin
-        remote_workspace = Workspace::RemoteWorkspace.new("#{options[:remote_workspace_dir]}", "#{options[:build_sources_git_url]}")
+        remote_workspace = Workspace::RemoteWorkspace.new("#{options[:remote_workspace_dir]}", "#{options[:build_sources_git_url]}", "#{options[:build_sources_git_tag]}")
         local_workspace = Workspace::LocalWorkspace.new("#{options[:config_file]}", "#{options[:local_workspace_dir]}", "#{options[:modifier_gem]}")
         builder = Environment::builder_factory(env, local_workspace, remote_workspace, options[:skip_steps])
         builder.build

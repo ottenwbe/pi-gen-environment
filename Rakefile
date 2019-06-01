@@ -61,7 +61,7 @@ end
 
 # version tasks
 
-desc "Show the versions of gems (i.e., #{PI_BUILD_MODIFIER} and #{PI_CUSTOMIZER})"
+desc "Show the gem's versions"
 task :version do 
   require_relative "#{PI_CUSTOMIZER}/lib/#{PI_CUSTOMIZER}/version"
   puts "#{PI_CUSTOMIZER} Versions"  
