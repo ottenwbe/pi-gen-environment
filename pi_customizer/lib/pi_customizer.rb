@@ -21,7 +21,7 @@
 require 'thor'
 require 'fileutils'
 require 'pi_customizer/version'
-require 'pi_customizer/build/environment/environment_builder_factory'
+require 'pi_customizer/build/environment/builder_factory'
 require 'pi_customizer/build/workspace/remote_workspace'
 require 'pi_customizer/build/workspace/local_workspace'
 require 'pi_customizer/write/image_writer'
@@ -50,7 +50,7 @@ module PiCustomizer
       begin
         remote_workspace = Workspace::RemoteWorkspace.new("#{options[:remote_workspace_dir]}", "#{options[:build_sources_git_url]}")
         local_workspace = Workspace::LocalWorkspace.new("#{options[:config_file]}", "#{options[:local_workspace_dir]}", "#{options[:modifier_gem]}")
-        builder = Environment::environment_builder_factory(env, local_workspace, remote_workspace, options[:skip_steps])
+        builder = Environment::builder_factory(env, local_workspace, remote_workspace, options[:skip_steps])
         builder.build
       rescue Exception => e
         $logger.error e.message

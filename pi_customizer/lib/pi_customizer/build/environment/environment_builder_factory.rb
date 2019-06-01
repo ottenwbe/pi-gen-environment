@@ -38,7 +38,7 @@ module PiCustomizer
     ENV_DOCKER = 'DOCKER'
     ENV_ECHO = 'ECHO'
 
-    def Environment.environment_builder_factory(env, local_workspace, remote_workspace, skip_build_steps)
+    def Environment.builder_factory(env, local_workspace, remote_workspace, skip_build_steps)
 
       environment = environment_factory(env, local_workspace, remote_workspace)
 

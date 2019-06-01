@@ -102,7 +102,7 @@ To build a default image in a Vagrant box, simply execute on the command line
 
 
 To customize your build:
-1. Any customizations have to be specified in a json configuration file (see the [__Config File__](#config_file) section for details).
+1. All customizations have to be specified in a json configuration file (see the [__Config File__](#config_file) section for details).
 1. The build process itself is then configured with command line options (see `pi_customizer help build` for details)   
      
 
@@ -164,15 +164,34 @@ An example of the json config file with all current configuration options
 
 ### Prerequisites
 
-Make sure Ruby is installed (and dependencies to build native extensions)
+* Make sure Ruby is installed (and dependencies to build native extensions). See, https://github.com/rbenv/rbenv and https://github.com/rbenv/ruby-build.
 
-On Fedora:
+  * On Fedora with zsh, this means sth. along the lines of:
 
-
+    ```
     sudo dnf group install "C Development Tools and Libraries"
-    sudo dnf install ruby ruby-devel     
-    sudo dnf install redhat-rpm-config 
+    sudo dnf install redhat-rpm-config git
     
+    git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+    echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.zshrc
+    ~/.rbenv/bin/rbenv init
+    exec $SHELL
+
+    echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.zshrc
+    git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+    exec $SHELL
+    
+    rbenv install 2.5.5
+    rbenv global 2.5.5
+    ```
+
+
+* Install Gems    
+
+    ```
+    gem install bundler rake rspec
+    ```    
+
 ## Test
 
 RSpec tests can be executed for all modules by calling the following rake command in the project root.
