@@ -163,13 +163,13 @@ An example of the json config file with all current configuration options
 # Development
 
 ### Prerequisites
-0
-0tive extensions). See, https://github.com/rbenv/rbenv and https://github.com/rbenv/ruby-build.
-0
-0
-0
-0
-0es"
+
+* Make sure Ruby is installed (and dependencies to build native extensions). See, https://github.com/rbenv/rbenv and https://github.com/rbenv/ruby-build.
+
+  * On Fedora with zsh, this means sth. along the lines of:
+
+    ```
+    sudo dnf group install "C Development Tools and Libraries"
     sudo dnf install redhat-rpm-config git
     
     git clone https://github.com/rbenv/rbenv.git ~/.rbenv
