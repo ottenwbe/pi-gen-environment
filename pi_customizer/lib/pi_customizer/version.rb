@@ -23,5 +23,5 @@ module PiCustomizer
   ##
   # The current version of the pi_customizer gem
 
-  VERSION = '0.4.0.pre.alpha'
+  VERSION = '0.3.1.pre.alpha'
 end

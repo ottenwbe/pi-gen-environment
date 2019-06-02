@@ -39,7 +39,7 @@ module PiCustomizer
     ENV_ECHO = 'ECHO'
 
     ##
-    # The builder_factory creates a builder for the selected environment env 
+    # The builder_factory creates a builder for the selected environment env. The builder orchestrates the environment and the build process in the environment.
 
     def Environment.builder_factory(env, local_workspace, remote_workspace, skip_build_steps)
 

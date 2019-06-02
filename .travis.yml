@@ -1,13 +1,28 @@
 language: ruby
 rvm:
-  - 2.6.3
-  - 2.5.5
-  - 2.4.6
-
-before_install:
-  - gem install bundler
-  - cd pi_customizer/ && bundle install && cd ..
-  - cd pi_build_modifier/ && bundle install && cd ..
-
+- 2.6.3
+- 2.5.5
+- 2.4.6
+before_script:
+- gem install bundler
+- cd pi_customizer/ && bundle install && cd ..
+- cd pi_build_modifier/ && bundle install && cd ..
 script:
-  - rake spec
+- rake spec
+- gem build pi_customizer/pi_customizer.gemspec
+- gem build pi_build_modifier/pi_build_modifier.gemspec
+deploy:
+  - provider: rubygems
+    gemspec: pi_customizer/pi_customizer.gemspec
+    on:
+      branch: development
+      ruby: 2.6.3
+    api_key:
+      secure: ZEkQylDugytlOXFIf9JsdSlZ0dDieIbiefTPzb/HVEFmNXBMbBaSV9+D6hFfJaTG+2CTkgJvyx5e3udfLnS4z13/MSYFvz/0tuzylTsOoS8wduyYuo88WiM5VVOUSrgC2LcPXVkvlI8JzqwieGXuYrq5u6srRAi6PKWvNUFKaFa1nfGQUaMLdC/FZVhEZghRWe9md+xHdb9ZQTA/sj5JcFaSSbfmK/h/8ByBYGV2jmEEVKpIBWfgRIiDcO9gUPmzUmREQfVBGtdS2uanSV+l3jYpSogl7aeRr0fansbJ6lSPnQuJXUk+X7QonXarlgV0FlRD/EyvboxXottZbUDiLQ3cYc9TGC0bvmFJqij6vIhnT4CeEsH4caosEhqGqIo8nXcXvP+PFPA6poQOx0igJlf2JJRswPgbLyCdd91Vd0/SWSI3lRMhkeLE7Vj6Hm6cBWJy9pPdG3fzSFlaFefcegs019PuW/kAezfcFLFbNBpPfxi6XpJdvrHDTgZuZetN19sQ8k4PN9+U8QlG3arAaMMFepMx5rsVavoo/sh4s1JldOGBK8ER86Rth7KKifV0Ypn71x//1OwAVcvTSuAHlcs83vnqdXH6APE+z9qVPhQgvHSyRuLnRCGejEMj1wvbWmprmMJ4/4Uf6x1NSDuimJn8sc5R4M7HM+BLS4QZHaE=
+  - provider: rubygems
+    gemspec: pi_build_modifier/pi_build_modifier.gemspec
+    on:
+      branch: development
+      ruby: 2.6.3
+    api_key:
+      secure: ZEkQylDugytlOXFIf9JsdSlZ0dDieIbiefTPzb/HVEFmNXBMbBaSV9+D6hFfJaTG+2CTkgJvyx5e3udfLnS4z13/MSYFvz/0tuzylTsOoS8wduyYuo88WiM5VVOUSrgC2LcPXVkvlI8JzqwieGXuYrq5u6srRAi6PKWvNUFKaFa1nfGQUaMLdC/FZVhEZghRWe9md+xHdb9ZQTA/sj5JcFaSSbfmK/h/8ByBYGV2jmEEVKpIBWfgRIiDcO9gUPmzUmREQfVBGtdS2uanSV+l3jYpSogl7aeRr0fansbJ6lSPnQuJXUk+X7QonXarlgV0FlRD/EyvboxXottZbUDiLQ3cYc9TGC0bvmFJqij6vIhnT4CeEsH4caosEhqGqIo8nXcXvP+PFPA6poQOx0igJlf2JJRswPgbLyCdd91Vd0/SWSI3lRMhkeLE7Vj6Hm6cBWJy9pPdG3fzSFlaFefcegs019PuW/kAezfcFLFbNBpPfxi6XpJdvrHDTgZuZetN19sQ8k4PN9+U8QlG3arAaMMFepMx5rsVavoo/sh4s1JldOGBK8ER86Rth7KKifV0Ypn71x//1OwAVcvTSuAHlcs83vnqdXH6APE+z9qVPhQgvHSyRuLnRCGejEMj1wvbWmprmMJ4/4Uf6x1NSDuimJn8sc5R4M7HM+BLS4QZHaE=
