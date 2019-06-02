@@ -9,8 +9,7 @@ before_script:
 - cd pi_build_modifier/ && bundle install && cd ..
 script:
 - rake spec
-- gem build pi_customizer/pi_customizer.gemspec
-- gem build pi_build_modifier/pi_build_modifier.gemspec
+
 deploy:
   - provider: rubygems
     gemspec: pi_customizer/pi_customizer.gemspec
