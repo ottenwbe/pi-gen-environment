@@ -27,8 +27,8 @@ begin
     t.pattern = pattern
   end
 rescue LoadError
-  puts 'RSpec is not installed. This means rake is not able to execute tests! Try: '
-  puts '* gem install rspec!'
+  puts 'RSpec is not installed. This means rake is not able to execute tests! '
+  puts '* Try: gem install rspec'
 end
 
 task :default => :spec
@@ -62,20 +62,20 @@ end
 # version tasks
 
 desc "Show the gem's versions"
-task :version do 
+task :versions do
   require_relative "#{PI_CUSTOMIZER}/lib/#{PI_CUSTOMIZER}/version"
   puts "#{PI_CUSTOMIZER} Versions"  
-  puts " "  
-  puts "*** Dev VERSION ***"
-  puts " "  
+  puts ' '
+  puts '*** Dev VERSION ***'
+  puts ' '
   puts "#{PI_CUSTOMIZER}: #{PiCustomizer::VERSION} "
   system "gem list #{PI_CUSTOMIZER} --pre --remote"  
-  puts " "    
+  puts ' '
   require_relative "#{PI_BUILD_MODIFIER}/lib/#{PI_BUILD_MODIFIER}/version"  
   puts "#{PI_BUILD_MODIFIER} Versions"
-  puts " "
-  puts "*** Dev VERSION ***"
-  puts " "
+  puts ' '
+  puts '*** Dev VERSION ***'
+  puts ' '
   puts "#{PI_BUILD_MODIFIER}: #{PiBuildModifier::VERSION}"
   system "gem list #{PI_BUILD_MODIFIER} --pre --remote"  
 end

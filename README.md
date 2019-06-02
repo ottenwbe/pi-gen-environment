@@ -193,6 +193,11 @@ An example of the json config file with all current configuration options
 RSpec tests can be executed for all modules by calling the following rake command in the project root.
 
     rake spec
+
+## Structure
+
+For now, the sources of both gems (pi_customizer and pi_build_modifier) are versioned in one repository. 
+This might change if their versions run out of sync.  
     
 ## Contributing
 
