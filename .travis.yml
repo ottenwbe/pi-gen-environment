@@ -10,19 +10,20 @@ before_script:
 script:
 - rake spec
 deploy:
-  - provider: rubygems
-    gem: pi_customizer
-    gemspec: pi_customizer/pi_customizer.gemspec
-    on:
-      branch: development
-      ruby: 2.6.3
-    api_key:
-      secure: $RUBYGEMS_API_KEY
-  - provider: rubygems
-    gem: pi_build_modifier
-    gemspec: pi_build_modifier/pi_build_modifier.gemspec
-    on:
-      branch: development
-      ruby: 2.6.3
-    api_key:
-      secure: $RUBYGEMS_API_KEY
+- provider: rubygems
+  gem: pi_customizer
+  gemspec: pi_customizer/pi_customizer.gemspec
+  on:
+    tags: true
+    ruby: 2.6.3
+  api_key:
+    secure: "$TEST"
+- provider: rubygems
+  gem: pi_build_modifier
+  gemspec: pi_build_modifier/pi_build_modifier.gemspec
+  on:
+    tags: true
+    ruby: 2.6.3
+  api_key:
+    secure: "$TEST"
+
