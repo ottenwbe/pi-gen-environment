@@ -14,7 +14,6 @@ deploy:
   gem: pi_customizer
   gemspec: pi_customizer/pi_customizer.gemspec
   on:
-    tags: true
     ruby: 2.6.3
   api_key:
     secure: "$TEST"
@@ -22,7 +21,6 @@ deploy:
   gem: pi_build_modifier
   gemspec: pi_build_modifier/pi_build_modifier.gemspec
   on:
-    tags: true
     ruby: 2.6.3
   api_key:
     secure: "$TEST"
