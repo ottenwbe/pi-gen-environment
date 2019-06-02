@@ -19,5 +19,5 @@
 # SOFTWARE.
 
 module PiBuildModifier
-  VERSION = '0.3.1.pre.alpha'
+  VERSION = '0.3.2.pre.alpha'
 end
