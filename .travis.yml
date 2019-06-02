@@ -15,7 +15,6 @@ deploy:
     gem: pi_customizer
     gemspec: pi_customizer/pi_customizer.gemspec
     on:
-      branch: development
       ruby: 2.6.3
     api_key:
       secure: V2bkBW+4UT/8Pt+MK6XZwDL5dPF3bkTL1RevI3UCIGmHSoKPPT918DpXhfVg6cRdOhMyYTbTjkQIyP9LEW5Uy8Nozp15kKa2nZbWIuDIIhUPopuymSW1x+g7c7VBU7nU7KL2XsYKwY2+PGp5WUycsWrKyM0U/4tn5wKK4u8lHz6fjmsIldl2/6nEsN23voat2LoftFzG3bng07v/mREjkiLtMzXnZ/sQ/uvC+4W5h3xJUf+KQ86JwoaBrisms5ETkOt3ox3/J56VFcTHi3QbpSW6MXnuKkiohTRkz1CI7V5jLyNKxJn/ZUSZmmKkCvOC2g9J9KzaTey36Iy+eKo2mYBNj59qrUzxChwpcU2peFhpIYfVx+9vQ2ki6h3FtAuTDQ7civ+s/BLAwTPdA64JoLjkYdIhOzsSN61rxsEQOXOz/mih21cPDADWiPOawvC8w6fW3Vf6Pg9etux9pzTpFr41F45e54ZOg074KpUCwk3vMMfZnyF0UbAR/wW5YjAEMA3VYffyT34uisrsmhHjbk3EhpuHIZeJy5ukOeKC2SDmOY6fIbi+rKGLwExj/okIpxVhhBp/bl59Qk4fNvBM81WbxqiuOGafTNWty5Hz1pLqO/1xllDU9eFEpd0jVcBTAAFvSmzYllBg/7R3BXDJyawmhVQZDFAkqtCQ6VOnOl0=
@@ -23,7 +22,6 @@ deploy:
     gem: pi_build_modifier
     gemspec: pi_build_modifier/pi_build_modifier.gemspec
     on:
-      branch: development
       ruby: 2.6.3
     api_key:
       secure: V2bkBW+4UT/8Pt+MK6XZwDL5dPF3bkTL1RevI3UCIGmHSoKPPT918DpXhfVg6cRdOhMyYTbTjkQIyP9LEW5Uy8Nozp15kKa2nZbWIuDIIhUPopuymSW1x+g7c7VBU7nU7KL2XsYKwY2+PGp5WUycsWrKyM0U/4tn5wKK4u8lHz6fjmsIldl2/6nEsN23voat2LoftFzG3bng07v/mREjkiLtMzXnZ/sQ/uvC+4W5h3xJUf+KQ86JwoaBrisms5ETkOt3ox3/J56VFcTHi3QbpSW6MXnuKkiohTRkz1CI7V5jLyNKxJn/ZUSZmmKkCvOC2g9J9KzaTey36Iy+eKo2mYBNj59qrUzxChwpcU2peFhpIYfVx+9vQ2ki6h3FtAuTDQ7civ+s/BLAwTPdA64JoLjkYdIhOzsSN61rxsEQOXOz/mih21cPDADWiPOawvC8w6fW3Vf6Pg9etux9pzTpFr41F45e54ZOg074KpUCwk3vMMfZnyF0UbAR/wW5YjAEMA3VYffyT34uisrsmhHjbk3EhpuHIZeJy5ukOeKC2SDmOY6fIbi+rKGLwExj/okIpxVhhBp/bl59Qk4fNvBM81WbxqiuOGafTNWty5Hz1pLqO/1xllDU9eFEpd0jVcBTAAFvSmzYllBg/7R3BXDJyawmhVQZDFAkqtCQ6VOnOl0=
