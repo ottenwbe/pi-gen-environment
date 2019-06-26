@@ -22,16 +22,17 @@ require 'pi_customizer/build/builder/builder'
 
 module PiCustomizer
   module Builder
+
     class PrepareExecuteBuilder < PiBuilder
 
       protected def execute_builder
         @build_executor.check
         @build_executor.prepare
-        @build_executor.publish
-        @build_executor.clean_up
         @build_executor.start
         @build_executor.build_image
+        @build_executor.publish
         @build_executor.stop
+        @build_executor.clean_up
       end
 
       protected def ensure_builder
@@ -39,5 +40,6 @@ module PiCustomizer
       end
 
     end
+
   end
 end

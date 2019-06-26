@@ -18,28 +18,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/build/builder/builder'
+require_relative '../../../spec_helper'
+require 'pi_customizer/build/config/build_config'
 
 module PiCustomizer
-  module Builder
+  module Config
+    RSpec.describe BuildConfig do
 
-    class StartExecuteBuilder < PiBuilder
-
-      protected def execute_builder
-        @build_executor.check
-        @build_executor.start
-        @build_executor.prepare
-        @build_executor.build_image
-        @build_executor.publish
-        @build_executor.clean_up
-        @build_executor.stop
+      it 'has a default config where no build steps are skipped' do
+        build_config = BuildConfig.new
+        expect(build_config.skip_build_steps.count).to eq 0
       end
 
-      protected def ensure_builder
-        @build_executor.ensure
+      it 'allows us to specify build steps that need to be skipped' do
+        build_config = BuildConfig.new(['test'])
+        expect(build_config.skip_build_steps.count).to eq 1
+        expect(build_config.skip_build_steps).to include :test
+        expect(build_config.skip_build_steps).not_to include('test')
       end
 
     end
-
   end
 end

@@ -27,11 +27,9 @@ module PiCustomizer
   module Environment
     class Vagrant < EnvironmentControl
 
-      VAGRANT_SOURCE = File.join(File.dirname(__FILE__), '/templates')
-
       def check
         $logger.info '[Check] Pre-flight checks are executing...'
-        ensure_vagrant
+        check_vagrant
       end
 
       def prepare
@@ -65,7 +63,7 @@ module PiCustomizer
         end
       end
 
-      def ensure_vagrant
+      def check_vagrant
         unless system 'vagrant -v'
           raise 'Vagrant not installed. Please ensure that vagrant is installed correctly.'
         end

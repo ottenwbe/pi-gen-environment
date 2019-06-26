@@ -18,28 +18,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/build/builder/builder'
+require_relative '../../../spec_helper'
+require 'rspec'
+require 'pi_customizer/build/builder/builder_factory'
+require 'pi_customizer/build/environment/environment_factory'
 
 module PiCustomizer
   module Builder
+    RSpec.describe 'builder_factory' do
 
-    class StartExecuteBuilder < PiBuilder
-
-      protected def execute_builder
-        @build_executor.check
-        @build_executor.start
-        @build_executor.prepare
-        @build_executor.build_image
-        @build_executor.publish
-        @build_executor.clean_up
-        @build_executor.stop
+      it 'creates a prepare_execute pi_builder when ENV_VAGRANT is specified' do
+        builder = Builder::builder_factory(Environment::ENV_VAGRANT, nil, nil, nil)
+        expect(builder).to be_a PrepareExecuteBuilder
       end
 
-      protected def ensure_builder
-        @build_executor.ensure
+      it 'creates a start_execute pi_builder when ENV_DOCKER is specified' do
+        builder = Builder::builder_factory(Environment::ENV_DOCKER, nil, nil, nil)
+        expect(builder).to be_a StartExecuteBuilder
       end
 
     end
-
   end
 end

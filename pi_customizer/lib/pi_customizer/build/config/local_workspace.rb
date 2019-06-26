@@ -36,9 +36,9 @@ module PiCustomizer
     DEFAULT_LOCAL_WORKSPACE_DIRECTORY = Dir.pwd + '/tmp'
 
     ##
-    # The LocalWorkspace class encapsulates the configuration of the workspace on the machine where the build of the pi image is triggered
+    # The LocalWorkspace class encapsulates the configuration of the config on the machine where the build of the pi image is triggered
 
-    class LocalWorkspace
+    class LocalWorkspaceConfig
 
       attr_reader :config_path, :workspace_directory, :modifier_gem_path
 

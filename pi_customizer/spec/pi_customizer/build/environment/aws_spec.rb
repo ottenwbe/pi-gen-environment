@@ -18,28 +18,40 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/build/builder/builder'
+require_relative '../../../spec_helper'
+require 'pi_customizer/build/environment/aws/aws'
+require 'fileutils'
+require 'pathname'
 
 module PiCustomizer
-  module Builder
+  module Environment
+    RSpec.describe AWS do
 
-    class StartExecuteBuilder < PiBuilder
+      let(:key_name) {'pi-test'}
 
-      protected def execute_builder
-        @build_executor.check
-        @build_executor.start
-        @build_executor.prepare
-        @build_executor.build_image
-        @build_executor.publish
-        @build_executor.clean_up
-        @build_executor.stop
+      it 'creates an ssh key' do
+        AWS.new(nil, '').create_keys(key_name)
+        expect(Pathname.new("ssh/#{key_name}.pem")).to be_file
+        expect(Pathname.new("ssh/#{key_name}.pub")).to be_file
       end
 
-      protected def ensure_builder
-        @build_executor.ensure
+      it 'deletes an existing ssh key' do
+        aws = AWS.new(nil, '')
+        aws.create_keys(key_name)
+        aws.del_keys(key_name)
+
+        expect(Pathname.new("ssh/#{key_name}.pem")).to_not be_file
+        expect(Pathname.new("ssh/#{key_name}.pub")).to_not be_file
       end
 
+      after(:each) do
+        if File.file?("ssh/#{key_name}.pub")
+          FileUtils.rm "ssh/#{key_name}.pem"
+        end
+        if File.file?("ssh/#{key_name}.pub")
+          FileUtils.rm "ssh/#{key_name}.pub"
+        end
+      end
     end
-
   end
 end

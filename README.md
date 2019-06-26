@@ -170,6 +170,7 @@ An example of the json config file with all current configuration options
     
     git clone https://github.com/rbenv/rbenv.git ~/.rbenv
     echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.zshrc
+    echo 'export PATH="$HOME/.rbenv/shim:$PATH"' >> ~/.zshrc
     ~/.rbenv/bin/rbenv init
     exec $SHELL
 
@@ -182,10 +183,16 @@ An example of the json config file with all current configuration options
     ```
 
 
-* Install Gems    
+* Install Gems 
 
     ```
     gem install bundler rake rspec rdoc
+    ```    
+
+* Install dependencies
+
+    ```
+    bundle install
     ```    
 
 ## Test

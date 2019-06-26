@@ -18,19 +18,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../../spec_helper'
-require 'pi_customizer/build/workspace/local_workspace'
+require_relative '../../../spec_helper'
+require 'pi_customizer/build/config/local_workspace'
 require 'fileutils'
 require 'pathname'
 
 module PiCustomizer
   module Workspace
-    RSpec.describe LocalWorkspace do
+    RSpec.describe LocalWorkspaceConfig do
 
       it 'uses default values for config_path and tmp_directory when no path is specified' do
         #Given
         #When
-        local_config = LocalWorkspace.new('', '', '')
+        local_config = LocalWorkspaceConfig.new('', '', '')
         #Then
         expect(local_config.config_path.to_s).to eq DEFAULT_CONFIG_PATH
         expect(local_config.workspace_directory.to_s).to eq DEFAULT_LOCAL_WORKSPACE_DIRECTORY
@@ -43,7 +43,7 @@ module PiCustomizer
         expected_tmp = '/home/test/tmp'
         expected_mod = '/home/test/mod.gem'
         #When
-        local_config = LocalWorkspace.new(expected_cfg, expected_tmp, expected_mod)
+        local_config = LocalWorkspaceConfig.new(expected_cfg, expected_tmp, expected_mod)
         #Then
         expect(local_config.config_path.to_s).to eq expected_cfg
         expect(local_config.workspace_directory.to_s).to eq expected_tmp
@@ -51,21 +51,21 @@ module PiCustomizer
       end
 
       it 'accepts relative paths for config_path and stores them as absolute paths' do
-        local_config = LocalWorkspace.new('a', 'b', 'c')
+        local_config = LocalWorkspaceConfig.new('a', 'b', 'c')
         expect(local_config.config_path.to_s).to eq File.join(Dir.pwd, '/a')
         expect(local_config.workspace_directory.to_s).to eq File.join(Dir.pwd, '/b')
         expect(local_config.modifier_gem_path.to_s).to eq File.join(Dir.pwd, '/c')
       end
 
       it 'allows us to check for value equality' do
-        local_config_1 = LocalWorkspace.new('a', 'b', 'c')
-        local_config_2 = LocalWorkspace.new('a', 'b', 'c')
+        local_config_1 = LocalWorkspaceConfig.new('a', 'b', 'c')
+        local_config_2 = LocalWorkspaceConfig.new('a', 'b', 'c')
         expect(local_config_1==local_config_2).to be true
       end
 
       it 'allows us to check for value inequality' do
-        local_config_1 = LocalWorkspace.new('a', 'b', 'c')
-        local_config_2 = LocalWorkspace.new('e', 'f', 'g')
+        local_config_1 = LocalWorkspaceConfig.new('a', 'b', 'c')
+        local_config_2 = LocalWorkspaceConfig.new('e', 'f', 'g')
         expect(local_config_1==local_config_2).to be false
       end
 

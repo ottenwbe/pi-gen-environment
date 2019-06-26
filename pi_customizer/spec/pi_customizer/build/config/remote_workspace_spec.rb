@@ -18,10 +18,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../../spec_helper'
+require_relative '../../../spec_helper'
 require 'fileutils'
 require 'pathname'
-require 'pi_customizer/build/workspace/remote_workspace'
+require 'pi_customizer/build/config/remote_workspace'
 
 
 RSpec.describe PiCustomizer::Workspace::RemoteWorkspace do

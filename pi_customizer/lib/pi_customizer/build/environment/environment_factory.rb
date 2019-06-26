@@ -18,56 +18,41 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require 'pi_customizer/build/environment/environment'
+require 'pi_customizer/build/environment/aws/aws'
+require 'pi_customizer/build/environment/vagrant/vagrant'
+require 'pi_customizer/build/environment/docker/docker'
+require 'pi_customizer/build/config/remote_workspace'
+require 'pi_customizer/build/config/local_workspace'
 require 'pi_customizer/utils/logex'
+
 
 module PiCustomizer
   module Environment
 
+    ENV_AWS = 'AWS'
+    ENV_VAGRANT = 'VAGRANT'
+    ENV_DOCKER = 'DOCKER'
+    ENV_ECHO = 'ECHO'
+
     ##
-    # EnvironmentControl defines the lifecycle steps of a build environment 
+    # The environment_factory creates an environment controller tailored to the selected build environment env
 
-    class EnvironmentControl
-
-      attr_reader :workspace, :config
-
-      def initialize(remote_workspace, local_workspace)
-        @workspace = remote_workspace
-        @config = local_workspace
+    def Environment.environment_factory(env, local_workspace, remote_workspace)
+      case env
+      when ENV_AWS
+        environment = AWS.new(remote_workspace, local_workspace)
+      when ENV_VAGRANT
+        environment = Vagrant.new(remote_workspace, local_workspace)
+      when ENV_DOCKER
+        environment = Docker.new(remote_workspace, local_workspace)
+      when ENV_ECHO
+        environment = EnvironmentControl.new(remote_workspace, local_workspace)
+      else
+        $logger.warn 'No valid environment (e.g., DOCKER or VAGRANT) defined!'
+        environment = EnvironmentControl.new(remote_workspace, local_workspace)
       end
-
-      def check
-        $logger.warn '[Check] skipped...'
-      end
-
-      def prepare
-        $logger.warn '[Prepare] skipped...'
-      end
-
-      def start
-        $logger.warn '[Start] skipped...'
-      end
-
-      def build_image
-        $logger.warn '[Build Image] skipped...'
-      end
-
-      def publish
-        $logger.warn '[Publish] skipped...'
-      end
-
-      def clean_up
-        $logger.warn '[Clean up] skipped...'
-      end
-
-      def stop
-        $logger.warn '[Stop] skipped...'
-      end
-
-      def ensure
-        $logger.info '[Ensure] skipped...'
-      end
-
+      environment
     end
   end
 end
-

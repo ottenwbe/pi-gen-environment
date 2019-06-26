@@ -52,7 +52,7 @@ module PiCustomizer
         $logger.info '[Build| Docker] customization of build sources'
         system "sudo docker exec --tty \"$(cat cid)\" bash -c \"sudo pi_build_modifier modify #{CONFIG_PATH_IN_DOCKER}/resources.json #{@workspace.workspace_directory}\""
         $logger.info '[Build| Docker] pi-image build step'
-        system "sudo docker exec --tty \"$(cat cid)\" bash -c \"cd #{@workspace.workspace_directory} && sudo ./build.sh\"" #sudo chown docker #{@workspace.workspace_directory} &&
+        system "sudo docker exec --tty \"$(cat cid)\" bash -c \"cd #{@workspace.workspace_directory} && sudo ./build.sh\"" #sudo chown docker #{@config.workspace_directory} &&
       end
 
       def clean_up

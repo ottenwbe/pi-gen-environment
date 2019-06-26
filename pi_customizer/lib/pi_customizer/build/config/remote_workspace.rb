@@ -40,7 +40,7 @@ module PiCustomizer
     DEFAULT_GIT_TAG = 'master'    
 
     ##
-    # The RemoteWorkspace class encapsulates the configuration of the workspace in the build environment
+    # The RemoteWorkspace class encapsulates the configuration of the config in the build environment
 
     class RemoteWorkspace
 

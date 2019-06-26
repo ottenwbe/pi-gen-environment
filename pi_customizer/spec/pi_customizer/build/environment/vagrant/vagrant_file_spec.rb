@@ -18,9 +18,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../../../spec_helper'
+require_relative '../../../../spec_helper'
 require 'pi_customizer/build/environment/vagrant/vagrant_file'
-require 'pi_customizer/build/workspace/local_workspace'
+require 'pi_customizer/build/config/local_workspace'
 require 'fileutils'
 require 'pathname'
 
@@ -29,7 +29,7 @@ module PiCustomizer
   RSpec.describe Environment::VagrantFileRenderer do
 
     let(:tmp_dir) {'tmp_vagrant_file'}
-    let(:vagrant_file) {Environment::VagrantFile.new(Workspace::LocalWorkspace.new('', tmp_dir, ''), nil)}
+    let(:vagrant_file) {Environment::VagrantFile.new(Workspace::LocalWorkspaceConfig.new('', tmp_dir, ''), nil)}
     let(:vagrant_file_builder) {Environment::VagrantFileRenderer.new(vagrant_file)}
     let(:test_vagrant_file) {File.dirname(__FILE__) + '/../../../fixtures/TestVagrantfile'}
 
@@ -45,7 +45,7 @@ module PiCustomizer
     it 'renders a Vagrantfile which copies a gem to the vagrant box when the modifier_gem_path is given' do
       #Given
       gem_name = 'my_gem.gem'
-      v_file = Environment::VagrantFile.new(Workspace::LocalWorkspace.new('', tmp_dir, gem_name), nil)
+      v_file = Environment::VagrantFile.new(Workspace::LocalWorkspaceConfig.new('', tmp_dir, gem_name), nil)
       v_file_builder = Environment::VagrantFileRenderer.new(v_file)
       #When
       v_file_builder.create_from_template
