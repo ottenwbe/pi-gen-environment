@@ -18,55 +18,41 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'json'
-require 'pathname'
-require 'fileutils'
-require 'pi_build_modifier/modifier/mapper'
+require 'pi_build_modifier/utils/logex'
 
 module PiBuildModifier
-  class ERBMapper < Mapper
 
-    def initialize(data, working_dir)
-      if data.nil?
-        raise 'Cannot initialize ERBMapper, since no valid object for mapping is given.'
-      end
-      @data = data
-      @template_path = @data.template_path
-      @output_path = working_dir + '/' + @data.relative_output_path
+  ##
+  # ConfigModifier represents a container that is used by the pi_build_modifier to call
+  # the necessary steps to modify a build configuration.
+  # It triggers check, mapping, and modification steps for one build configuration.
+
+  class ConfigModifier
+
+    def initialize(workspace)
+      @workspace = workspace
+      @configs = Array.new
     end
 
-    def check(json_data)
-      @data.check(json_data)
+    def add(config)
+      @configs << config
+    end
+
+    def check
+      @configs.each {|config| config.check unless config.nil?}
     end
 
     def map(json_data)
-      @data.map(json_data)
+      @configs.each {|config| config.map(json_data) unless config.nil?}
     end
 
     def modify
-      read_template
-      create_conf
+      @configs.each {|config| config.modify unless config.nil?}
     end
 
-    private def read_template
-      File.open(@template_path.to_s, 'r+') do |f|
-        @template = f.read
-      end
+    def finish
+      $logger.debug("Skipped finish")
     end
 
-    def render
-      ERB.new(@template).result(@data.get_binding)
-    end
-
-    private def create_conf
-
-      puts "create dir at #{@output_path}"
-
-      FileUtils.mkdir_p File.dirname @output_path
-
-      File.open(@output_path, 'w+') do |f|
-        f.write(render)
-      end
-    end
   end
 end

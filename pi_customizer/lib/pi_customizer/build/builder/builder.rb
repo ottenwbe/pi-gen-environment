@@ -24,12 +24,10 @@ module PiCustomizer
   module Builder
 
     ##
-    # PiBuilder defines abstractly the steps of a build process.
+    # PiBuilder abstractly defines the steps of a build process.
     # However, the concrete orchestration of the build process's steps is done by its sub-classes.
 
     class PiBuilder
-
-      attr_reader :build_executor
 
       def initialize(environment, build_config)
         @build_executor = BuildExecutor.new(environment, build_config)
@@ -55,5 +53,6 @@ module PiCustomizer
       end
 
     end
+
   end
 end

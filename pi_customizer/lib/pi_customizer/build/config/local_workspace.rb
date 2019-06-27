@@ -28,12 +28,12 @@ module PiCustomizer
     ##
     # The default path which points to the configuration file
 
-    DEFAULT_CONFIG_PATH = File.join(File.dirname(__FILE__), '/../../../../resources/config.json')
+    DEFAULT_CONFIG_PATH = File.join(Dir.pwd, 'config.json')
 
     ##
     # The default directory which is used to store temporary build files, e.g., the Vagrantfile for a build with vagrant
 
-    DEFAULT_LOCAL_WORKSPACE_DIRECTORY = Dir.pwd + '/tmp'
+    DEFAULT_LOCAL_WORKSPACE_DIRECTORY = File.join(Dir.pwd, '/tmp')
 
     ##
     # The LocalWorkspace class encapsulates the configuration of the config on the machine where the build of the pi image is triggered
@@ -66,10 +66,10 @@ module PiCustomizer
 
       private def workspace_directory=(workspace_directory)
         @workspace_directory = if workspace_directory.nil? or workspace_directory == ''
-                           Pathname.new(DEFAULT_LOCAL_WORKSPACE_DIRECTORY)
-                         else
-                           absolute_path_name(workspace_directory)
-                         end
+                                 Pathname.new(DEFAULT_LOCAL_WORKSPACE_DIRECTORY)
+                               else
+                                 absolute_path_name(workspace_directory)
+                               end
       end
 
       private def modifier_gem_path=(modifier_gem_path)

@@ -19,7 +19,7 @@
 # SOFTWARE.
 
 require 'fileutils'
-require 'pi_build_modifier/modifier/mapper'
+require 'pi_build_modifier/modify/modifier/config_modifier'
 
 module PiBuildModifier
 
@@ -28,45 +28,76 @@ module PiBuildModifier
     LITE = 'lite'
   end
 
-  class System < Mapper
+  class NameConfig
 
     attr_reader :name, :type
 
     def initialize
       @name = 'custompi'
-      @type = Type::FULL
     end
 
-    def mapper(workspace)
-      @workspace = workspace
-      @relative_output_path = @workspace
-      self
+    def check
+      true
     end
 
     def map(json_data)
       unless json_data.nil?
         @name = json_data['system']['name'] if json_data.has_key?('system') && json_data['system'].has_key?('name')
+      else
+        $logger.error "No json configuration found"
+      end
+    end
+
+    def config_line
+      "IMG_NAME='#{@name}'"
+    end
+  end
+
+  class SshConfig
+
+    def initialize
+      @enable = true
+    end
+
+    def check
+      true
+    end
+
+    def map(json_data)
+      unless json_data.nil?
+        @enable = json_data['ssh']['enabled'] if json_data.has_key?('ssh') && json_data['ssh'].has_key?('enabled')
+      else
+        $logger.error 'Ssh could not be configured: Invalid json data.'
+      end
+    end
+
+    def config_line
+      if @enable
+        "ENABLE_SSH=1"
+      end
+    end
+  end
+  class TypeConfig
+
+    def initialize
+      @type = Type::FULL
+    end
+
+    def check
+      true
+    end
+
+    def map(json_data)
+      unless json_data.nil?
         @type = json_data['system']['type'] if json_data.has_key?('system') && json_data['system'].has_key?('type')
       else
-        # TODO: log error
+        $logger.error "No json configuration found"
       end
     end
 
     def modify
-      write_name
-      modify_type
-    end
-
-    private def modify_type
       if @type.nil? || @type == Type::LITE
         make_lite
-      end
-    end
-
-    private def write_name
-      FileUtils.mkdir_p "#{@workspace}"
-      File.open("#{@workspace}/config", 'w') do |file|
-        file.write("IMG_NAME='#{@name}'")
       end
     end
 
@@ -81,4 +112,6 @@ module PiBuildModifier
       end
     end
   end
+
+
 end

@@ -18,49 +18,68 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'erb'
 require 'json'
 
 module PiBuildModifier
+  class Modifiers
 
-  ##
-  # The Locale class is used to customize the locales
+    attr_reader :config_modifiers
 
-  class Locale
-
-    LOCALE = 'locale'
-
-    GEN = 'gen'
-
-    SYS = 'sys'
-
-    attr_accessor :gen_locales, :sys_locales, :template
-
-    attr_reader :template_path, :relative_output_path
-
-    def initialize(gen_locales = ['en_GB.UTF-8 UTF-8'], sys_locale = 'en_GB.UTF-8')
-      @gen_locales = gen_locales
-      @sys_locale = sys_locale
-      @template_path = File.join(File.dirname(__FILE__), '/templates/00-debconf.erb').to_s
-      @relative_output_path = 'stage0/01-locale/00-debconf'
+    def initialize
+      @config_modifiers = Array.new
+      @json_path = nil
+      @json_data = nil
     end
 
-    def mapper(workspace)
-      ERBMapper.new(self,workspace)
+    def with_json_configuration(json_file)
+      @json_path = json_file
+      self
     end
 
-    def map(json_data)
-      unless json_data.nil?
-        @gen_locales = json_data[LOCALE][GEN].map {|gen| gen} if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(GEN)
-        @sys_locale = json_data[LOCALE][SYS] if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(SYS)
+    def with_config_modifier(config_modifier)
+      if config_modifier.is_a? ConfigModifier
+        @config_modifiers << config_modifier
+      else
+        raise 'Parameter must be of type "ConfigModifier"'
+      end
+      self
+    end
+
+    def modify_configs
+      load_config
+      check_all
+      map_all
+      modify_all
+      finish_all
+    end
+
+    private def load_config
+      if File.file?(@json_path)
+        File.open(@json_path, 'r+') do |f|
+          @json_data = JSON.parse(f.read)
+        end
+      else
+        raise "Json configuration file does not exist at '#{@json_path}!'"
       end
     end
 
-    def get_binding
-      binding
+    private def check_all
+      @config_modifiers.each(&:check)
+    end
+
+    private def map_all
+      @config_modifiers.each do |mapper|
+        mapper.map(@json_data)
+      end
+    end
+
+    private def modify_all
+      @config_modifiers.each(&:modify)
+    end
+
+    private def finish_all
+      @config_modifiers.each(&:finish)
     end
 
   end
-
 end
-

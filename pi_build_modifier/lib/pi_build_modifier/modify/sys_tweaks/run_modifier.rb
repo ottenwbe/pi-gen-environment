@@ -18,49 +18,47 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../../spec_helper'
-require 'rspec'
 require 'fileutils'
-require 'pi_build_modifier/system/system_type'
-require 'pi_build_modifier/modifier/mapper'
-
-RSpec.describe PiBuildModifier::System do
-
-  EXPECTED_SYSTEM_NAME = 'chiipi_test'
-  EXPECTED_SYSTEM_TYPE = 'lite'
-  let(:config) {{'system' => {'name' => EXPECTED_SYSTEM_NAME, 'type' => EXPECTED_SYSTEM_TYPE}}}
-  let(:workspace) {"#{File.dirname(__FILE__)}/workspace"}
+require 'pi_build_modifier/modify/modifier/config_modifier'
 
 
-  after(:each) do
-    FileUtils.rm_rf(workspace) if Dir.exist?(workspace)
-  end
+module PiBuildModifier
 
+  ##
+  # RunModifier is a class which appends lines to the sys-tweaks run file in the pi-gen build directory.
+  # By default this is the file 'stage2/01-sys-tweaks/01-run.sh'.
 
-  it 'should map the name and type given in a hash to corresponding members' do
-    #Given
-    system = PiBuildModifier::System.new.mapper(workspace)
+  class RunModifier < ConfigModifier
 
-    #When
-    system.map(config)
+    attr_reader :relative_output_path, :appender
 
-    #Then
-    expect(system.name).to eq(EXPECTED_SYSTEM_NAME)
-    expect(system.type).to eq(EXPECTED_SYSTEM_TYPE)
-  end
-
-  it 'should map the name and type to variables' do
-    #Given
-    system = PiBuildModifier::System.new.mapper(workspace)
-
-    #When
-    system.map(config)
-    system.modify
-
-    #Then
-    %w(/config /stage3/SKIP /stage4/SKIP /stage5/SKIP).each do |file|
-      expect(Pathname.new(workspace + file)).to be_file
+    def initialize
+      super
+      @appender = Array.new
+      @workspace = nil
+      @relative_output_path = 'stage2/01-sys-tweaks/01-run.sh'
     end
-  end
 
+    def mapper(workspace)
+      @workspace = workspace
+      self
+    end
+
+    def append(appender)
+      @appender << appender
+    end
+
+    ##
+    # modify the sys-tweaks run file by adding lines at the end of the file
+
+    def modify
+      open("#{@workspace}/#{@relative_output_path}", 'a') do |f|
+        f.puts ''
+        @appender.each do |a|
+          f.puts "source #{@workspace}/#{a.append_line}"
+        end
+      end
+    end
+
+  end
 end

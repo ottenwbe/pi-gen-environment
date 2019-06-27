@@ -18,31 +18,43 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require 'fileutils'
+require 'pi_build_modifier/modify/modifier/config_modifier'
+require 'pi_build_modifier/modify/sys_tweaks/run_modifier'
+require 'pi_build_modifier/utils/logex'
+
 module PiBuildModifier
 
-  ##
-  # Mapper represents a container that is used by the pi_build_modifier to call
-  # the necessary steps to modify a build configuration.
-  # It triggers check, mapping, and modification steps for one build configuration.
+  class Ssh
 
-  class Mapper
+    attr_accessor :enable
 
-    attr_reader :data
+    attr_reader :template_path, :relative_output_path
 
-    def initialize(data)
-      @data = data
+    def initialize
+      @enable = 'enable'
+      @template_path = File.join(File.dirname(__FILE__), '/templates/ssh.sh.erb').to_s
+      @relative_output_path = 'stage2/01-sys-tweaks/ssh.sh'
     end
 
-    def check(json_data)
-      @data.check(json_data) unless @data.nil?
+    def mapper(workspace)
+      ERBMapper.new(self, workspace)
+    end
+
+    def append_line
+      "#{@relative_output_path}"
     end
 
     def map(json_data)
-      @data.map(json_data) unless @data.nil?
+      unless json_data.nil?
+        @enable = 'disable' if json_data.has_key?('ssh') && json_data['ssh'].has_key?('enabled') && (not json_data['ssh']['enabled'])
+      else
+        $logger.error 'Ssh could not be configured: Invalid json data.'
+      end
     end
 
-    def modify
-      @data.modify unless @data.nil?
+    def get_binding
+      binding
     end
 
   end

@@ -18,46 +18,49 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'fileutils'
-require 'pi_build_modifier/modifier/mapper'
-
+require 'erb'
+require 'json'
 
 module PiBuildModifier
 
   ##
-  # RunModifier is a class which appends lines to the sys-tweaks run file in the pi-gen build directory.
-  # By default this is the file 'stage2/01-sys-tweaks/01-run.sh'.
+  # The Locale class is used to customize the locales
 
-  class RunModifier < Mapper
+  class Locale
 
-    attr_reader :relative_output_path, :appender
+    LOCALE = 'locale'
 
-    def initialize
-      @appender = Array.new
-      @workspace = nil
-      @relative_output_path = 'stage2/01-sys-tweaks/01-run.sh'
+    GEN = 'gen'
+
+    SYS = 'sys'
+
+    attr_accessor :gen_locales, :sys_locales, :template
+
+    attr_reader :template_path, :relative_output_path
+
+    def initialize(gen_locales = ['en_GB.UTF-8 UTF-8'], sys_locale = 'en_GB.UTF-8')
+      @gen_locales = gen_locales
+      @sys_locale = sys_locale
+      @template_path = File.join(File.dirname(__FILE__), '/templates/00-debconf.erb').to_s
+      @relative_output_path = 'stage0/01-locale/00-debconf'
     end
 
     def mapper(workspace)
-      @workspace = workspace
-      self
+      ERBMapper.new(self, workspace)
     end
 
-    def append(appender)
-      @appender << appender
-    end
-
-    ##
-    # modify the sys-tweaks run file by adding lines at the end of the file
-
-    def modify
-      open("#{@workspace}/#{@relative_output_path}", 'a') do |f|
-        f.puts ''
-        @appender.each do |a|
-          f.puts "source #{@workspace}/#{a.append_line}"
-        end
+    def map(json_data)
+      unless json_data.nil?
+        @gen_locales = json_data[LOCALE][GEN].map {|gen| gen} if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(GEN)
+        @sys_locale = json_data[LOCALE][SYS] if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(SYS)
       end
     end
 
+    def get_binding
+      binding
+    end
+
   end
+
 end
+

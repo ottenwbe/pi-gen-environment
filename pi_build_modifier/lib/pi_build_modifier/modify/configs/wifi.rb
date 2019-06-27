@@ -21,34 +21,14 @@
 require 'erb'
 require 'json'
 require 'openssl'
-require 'pi_build_modifier/modifier/erb_mapper'
+require 'pi_build_modifier/modify/modifier/erb_config_modifier'
 
 module PiBuildModifier
 
   ##
-  # WifiNetwork represents a network in the wpa_supplicant configuration
+  # Wifi configuration
 
-  class WifiNetwork
-
-    attr_reader :ssid, :psk
-
-    def initialize(ssid, psk)
-      @ssid = ssid
-      @psk = psk
-    end
-
-    def to_s
-      sprintf('{
-  ssid="%s"
-  psk=%s
-}', ssid, psk)
-    end
-  end
-
-  ##
-  # WPASupplicant represents the wpa_supplicant's configuration
-
-  class WPASupplicant
+  class Wifi
 
     PASSPHRASE = 'passphrase'
 
@@ -61,18 +41,10 @@ module PiBuildModifier
     ##
     # By default, WPASupplicant is configured with:
     # wpa_country:  DE
-    # template:     './templates/wpa_supplicant.conf.erb'
-    # output path:  'stage2/02-net-tweaks/files/wpa_supplicant.conf'
 
     def initialize
       @networks = map_network(nil)
-      @wpa_country = 'DE'
-      @template_path = File.join(File.dirname(__FILE__), '/templates/wpa_supplicant.conf.erb').to_s
-      @relative_output_path = 'stage2/02-net-tweaks/files/wpa_supplicant.conf'
-    end
-
-    def mapper(workspace)
-      ERBMapper.new(self, workspace)
+      @wpa_country = 'US'
     end
 
     #TODO: test
@@ -121,4 +93,5 @@ module PiBuildModifier
 
   end
 end
+
 

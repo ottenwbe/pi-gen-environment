@@ -37,6 +37,16 @@ module PiCustomizer
         expect(build_config.skip_build_steps).not_to include('test')
       end
 
+      it 'allows us to query for individually skipped build steps' do
+        build_config = BuildConfig.new(['test'])
+        expect(build_config.skip? :test).to be true
+      end
+
+      it 'allows us to query for build steps that are not skipped' do
+        build_config = BuildConfig.new(['test'])
+        expect(build_config.skip? :foo).to be false
+      end
+
     end
   end
 end

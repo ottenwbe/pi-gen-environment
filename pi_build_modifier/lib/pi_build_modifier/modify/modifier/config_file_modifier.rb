@@ -18,43 +18,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'fileutils'
-require 'pi_build_modifier/modifier/mapper'
-require 'pi_build_modifier/sys_tweaks/run_modifier'
-require 'pi_build_modifier/config/logex'
+require 'json'
+require 'pi_build_modifier/modify/modifier/config_modifier'
 
 module PiBuildModifier
+  class ConfigFileModifier < ConfigModifier
 
-  class Ssh
-
-    attr_accessor :enable
-
-    attr_reader :template_path, :relative_output_path
-
-    def initialize
-      @enable = 'enable'
-      @template_path = File.join(File.dirname(__FILE__), '/templates/ssh.sh.erb').to_s
-      @relative_output_path = 'stage2/01-sys-tweaks/ssh.sh'
+    def initialize(workspace)
+      super(workspace)
+      @cfg_lines = Array.new
+      @config_file = 'config'
     end
 
-    def mapper(workspace)
-      ERBMapper.new(self, workspace)
+    def modify
+      @configs.each {|config| @cfg_lines << @data.config_line unless config.nil?}
     end
 
-    def append_line
-      "#{@relative_output_path}"
-    end
-
-    def map(json_data)
-      unless json_data.nil?
-        @enable = 'disable' if json_data.has_key?('ssh') && json_data['ssh'].has_key?('enabled') && (not json_data['ssh']['enabled'])
-      else
-        $logger.error 'Ssh could not be configured: Invalid json data.'
+    def finish
+      FileUtils.mkdir_p "#{@workspace}"
+      File.open(File.join("#{@workspace}", "#{@config_file}"), 'w+') do |file|
+        @cfg_lines.each {|cfg_line| file.puts(cfg_line)}
       end
-    end
-
-    def get_binding
-      binding
     end
 
   end

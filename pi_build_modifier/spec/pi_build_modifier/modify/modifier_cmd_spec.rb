@@ -18,64 +18,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'json'
+require_relative '../../spec_helper'
+require 'pi_build_modifier/modify/modifier_cmd'
+require 'pi_build_modifier/modify/modifier/modifiers'
 
 module PiBuildModifier
-  class PiModifier
 
-    attr_reader :mappers
+  RSpec.describe Cmd::Modifier do
 
-    def initialize
-      @mappers = Array.new
-      @json_path = nil
-      @json_data = nil
-    end
+    context 'initialize' do
 
-    def with_json_configuration(json_file)
-      @json_path = json_file
-    end
-
-    def with_mapper(mapper)
-      if mapper.is_a? Mapper
-        @mappers << mapper
-      else
-        raise 'Parameter must be of type Mapper'
+      it 'creates an array of modifiers' do
+        modifier = Cmd::Modifier.new("no.cfg", ".")
+        expect(modifier.modifiers).not_to be_nil
+        expect(modifier.modifiers.config_modifiers.length).to be > 0
       end
-    end
 
-    def modify(do_check = false)
-      load_config
-      check_all if do_check
-      map_all
-      modify_all
-    end
-
-    private def load_config
-      if File.file?(@json_path)
-        File.open(@json_path, 'r+') do |f|
-          @json_data = JSON.parse(f.read)
-        end
-      else
-        raise "Json configuration file does not exist at '#{@json_path}!'"
+      it 'creates erb and config file modifiers' do
+        modifier = Cmd::Modifier.new("no.cfg", ".")
+        expect(modifier.modifiers.config_modifiers).to include(be_a ERBMapper)
+        expect(modifier.modifiers.config_modifiers).to include(be_a ConfigFileModifier)
       end
-    end
 
-    private def check_all
-      @mappers.each do |mapper|
-        mapper.check(@json_data)
-      end
-    end
-
-    private def map_all
-      @mappers.each do |mapper|
-        mapper.map(@json_data)
-      end
-    end
-
-    private def modify_all
-      @mappers.each do |mapper|
-        mapper.modify
-      end
     end
   end
+
 end

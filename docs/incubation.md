@@ -1,3 +1,8 @@
+TODOs:
+
+* local and remote workspace config to builder
+* local_workspace steps in builder
+
 Potential improvements:
 
 

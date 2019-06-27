@@ -45,8 +45,8 @@ module PiCustomizer
         $logger.warn 'No valid build environment defined!'
         env_builder = PiBuilder.new(environment, skip_build_steps)
       end
-
       env_builder
+
     end
 
   end

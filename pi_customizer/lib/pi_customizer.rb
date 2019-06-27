@@ -39,7 +39,7 @@ module PiCustomizer
 
     desc 'build ENV', 'Build pi image on environment ENV (valid environments are: VAGRANT).'
     method_option :build_sources_git_url, :default => Workspace::DEFAULT_GIT_PATH, :aliases => '-g'
-    method_option :build_sources_git_tag, :default => Workspace::DEFAULT_GIT_TAG, :aliases => '-t'    
+    method_option :build_sources_git_tag, :default => Workspace::DEFAULT_GIT_TAG, :aliases => '-t'
     method_option :remote_workspace_dir, :default => Workspace::DEFAULT_REMOTE_WORKSPACE_DIRECTORY, :aliases => '-w'
     method_option :config_file, :aliases => '-c', :required => true
     method_option :local_workspace_dir, :default => Workspace::DEFAULT_LOCAL_WORKSPACE_DIRECTORY, :aliases => '-l'
@@ -74,7 +74,7 @@ module PiCustomizer
 
     def write_image(image, device)
       begin
-        ImageWriter.new().write(image, device)
+        ImageWriter.new.write(image, device)
       rescue Exception => e
         $logger.error e.message
       end

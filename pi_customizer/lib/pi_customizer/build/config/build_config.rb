@@ -17,9 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-#
-#
-#
+
 module PiCustomizer
   module Config
 
@@ -31,6 +29,13 @@ module PiCustomizer
 
       def initialize(skip_build_steps = Array.new)
         @skip_build_steps = convert_to_skip(skip_build_steps)
+      end
+
+      ##
+      # check if a build step needs to be skipped
+
+      def skip?(build_step)
+        @skip_build_steps.include? build_step
       end
 
       ##

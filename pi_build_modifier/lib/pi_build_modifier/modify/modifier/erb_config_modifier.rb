@@ -18,46 +18,46 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../spec_helper'
-require 'rspec'
+require 'json'
+require 'pathname'
 require 'fileutils'
-require 'pi_build_modifier/modifier/pi_modifier'
-require 'pi_build_modifier/modifier_task'
-
+require 'pi_build_modifier/modify/modifier/config_modifier'
+require 'pi_build_modifier/utils/logex'
 
 module PiBuildModifier
-  RSpec.describe Task::Modifier do
+  class ERBMapper < ConfigModifier
 
-    let(:json_config) {File.dirname(__FILE__) + '/../fixtures/config.json'}
-    let(:workspace) {File.dirname(__FILE__) + '/' + 'tmp_workspace'}
-
-    before do
-      FileUtils::mkdir_p workspace
+    def initialize(working_dir)
+      @working_dir = working_dir
+      #@data = data
+      #@template_path = @data.template_path
+      #@output_path = File.join(working_dir, @data.relative_output_path)
     end
 
-    after do
-      FileUtils.rm_rf workspace
+    def modify
+      read_template
+      create_conf
     end
 
-    it 'registers all default mappers' do
-      #Given
-      pi_modifier = PiModifier.new
-      #When
-      Task::Modifier.new(json_config, workspace, pi_modifier)
-      #Then
-      expect(pi_modifier.mappers.size).to be >= 1
+    private def read_template
+      File.open(@template_path.to_s, 'r+') do |f|
+        @template = f.read
+      end
     end
 
-    it 'when the modification task is executed, modifications are made to the workspace directory' do
-      #Given
-      pi_modifier_task = Task::Modifier.new(json_config, workspace)
+    private def render
+      ERB.new(@template).result(@data.get_binding)
+    end
 
-      #When
-      pi_modifier_task.execute
+    private def create_conf
 
-      #Then
-      expect(Dir["#{workspace}/**/*"].length).to be > 0
+      $logger.info "create dir at #{@output_path}"
+
+      FileUtils.mkdir_p File.dirname @output_path
+
+      File.open(@output_path, 'w+') do |f|
+        f.write(render)
+      end
     end
   end
-
 end
