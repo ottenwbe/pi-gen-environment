@@ -16,23 +16,23 @@ The image is built in an isolated [build environment](#environments), e.g.,
 a vagrant box, which is orchestrated by the pi_customizer.
 The customization is performed by a Ruby Gem (_pi_build_modifier_) in the build environment by adapting the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
 
+# Why this project?
 
-# WIP Notice
-
-This project is still under construction and in a pre release phase.
+At the beginning of the pi_customizer project, [pi-gen](https://github.com/RPi-Distro/pi-gen) did not offer much options to customize the build. 
+This changed phenomenally! However, pi_customizer offers some additional features.
 
 # Install
 
 ## Prerequisites
 
 To customize the build process the following prerequisites are expected:
-* The _pi_customizer_ gem is installed (see the [__Deploy Gem__](#deploy_gem) section for details) 
+* The _pi_customizer_ gem is installed (see the [__Install Gem__](#deploy_gem) section for details) 
 * One of the supported build environments is accessible (see the [__Environments__](#environments) section):  
     * Vagrant 
     * Docker (feature is still in development)    
 
 <a name="deploy_gem"></a>
-## Deploy Gem
+## Install Gem
 
 To customize your Raspbian image the pi_customizer gem must be installed on the machine that coordinates the build process.
 This is typically your local machine.
@@ -158,7 +158,11 @@ An example of the json config file with all current configuration options
 
 # Development
 
-### Prerequisites
+## Why Ruby?
+
+Well, the author wanted to learn Ruby.
+
+## Prerequisites
 
 * Make sure Ruby is installed (and dependencies to build native extensions). See, https://github.com/rbenv/rbenv and https://github.com/rbenv/ruby-build.
 

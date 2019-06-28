@@ -18,46 +18,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'fileutils'
-require 'pi_build_modifier/modify/modifier/config_modifier'
+require_relative '../../spec_helper'
+require 'pi_build_modifier/modify/modifiers'
 
 
-module PiBuildModifier
+RSpec.describe PiBuildModifier::Modifiers do
 
-  ##
-  # RunModifier is a class which appends lines to the sys-tweaks run file in the pi-gen build directory.
-  # By default this is the file 'stage2/01-sys-tweaks/01-run.sh'.
+  context 'ModifiersBuilder' do
 
-  class RunModifier < ConfigModifier
-
-    attr_reader :relative_output_path, :appender
-
-    def initialize
-      super
-      @appender = Array.new
-      @workspace = nil
-      @relative_output_path = 'stage2/01-sys-tweaks/01-run.sh'
+    it 'creates Modifiers' do
+      modifier = PiBuildModifier::Modifiers::ModifiersBuilder.build(".", "no.cfg")
+      expect(modifier.config_modifiers).not_to be_nil
+      expect(modifier.config_modifiers).not_to be_a PiBuildModifier::Modifiers::Modifiers
     end
 
-    def mapper(workspace)
-      @workspace = workspace
-      self
-    end
-
-    def append(appender)
-      @appender << appender
-    end
-
-    ##
-    # modify the sys-tweaks run file by adding lines at the end of the file
-
-    def modify
-      open("#{@workspace}/#{@relative_output_path}", 'a') do |f|
-        f.puts ''
-        @appender.each do |a|
-          f.puts "source #{@workspace}/#{a.append_line}"
-        end
-      end
+    it 'creates and adds erb and config file modifiers to the Modifiers' do
+      modifier = PiBuildModifier::Modifiers::ModifiersBuilder.build("no.cfg", ".")
+      expect(modifier.config_modifiers).to include(be_a PiBuildModifier::Modifiers::ERBConfigModifier)
+      expect(modifier.config_modifiers).to include(be_a PiBuildModifier::Modifiers::ConfigFileModifier)
     end
 
   end

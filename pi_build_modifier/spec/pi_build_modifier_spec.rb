@@ -21,7 +21,7 @@
 require_relative 'spec_helper'
 require 'pi_build_modifier'
 require 'pi_build_modifier/version'
-require 'pi_build_modifier/modify/modifier_cmd'
+require 'pi_build_modifier/modify/modifiers'
 
 RSpec.describe PiBuildModifier do
   it 'has a version number' do
@@ -62,8 +62,8 @@ RSpec.describe PiBuildModifier::PiBuildModifier do
     end
 
     it 'triggers the modifier task' do
-      expect(PiBuildModifier::Cmd::Modifier).to receive(:new).with(tmp_json_config, tmp_workspace).and_return(PiBuildModifier::Cmd::Modifier.new(tmp_json_config, tmp_workspace))
-      expect_any_instance_of(PiBuildModifier::Cmd::Modifier).to receive(:execute)
+      expect(PiBuildModifier::Modifiers::ModifiersBuilder).to receive(:build).with(tmp_workspace, tmp_json_config).and_return(PiBuildModifier::Modifiers::Modifiers.new)
+      expect_any_instance_of(PiBuildModifier::Modifiers::Modifiers).to receive(:modify_configs)
       PiBuildModifier::PiBuildModifier.start(['modify', tmp_json_config, tmp_workspace])
     end
   end

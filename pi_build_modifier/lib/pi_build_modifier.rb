@@ -19,10 +19,8 @@
 # SOFTWARE.
 
 require 'thor'
-require 'pi_build_modifier/modify/net-tweaks/wifi_network'
-require 'pi_build_modifier/modify/modifier/erb_config_modifier'
+require 'pi_build_modifier/modify/modifiers'
 require 'pi_build_modifier/version'
-require 'pi_build_modifier/modify/modifier_cmd'
 require 'pi_build_modifier/utils/logex'
 
 module PiBuildModifier
@@ -38,7 +36,7 @@ module PiBuildModifier
     desc 'modify CONFIG WORKSPACE', 'Modify the pi image sources at the specified WORKSPACE with the specified configuration file CONFIG.'
     def modify(config, workspace)
       $logger.debug "Modifying with a configuration read from '#{config}' in the workspace '#{workspace}'"
-      Cmd::Modifier.new(config, workspace).execute
+      Modifiers::ModifiersBuilder::build(workspace, config).modify_configs
     end
 
     ##
