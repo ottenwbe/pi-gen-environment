@@ -29,27 +29,32 @@ module PiCustomizer
 
     class PiBuilder
 
-      def initialize(environment, build_config)
-        @build_executor = BuildExecutor.new(environment, build_config)
-      end
-
       ##
-      # build orchestrates an environment and therefore the build process of an image
+      # build orchestrates the build steps related to an environment and therefore the build process of an image
 
-      def build
+      def build(environment, build_config)
+        build_executor = BuildExecutor.new(environment, build_config)
         begin
-          execute_builder
+          execute_builder(build_executor)
         rescue Exception => e
           $logger.error e.message
         ensure
-          ensure_builder
+          ensure_builder(build_executor)
         end
       end
 
-      protected def ensure_builder
+      private def execute_builder(build_executor)
+        build_executor.check
+        build_executor.prepare
+        build_executor.start
+        build_executor.build_image
+        build_executor.publish
+        build_executor.stop
+        build_executor.clean_up
       end
 
-      protected def execute_builder
+      private def ensure_builder(build_executor)
+        build_executor.ensure
       end
 
     end

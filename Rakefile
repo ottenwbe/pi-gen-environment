@@ -14,6 +14,7 @@ begin
   require 'rspec/core/rake_task'
 
   RSpec::Core::RakeTask.new(:spec) do |t|
+
     # find all spec files (for all gems)
     pattern = ''
     all_gems.each do |gem|
@@ -26,13 +27,13 @@ begin
     # tell rspec to execute tests on all spec files
     t.pattern = pattern
   end
+
 rescue LoadError
   puts 'RSpec is not installed. This means rake is not able to execute tests! '
   puts '* Try: gem install rspec'
 end
 
 task :default => :spec
-
 
 # release task
 
@@ -64,20 +65,20 @@ end
 desc "Show the gem's versions"
 task :versions do
   require_relative "#{PI_CUSTOMIZER}/lib/#{PI_CUSTOMIZER}/version"
-  puts "#{PI_CUSTOMIZER} Versions"  
+  puts "#{PI_CUSTOMIZER} Versions"
   puts ' '
   puts '*** Dev VERSION ***'
   puts ' '
   puts "#{PI_CUSTOMIZER}: #{PiCustomizer::VERSION} "
-  system "gem list #{PI_CUSTOMIZER} --pre --remote"  
+  system "gem list #{PI_CUSTOMIZER} --pre --remote"
   puts ' '
-  require_relative "#{PI_BUILD_MODIFIER}/lib/#{PI_BUILD_MODIFIER}/version"  
+  require_relative "#{PI_BUILD_MODIFIER}/lib/#{PI_BUILD_MODIFIER}/version"
   puts "#{PI_BUILD_MODIFIER} Versions"
   puts ' '
   puts '*** Dev VERSION ***'
   puts ' '
   puts "#{PI_BUILD_MODIFIER}: #{PiBuildModifier::VERSION}"
-  system "gem list #{PI_BUILD_MODIFIER} --pre --remote"  
+  system "gem list #{PI_BUILD_MODIFIER} --pre --remote"
 end
 
 # build tasks

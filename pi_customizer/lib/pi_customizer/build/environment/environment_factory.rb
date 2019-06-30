@@ -19,7 +19,6 @@
 # SOFTWARE.
 
 require 'pi_customizer/build/environment/environment'
-require 'pi_customizer/build/environment/aws/aws'
 require 'pi_customizer/build/environment/vagrant/vagrant'
 require 'pi_customizer/build/environment/docker/docker'
 require 'pi_customizer/build/config/remote_workspace'
@@ -30,7 +29,6 @@ require 'pi_customizer/utils/logex'
 module PiCustomizer
   module Environment
 
-    ENV_AWS = 'AWS'
     ENV_VAGRANT = 'VAGRANT'
     ENV_DOCKER = 'DOCKER'
     ENV_ECHO = 'ECHO'
@@ -40,8 +38,6 @@ module PiCustomizer
 
     def Environment.environment_factory(env, local_workspace, remote_workspace)
       case env
-      when ENV_AWS
-        environment = AWS.new(remote_workspace, local_workspace)
       when ENV_VAGRANT
         environment = Vagrant.new(remote_workspace, local_workspace)
       when ENV_DOCKER

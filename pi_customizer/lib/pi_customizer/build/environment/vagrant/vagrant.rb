@@ -35,6 +35,7 @@ module PiCustomizer
       def prepare
         $logger.info '[Prepare] pi-image in vagrant environment'
         VagrantFileRenderer.new(VagrantFile.new(@config, @workspace)).create_from_template
+        system 'vagrant box update' # cleanup old environment
       end
 
       def start
@@ -50,10 +51,6 @@ module PiCustomizer
         Dir.chdir(@config.workspace_directory) do
           system 'vagrant provision'
         end
-      end
-
-      def clean_up
-        $logger.info '[Clean Up] pi-image in local vagrant environment'
       end
 
       def stop

@@ -21,9 +21,11 @@
 require 'thor'
 require 'fileutils'
 require 'pi_customizer/version'
-require 'pi_customizer/build/builder/builder_factory'
+require 'pi_customizer/build/builder/builder'
 require 'pi_customizer/build/config/remote_workspace'
 require 'pi_customizer/build/config/local_workspace'
+require 'pi_customizer/build/config/build_config'
+require 'pi_customizer/build/environment/environment_factory'
 require 'pi_customizer/write/image_writer'
 require 'pi_customizer/utils/logex'
 
@@ -51,8 +53,12 @@ module PiCustomizer
       begin
         remote_workspace = Workspace::RemoteWorkspace.new("#{options[:remote_workspace_dir]}", "#{options[:build_sources_git_url]}", "#{options[:build_sources_git_tag]}")
         local_workspace = Workspace::LocalWorkspaceConfig.new("#{options[:config_file]}", "#{options[:local_workspace_dir]}", "#{options[:modifier_gem]}")
-        builder = Builder::builder_factory(env, local_workspace, remote_workspace, options[:skip_steps])
-        builder.build
+        build_config = Config::BuildConfig.new(options[:skip_steps])
+
+        environment = Environment::environment_factory(env, local_workspace, remote_workspace)
+        builder = Builder::PiBuilder.new
+
+        builder.build(environment, build_config)
       rescue Exception => e
         $logger.error e.message
       end
@@ -68,7 +74,7 @@ module PiCustomizer
     end
 
     ##
-    # Allow users to write an image to a SD card
+    # Allow users to write an image to a device, i.e., a SD card
 
     desc 'write IMAGE DEVICE', 'Write an image to a device.'
 

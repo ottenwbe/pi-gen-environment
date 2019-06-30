@@ -62,7 +62,7 @@ RSpec.describe PiBuildModifier::PiBuildModifier do
     end
 
     it 'triggers the modifier task' do
-      expect(PiBuildModifier::Modifiers::ModifiersBuilder).to receive(:build).with(tmp_workspace, tmp_json_config).and_return(PiBuildModifier::Modifiers::Modifiers.new)
+      expect(PiBuildModifier::Modifiers::ModifiersBuilder).to receive(:build_defaults).with(tmp_workspace, tmp_json_config).and_return(PiBuildModifier::Modifiers::Modifiers.new)
       expect_any_instance_of(PiBuildModifier::Modifiers::Modifiers).to receive(:modify_configs)
       PiBuildModifier::PiBuildModifier.start(['modify', tmp_json_config, tmp_workspace])
     end

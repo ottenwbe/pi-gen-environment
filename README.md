@@ -14,12 +14,15 @@ with all customizations baked into the image.
 
 The image is built in an isolated [build environment](#environments), e.g., 
 a vagrant box, which is orchestrated by the pi_customizer.
-The customization is performed by a Ruby Gem (_pi_build_modifier_) in the build environment by adapting the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
+The customization is performed behind the scenes by a Ruby Gem (_pi_build_modifier_) in the build environment by adapting the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
+
+Finally, pi_customizer also allows you to write the image to an SD card.
 
 # Why this project?
 
 At the beginning of the pi_customizer project, [pi-gen](https://github.com/RPi-Distro/pi-gen) did not offer much options to customize the build. 
-This changed phenomenally! However, pi_customizer offers some additional features.
+This changed phenomenally! 
+However, pi_customizer still offers some additional features.
 
 # Install
 
@@ -110,7 +113,9 @@ An example of the json config file with all current configuration options
     {
       "system": {
         "name" : "custompi",
-        "type" : "lite"
+        "type" : "lite",
+        "username" : "pi", 
+        "password" : "raspberry"
       },
       "ssh" : {
         "enabled" : true
@@ -139,6 +144,10 @@ An example of the json config file with all current configuration options
 
 * To build a lite version of the pi image, specify the __type__ as lite, otherwise specify it as full. The default is _full_.
 
+* Select the __username__ for the first user, by default this is __pi__.
+
+* To change the default __raspberry__ password, specify a __password__. 
+
 ### The ssh section
 
 * To disable ssh by default, set __enabled__ to false.
@@ -155,6 +164,24 @@ An example of the json config file with all current configuration options
 ### The wifi section
 
 * The wifi section allows you to specify networks and passphrase __OR__ wpa_passpharse as well as the wpa_country.
+
+<a name="cli_options"></a>
+## Command Line Options
+
+Change the location of the configuration file with ```--config, -c```.
+``` 
+pi_customizer -c myconfig.conf 
+``` 
+
+Change the git location of the pi-gen build sources with ```--build_sources_git_url -g``` or the used branch/tag  ```--build_sources_git_tag, -t```. __NOTE__: Only works with tags from 2019 or later.
+``` 
+pi_customizer -g https://github.com/ottenwbe/pi-gen.git -t 2019-06-20-raspbian-buster
+``` 
+
+Change the workspace directory on the local machine with ```--local_workspace_dir, -l```.
+``` 
+pi_customizer -l ./workspace
+``` 
 
 # Development
 

@@ -34,12 +34,12 @@ module PiCustomizer
     let(:test_vagrant_file) {File.dirname(__FILE__) + '/../../../fixtures/TestVagrantfile'}
 
     after(:each) do
-      #FileUtils.rm_rf tmp_dir
+      FileUtils.rm_rf tmp_dir
     end
 
     it 'renders a Vagrantfile in the given temporary directory' do
       vagrant_file_builder.create_from_template
-      expect(Pathname.new(tmp_dir+'/Vagrantfile')).to be_file
+      expect(Pathname.new(tmp_dir + '/Vagrantfile')).to be_file
     end
 
     it 'renders a Vagrantfile which copies a gem to the vagrant box when the modifier_gem_path is given' do
@@ -50,7 +50,7 @@ module PiCustomizer
       #When
       v_file_builder.create_from_template
       #Then
-      expect(File.read(tmp_dir+'/Vagrantfile').to_s).to match(/config.vm.provision 'file', source: [-a-zA-Z0-9'\/_]+#{gem_name}/)
+      expect(File.read(tmp_dir + '/Vagrantfile').to_s).to match(/config.vm.provision 'file', source: [-a-zA-Z0-9'\/_]+#{gem_name}/)
       #expect(File.read(tmp_dir+'/Vagrantfile').to_s).to eq File.read(test_vagrant_file).to_s
     end
 

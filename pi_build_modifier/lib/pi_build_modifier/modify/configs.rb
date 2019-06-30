@@ -18,11 +18,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+##
+# configs.rb comprises all configurations of the pi-build sources to avoid a require hell
+
 require 'json'
 require 'openssl'
 require 'pi_build_modifier/utils/logex'
 
 module PiBuildModifier
+
+  ######################## Init ########################
+
+
+  ##
+  # Configuration changes of the pi-gen build sources
+
   module Configs
 
     def Configs.create_config_modifiers
@@ -30,21 +40,43 @@ module PiBuildModifier
     end
 
     def Configs.create_erb_modifiers
-      [Locale.new, Boot.new]
+      [Locale.new, Boot.new, Wifi.new]
     end
 
     def Configs.create_config_file_modifiers
-      [NameConfig.new, SshConfig.new, Wifi.new]
+      [SystemConfig.new, SshConfig.new]
     end
+
+    SYSTEM = 'system'
+    NAME = 'name'
+    ENABLED = 'enabled'
+    SSH = 'ssh'
+    PASSPHRASE = 'passphrase'
+    WPA_PASSPHRASE = 'wpa_passphrase'
+    SSID = 'ssid'
+    LOCALE = 'locale'
+    GEN = 'gen'
+    SYS = 'sys'
+    C_GROUPS = 'cgroups'
+    C_GROUP_MEMORY = 'memory'
+    TYPE = 'type'
+    USERNAME = 'username'
+    PASSWORD = 'password'
 
     ######################## Config File Modifiers (ConfigFileModifier) ########################
 
-    class NameConfig
 
-      attr_reader :name, :type
+    ##
+    # Customization of the pi image's name
+
+    class SystemConfig
+
+      attr_reader :name, :username, :password
 
       def initialize
         @name = 'custompi'
+        @username = nil
+        @password = nil
       end
 
       def check
@@ -53,18 +85,33 @@ module PiBuildModifier
 
       def map(json_data)
         unless json_data.nil?
-          @name = json_data['system']['name'] if json_data.has_key?('system') && json_data['system'].has_key?('name')
+          @name = json_data[SYSTEM][NAME] if json_data.has_key?(SYSTEM) && json_data[SYSTEM].has_key?(NAME)
+          @username = json_data[SYSTEM][USERNAME] if json_data.has_key?(SYSTEM) && json_data[SYSTEM].has_key?(USERNAME)
+          @password = json_data[SYSTEM][PASSWORD] if json_data.has_key?(SYSTEM) && json_data[SYSTEM].has_key?(PASSWORD)
         else
           $logger.error "No json configuration found"
         end
       end
 
       def config_line
-        "IMG_NAME='#{@name}'"
+        result = "IMG_NAME='#{@name}'"
+        unless @username.nil?
+          result = "#{result}\nFIRST_USER_NAME=#{@username}"
+        end
+        unless @password.nil?
+          result = "#{result}\nFIRST_USER_PASS=#{@password}"
+        end
+        result
       end
+
     end
 
+    ##
+    # Enables or Disables SSH by default in the built image
+
     class SshConfig
+
+      attr_reader :enable
 
       def initialize
         @enable = true
@@ -76,7 +123,7 @@ module PiBuildModifier
 
       def map(json_data)
         unless json_data.nil?
-          @enable = json_data['ssh']['enabled'] if json_data.has_key?('ssh') && json_data['ssh'].has_key?('enabled')
+          @enable = json_data[SSH][ENABLED] if json_data.has_key?(SSH) && json_data[SSH].has_key?(ENABLED)
         else
           $logger.error 'Ssh could not be configured: Invalid json data.'
         end
@@ -89,32 +136,25 @@ module PiBuildModifier
       end
     end
 
+    ######################## ERB Modifiers (ERBConfigModifier) ########################
+
     ##
     # Wifi represents the wpa_supplicant's configuration
 
     class Wifi
 
-      PASSPHRASE = 'passphrase'
-
-      WPA_PASSPHRASE = 'wpa_passphrase'
-
-      SSID = 'ssid'
-
+      attr_reader :template_path, :relative_output_path
 
       def initialize
         @networks = map_network(nil)
         @wpa_country = 'DE'
+        @template_path = File.join(File.dirname(__FILE__), '/templates/wpa_supplicant.conf.erb').to_s
+        @relative_output_path = 'stage2/02-net-tweaks/files/wpa_supplicant.conf'
       end
 
       def check
         true
       end
-
-      #    def check(json_data)
-      #      unless File.file?(@relative_output_path)
-      #        raise "File #{relative_output_path} does not exist"
-      #      end
-      #    end
 
       ##
       # map the 'wifi' section in the json configuration to the instance variables.
@@ -151,28 +191,16 @@ module PiBuildModifier
         networks
       end
 
-      def config_line
-        result = "WPA_COUNTRY=#{@wpa_country}"
-        unless @networks.length == 0
-          result = "#{result}\nWPA_PASSWORD=#{@networks[0].psk}\nWPA_ESSID=#{@networks[0].ssid}"
-        end
-        result
+      def get_binding
+        binding
       end
 
     end
 
-    ######################## ERB Modifiers (ERBConfigModifier) ########################
-
     ##
-    # The Locale class is used to customize the locales
+    # Customization of the locales
 
     class Locale
-
-      LOCALE = 'locale'
-
-      GEN = 'gen'
-
-      SYS = 'sys'
 
       attr_accessor :gen_locales, :sys_locales
 
@@ -204,13 +232,9 @@ module PiBuildModifier
 
 
     ##
-    # The Locale class is used to customize locales
+    # Enable cgroups during boot
 
     class Boot
-
-      C_GROUPS = 'cgroups'
-
-      C_GROUP_MEMORY = 'memory'
 
       attr_accessor :c_groups
 
@@ -259,7 +283,7 @@ module PiBuildModifier
 
       def map(json_data)
         unless json_data.nil?
-          @type = json_data['system']['type'] if json_data.has_key?('system') && json_data['system'].has_key?('type')
+          @type = json_data[SYSTEM][TYPE] if json_data.has_key?(SYSTEM) && json_data[SYSTEM].has_key?(TYPE)
         else
           $logger.error "No json configuration found"
         end
@@ -290,6 +314,13 @@ module PiBuildModifier
       def initialize(ssid, psk)
         @ssid = ssid
         @psk = psk
+      end
+
+      def to_s
+        sprintf('{
+  ssid="%s"
+  psk=%s
+}', ssid, psk)
       end
     end
 

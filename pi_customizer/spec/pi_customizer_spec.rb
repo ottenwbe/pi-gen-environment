@@ -20,53 +20,53 @@
 
 require_relative 'spec_helper'
 require 'fileutils'
-require 'rspec'
 require 'pi_customizer'
 require 'pi_customizer/utils/logex'
 require 'pi_customizer/version'
 require 'pi_customizer/build/config/local_workspace'
+require 'pi_customizer/build/environment/environment_factory'
 require 'pi_customizer/utils/logex'
 
 
 describe PiCustomizer::PiCustomizer do
 
-  context 'build' do
+  context '#build' do
     it 'starts a build when the command line parameter \'build\' is passed' do
-      expect(PiCustomizer::Builder).to receive(:builder_factory).with(anything(), anything(), anything(), anything())
+      expect_any_instance_of(PiCustomizer::Builder::PiBuilder).to receive(:build).with(anything, anything)
       PiCustomizer::PiCustomizer.start(%w(build ECHO -c tst))
     end
     it 'reads the modifier_gem_path parameter' do
-      expect(PiCustomizer::Builder).to receive(:builder_factory).with(anything(), PiCustomizer::Workspace::LocalWorkspaceConfig.new('cfg', '', 'mod'), anything(), anything())
+      expect(PiCustomizer::Environment).to receive(:environment_factory).with(PiCustomizer::Environment::ENV_ECHO, PiCustomizer::Workspace::LocalWorkspaceConfig.new('cfg', '', 'mod'), anything)
       PiCustomizer::PiCustomizer.start(%w(build ECHO --modifier_gem=mod --config_file=cfg))
     end
     it 'reads the local_workspace_dir parameter' do
-      expect(PiCustomizer::Builder).to receive(:builder_factory).with(anything(), PiCustomizer::Workspace::LocalWorkspaceConfig.new('cfg', 'tmp', ''), anything(), anything())
+      expect(PiCustomizer::Environment).to receive(:environment_factory).with(PiCustomizer::Environment::ENV_ECHO, PiCustomizer::Workspace::LocalWorkspaceConfig.new('cfg', 'tmp', ''), anything)
       PiCustomizer::PiCustomizer.start(%w(build ECHO --local_workspace_dir=tmp --config_file=cfg))
     end
     it 'reads the config_path parameter' do
-      expect(PiCustomizer::Builder).to receive(:builder_factory).with(anything(), PiCustomizer::Workspace::LocalWorkspaceConfig.new('cfg', '', ''), anything(), anything())
+      expect(PiCustomizer::Environment).to receive(:environment_factory).with(PiCustomizer::Environment::ENV_ECHO, PiCustomizer::Workspace::LocalWorkspaceConfig.new('cfg', '', ''), anything)
       PiCustomizer::PiCustomizer.start(%w(build ECHO --config_file=cfg))
     end
     it 'reads the remote_workspace_dir parameter' do
-      expect(PiCustomizer::Builder).to receive(:builder_factory).with(anything(), anything(), PiCustomizer::Workspace::RemoteWorkspace.new('rdir', ''), anything())
+      expect(PiCustomizer::Environment).to receive(:environment_factory).with(PiCustomizer::Environment::ENV_ECHO, anything, PiCustomizer::Workspace::RemoteWorkspace.new('rdir', ''))
       PiCustomizer::PiCustomizer.start(%w(build ECHO --remote_workspace_dir=rdir  -c tst))
     end
     it 'reads the build_sources_git_url parameter' do
-      expect(PiCustomizer::Builder).to receive(:builder_factory).with(anything(), anything(), PiCustomizer::Workspace::RemoteWorkspace.new('', 'git'), anything())
+      expect(PiCustomizer::Environment).to receive(:environment_factory).with(PiCustomizer::Environment::ENV_ECHO, anything, PiCustomizer::Workspace::RemoteWorkspace.new('', 'git'))
       PiCustomizer::PiCustomizer.start(%w(build ECHO --build_sources_git_url=git  -c tst))
     end
     it 'logs unexpected errors' do
-      expect($logger).to receive(:error).with(anything())
-      allow(PiCustomizer::Builder).to receive(:builder_factory).and_throw('test throw')
+      expect($logger).to receive(:error).with(anything)
+      allow(PiCustomizer::Environment).to receive(:environment_factory).and_throw('test throw')
       PiCustomizer::PiCustomizer.start(%w(build NONE -c "tst"))
     end
     it 'does not start if no config is provided' do
-      expect(STDERR).to receive(:puts).with(anything())
+      expect(STDERR).to receive(:puts).with(anything)
       PiCustomizer::PiCustomizer.start(%w(build ECHO))
     end
   end
 
-  context 'v' do
+  context '#version' do
     it 'returns the app\'s version' do
       expect(STDOUT).to receive(:puts).with(PiCustomizer::VERSION)
       PiCustomizer::PiCustomizer.start(%w(v))
@@ -80,13 +80,18 @@ describe PiCustomizer::PiCustomizer do
     end
   end
 
-  context 'write' do
+  context '#write' do
     it 'triggers the write of a given image to a given device' do
       allow(PiCustomizer::ImageWriter).to receive(:dispatch_write)
       expected_img = 'test.img'
       expected_dev = '/dev/null'
       expect_any_instance_of(PiCustomizer::ImageWriter).to receive(:write).with(expected_img, expected_dev)
       PiCustomizer::PiCustomizer.start(['write', "#{expected_img}", "#{expected_dev}"])
+    end
+    it 'logs unexpected errors' do
+      expect($logger).to receive(:error).with(anything)
+      allow(PiCustomizer::ImageWriter).to receive(:write).and_throw('test throw')
+      PiCustomizer::PiCustomizer.start(%w'write img dev')
     end
   end
 

@@ -20,7 +20,8 @@
 
 require 'json'
 require 'erb'
-require 'pi_build_modifier/modify/configs/configs'
+require 'fileutils'
+require 'pi_build_modifier/modify/configs'
 require 'pi_build_modifier/utils/logex'
 
 module PiBuildModifier
@@ -28,61 +29,64 @@ module PiBuildModifier
   module Modifiers
 
     ##
-    # ModifiersBuilder triggers all changes specified in the config file. To this end,
-    # it creates and calls specialized 'Modifiers' which map the config to
-    # the the individual pi-gen build scripts.
+    # ModifiersBuilder creates a Modifiers object and adds build configuration modifiers which map the (json) config to
+    # the the individual pi-gen build sources
 
     class ModifiersBuilder
+      class << self
 
-      ##
-      # Initialization and configuration of the modifiers that are used to change and configure the build sources
+        ##
+        # Initialization and configuration of the modifiers that are used to change and configure the build sources
 
-      def ModifiersBuilder.build(workspace, config)
-        modifiers = Modifiers.new
-        modifiers.with_json_configuration(config)
-        create_modifiers(workspace).each do |*, modifier|
-          modifiers.with_config_modifier(modifier)
+        def build_defaults(workspace, config)
+          modifiers = Modifiers.new
+          modifiers.with_json_configuration(config)
+          create_modifiers(workspace).each do |*, modifier|
+            modifiers.with_config_modifier(modifier)
+          end
+          modifiers
         end
-        modifiers
-      end
 
-      def ModifiersBuilder.create_modifiers(workspace)
-        {
-            :erb_config => create_erb_modifier(workspace),
-            :config_file => create_config_file_modifier(workspace),
-            :default => create_config_modifier(workspace)
-        }
-      end
-
-      def ModifiersBuilder.create_config_modifier(workspace)
-        config_modifier = ConfigModifier.new(workspace)
-        Configs::create_config_modifiers.each do |modifier|
-          config_modifier.add(modifier)
+        private def create_modifiers(workspace)
+          {
+              :erb_config => create_erb_modifier(workspace),
+              :config_file => create_config_file_modifier(workspace),
+              :default => create_config_modifier(workspace)
+          }
         end
-        config_modifier
-      end
 
-      def ModifiersBuilder.create_erb_modifier(workspace)
-        erb_modifier = ERBConfigModifier.new(workspace)
-        Configs::create_erb_modifiers.each do |modifier|
-          erb_modifier.add(modifier)
+        private def create_config_modifier(workspace)
+          config_modifier = ConfigModifier.new(workspace)
+          Configs::create_config_modifiers.each do |modifier|
+            config_modifier.add(modifier)
+          end
+          config_modifier
         end
-        erb_modifier
-      end
 
-      def ModifiersBuilder.create_config_file_modifier(workspace)
-        config_file_modifier = ConfigFileModifier.new(workspace)
-        Configs::create_config_file_modifiers.each do |modifier|
-          config_file_modifier.add(modifier)
+        private def create_erb_modifier(workspace)
+          erb_modifier = ERBConfigModifier.new(workspace)
+          Configs::create_erb_modifiers.each do |modifier|
+            erb_modifier.add(modifier)
+          end
+          erb_modifier
         end
-        config_file_modifier
-      end
 
+        private def create_config_file_modifier(workspace)
+          config_file_modifier = ConfigFileModifier.new(workspace)
+          Configs::create_config_file_modifiers.each do |modifier|
+            config_file_modifier.add(modifier)
+          end
+          config_file_modifier
+        end
+      end
     end
+
+    ##
+    # Modifiers orchestrates all changes specified in the (json) config file.
 
     class Modifiers
 
-      attr_reader :config_modifiers
+      attr_reader :config_modifiers, :json_data
 
       def initialize
         @config_modifiers = Array.new
@@ -143,9 +147,8 @@ module PiBuildModifier
     end
 
     ##
-    # ConfigModifier represents a container that is used by the pi_build_modifier to call
-    # the necessary steps to modify a build configuration.
-    # It triggers check, mapping, and modification steps for one build configuration.
+    # ConfigModifier (and derived classes) calls the necessary steps to modify pi-gen build sources.
+    # It triggers check, mapping, and modification steps for one build configuration change.
 
     class ConfigModifier
 
@@ -176,6 +179,9 @@ module PiBuildModifier
 
     end
 
+    ##
+    # ConfigFileModifier creates a pi-gen config file
+
     class ConfigFileModifier < ConfigModifier
 
       def initialize(workspace)
@@ -197,6 +203,8 @@ module PiBuildModifier
 
     end
 
+    ##
+    # ERBConfigModifier creates configurations from erb templates
 
     class ERBConfigModifier < ConfigModifier
 

@@ -19,6 +19,7 @@
 # SOFTWARE.
 
 require 'simplecov'
+require 'rspec'
 #require 'codecov'
 
 SimpleCov.start do

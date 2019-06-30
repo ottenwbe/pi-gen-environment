@@ -36,7 +36,7 @@ module PiBuildModifier
     desc 'modify CONFIG WORKSPACE', 'Modify the pi image sources at the specified WORKSPACE with the specified configuration file CONFIG.'
     def modify(config, workspace)
       $logger.debug "Modifying with a configuration read from '#{config}' in the workspace '#{workspace}'"
-      Modifiers::ModifiersBuilder::build(workspace, config).modify_configs
+      Modifiers::ModifiersBuilder::build_defaults(workspace, config).modify_configs
     end
 
     ##

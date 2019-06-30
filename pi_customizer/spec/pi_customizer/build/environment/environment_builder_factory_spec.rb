@@ -21,28 +21,25 @@
 require_relative '../../../spec_helper'
 require 'rspec'
 require 'pi_customizer/build/environment/environment_factory'
+require 'pi_customizer/build/environment/environment'
 require 'pi_customizer/build/environment/docker/docker'
-require 'pi_customizer/build/environment/aws/aws'
+require 'pi_customizer/build/environment/vagrant/vagrant'
 
-module PiCustomizer
-  module Environment
-    RSpec.describe 'environment_factory' do
+RSpec.describe 'environment_factory' do
 
-      it 'creates a vagrant environment when ENV_VAGRANT is specified' do
-        env = Environment::environment_factory(ENV_VAGRANT, '', '')
-        expect(env).to be_a Vagrant
-      end
-
-      it 'creates a docker environment when ENV_DOCKER is specified' do
-        env = Environment::environment_factory(ENV_DOCKER, '', '')
-        expect(env).to be_a Docker
-      end
-
-      it 'creates an AWS environment when ENV_AWS is specified' do
-        env = Environment::environment_factory(ENV_AWS, '', '')
-        expect(env).to be_a AWS
-      end
-
-    end
+  it 'creates a vagrant environment when ENV_VAGRANT is specified' do
+    env = PiCustomizer::Environment::environment_factory(PiCustomizer::Environment::ENV_VAGRANT, '', '')
+    expect(env).to be_a PiCustomizer::Environment::Vagrant
   end
+
+  it 'creates a docker environment when ENV_DOCKER is specified' do
+    env = PiCustomizer::Environment::environment_factory(PiCustomizer::Environment::ENV_DOCKER, '', '')
+    expect(env).to be_a PiCustomizer::Environment::Docker
+  end
+
+  it 'creates an echo environment when ENV_ECHO is specified' do
+    env = PiCustomizer::Environment::environment_factory(PiCustomizer::Environment::ENV_DOCKER, '', '')
+    expect(env).to be_a PiCustomizer::Environment::Docker
+  end
+
 end
