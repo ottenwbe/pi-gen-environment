@@ -40,6 +40,7 @@ module PiCustomizer
     end
 
     private def dispatch_write(image, device)
+      puts "Note: Writing #{image} to #{device} requires sudo privileges"
       extension = File.extname(image)
       if @zip_formats.include? extension
         write_zip(image, device)
@@ -51,11 +52,11 @@ module PiCustomizer
     end
 
     private def write_zip(image, device)
-      run("unzip -p #{image} | dd of=#{device} bs=4M conv=fsync")
+      run("unzip -p #{image} | sudo dd of=#{device} bs=4M conv=fsync")
     end
 
     private def write_img(image, device)
-      run("dd if=#{image} of=#{device} bs=4M conv=fsync")
+      run("sudo dd if=#{image} of=#{device} bs=4M conv=fsync")
     end
 
     private def run(command)

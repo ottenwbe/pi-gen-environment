@@ -9,20 +9,14 @@
 
 
 The _pi_customizer_ allows you to adapt Raspbian images to your needs.
-To this end, the Raspbian image is be built from [scratch](https://github.com/ottenwbe/pi-gen.git) 
+To this end, an image is built from [scratch](https://github.com/ottenwbe/pi-gen.git) 
 with all customizations baked into the image. 
 
 The image is built in an isolated [build environment](#environments), e.g., 
 a vagrant box, which is orchestrated by the pi_customizer.
-The customization is performed behind the scenes by a Ruby Gem (_pi_build_modifier_) in the build environment by adapting the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
+The customization is performed behind the scenes by Ruby scripts (_pi_build_modifier_) in the build environment by adapting the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
 
 Finally, pi_customizer also allows you to write the image to an SD card.
-
-# Why this project?
-
-At the beginning of the pi_customizer project, [pi-gen](https://github.com/RPi-Distro/pi-gen) did not offer much options to customize the build. 
-This changed phenomenally! 
-However, pi_customizer still offers some additional features.
 
 # Install
 
@@ -84,7 +78,7 @@ Note: feature still in development
 Docker uses a temporary folder as volume to build the image. 
 The folder location can be changed with the build option __tmp-folder__, which is set to "${PWD}/tmp" by default.
 
-Note: the type of the tmp directory needs to be changed on SELinux
+Note: the type of the workspace directory needs to be changed on SELinux
 
     chcon -Rt svirt_sandbox_file_t "${PWD}/tmp"
     
@@ -101,8 +95,8 @@ To build a default image in a Vagrant box, simply execute on the command line
 
 
 To customize your build:
-1. All customizations have to be specified in a json configuration file (see the [__Config File__](#config_file) section for details).
-1. The build process itself is then configured with command line options (see `pi_customizer help build` for details)   
+1. All customizations have to be specified in a json configuration file (see the [Config File](#config_file) section for details).
+1. The build process itself is then configured with command line options (see `pi_customizer help build` or the [CLI](#cli_options) section for details)   
      
 
 <a name="config_file"></a>
@@ -169,16 +163,19 @@ An example of the json config file with all current configuration options
 ## Command Line Options
 
 Change the location of the configuration file with ```--config, -c```.
+
 ``` 
 pi_customizer -c myconfig.conf 
 ``` 
 
 Change the git location of the pi-gen build sources with ```--build_sources_git_url -g``` or the used branch/tag  ```--build_sources_git_tag, -t```. __NOTE__: Only works with tags from 2019 or later.
+
 ``` 
 pi_customizer -g https://github.com/ottenwbe/pi-gen.git -t 2019-06-20-raspbian-buster
 ``` 
 
-Change the workspace directory on the local machine with ```--local_workspace_dir, -l```.
+Change the workspace directory on the local machine with ```--local_workspace_dir, -l```. Environment configuration and built images are stored in the workspace.
+
 ``` 
 pi_customizer -l ./workspace
 ``` 
@@ -188,6 +185,11 @@ pi_customizer -l ./workspace
 ## Why Ruby?
 
 Well, the author wanted to learn Ruby.
+
+## Structure
+
+For now, the sources of both gems (pi_customizer and pi_build_modifier) are versioned in one repository. 
+This might change if their versions run out of sync.  
 
 ## Prerequisites
 
@@ -213,8 +215,7 @@ Well, the author wanted to learn Ruby.
     rbenv global 2.5.5
     ```
 
-
-* Install Gems 
+* Install build dependencies 
 
     ```
     gem install bundler rake rspec rdoc
@@ -223,7 +224,8 @@ Well, the author wanted to learn Ruby.
 * Install dependencies
 
     ```
-    bundle install
+    cd pi_customizer/ && bundle install && cd ..
+    cd pi_build_modifier/ && bundle install && cd ..
     ```    
 
 ## Test
@@ -231,11 +233,6 @@ Well, the author wanted to learn Ruby.
 RSpec tests can be executed for all modules by calling the following rake command in the project root.
 
     rake spec
-
-## Structure
-
-For now, the sources of both gems (pi_customizer and pi_build_modifier) are versioned in one repository. 
-This might change if their versions run out of sync.  
     
 ## Contributing
 

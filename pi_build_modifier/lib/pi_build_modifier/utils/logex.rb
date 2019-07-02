@@ -21,5 +21,9 @@
 require 'logger'
 
 module PiBuildModifier
-  $logger = Logger.new(STDOUT)
+  begin
+    $logger = Logger.new('/etc/pi_build_modifier/modifier.log')
+  rescue
+    $logger = Logger.new(STDOUT)
+  end
 end

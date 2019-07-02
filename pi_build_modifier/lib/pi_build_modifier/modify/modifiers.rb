@@ -112,6 +112,7 @@ module PiBuildModifier
         load_config
         check_all
         map_all
+        verify_all
         modify_all
         finish_all
       end
@@ -126,7 +127,11 @@ module PiBuildModifier
         end
       end
 
-      private def check_all
+      private def verify_all
+        @config_modifiers.each(&:verify)
+      end
+
+      def check_all
         @config_modifiers.each(&:check)
       end
 
@@ -162,7 +167,11 @@ module PiBuildModifier
       end
 
       def check
-        @configs.each {|config| config.check unless config.nil?}
+        $logger.debug("No pre check specified")
+      end
+
+      def verify
+        @configs.each {|config| config.verify unless config.nil?}
       end
 
       def map(json_data)
@@ -208,8 +217,27 @@ module PiBuildModifier
 
     class ERBConfigModifier < ConfigModifier
 
-      def initialize(working_dir)
-        super(working_dir)
+      def initialize(workspace)
+        super(workspace)
+      end
+
+      def check
+        @configs.each do |config|
+          template_path = config.template_path
+          output_path = config.relative_output_path
+          template = read_template(template_path)
+
+          rendered = render(template, config.get_binding)
+          original = ""
+          File.open(output_path, 'r+') do |f|
+            original = f.read
+          end
+
+          unless rendered.equal? original
+            $logger.warn "Check of sources with default configuration failed:\nrendered = \n\n #{rendered} \n\n != original = \n\n #{original}"
+          end
+
+        end
       end
 
       def modify

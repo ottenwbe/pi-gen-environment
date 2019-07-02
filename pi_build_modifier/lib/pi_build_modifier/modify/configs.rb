@@ -29,7 +29,6 @@ module PiBuildModifier
 
   ######################## Init ########################
 
-
   ##
   # Configuration changes of the pi-gen build sources
 
@@ -47,6 +46,8 @@ module PiBuildModifier
       [SystemConfig.new, SshConfig.new]
     end
 
+    ######################## Configuration Constants ########################
+
     SYSTEM = 'system'
     NAME = 'name'
     ENABLED = 'enabled'
@@ -57,8 +58,8 @@ module PiBuildModifier
     LOCALE = 'locale'
     GEN = 'gen'
     SYS = 'sys'
-    C_GROUPS = 'cgroups'
-    C_GROUP_MEMORY = 'memory'
+    CGROUPS = 'cgroups'
+    CGROUP_MEMORY = 'memory'
     TYPE = 'type'
     USERNAME = 'username'
     PASSWORD = 'password'
@@ -79,10 +80,6 @@ module PiBuildModifier
         @password = nil
       end
 
-      def check
-        true
-      end
-
       def map(json_data)
         unless json_data.nil?
           @name = json_data[SYSTEM][NAME] if json_data.has_key?(SYSTEM) && json_data[SYSTEM].has_key?(NAME)
@@ -90,6 +87,12 @@ module PiBuildModifier
           @password = json_data[SYSTEM][PASSWORD] if json_data.has_key?(SYSTEM) && json_data[SYSTEM].has_key?(PASSWORD)
         else
           $logger.error "No json configuration found"
+        end
+      end
+
+      def verify
+        if (!@name.is_a? String) || @name.empty?
+          raise "No valid image name string provided in the config file! E.g., it might be an empty string or not a string at all. Configured image name: '#{@name}'."
         end
       end
 
@@ -117,16 +120,16 @@ module PiBuildModifier
         @enable = true
       end
 
-      def check
-        true
-      end
-
       def map(json_data)
         unless json_data.nil?
           @enable = json_data[SSH][ENABLED] if json_data.has_key?(SSH) && json_data[SSH].has_key?(ENABLED)
         else
           $logger.error 'Ssh could not be configured: Invalid json data.'
         end
+      end
+
+      def verify
+        # no verify
       end
 
       def config_line
@@ -150,10 +153,6 @@ module PiBuildModifier
         @wpa_country = 'DE'
         @template_path = File.join(File.dirname(__FILE__), '/templates/wpa_supplicant.conf.erb').to_s
         @relative_output_path = 'stage2/02-net-tweaks/files/wpa_supplicant.conf'
-      end
-
-      def check
-        true
       end
 
       ##
@@ -191,6 +190,10 @@ module PiBuildModifier
         networks
       end
 
+      def verify
+        # no verify
+      end
+
       def get_binding
         binding
       end
@@ -213,15 +216,15 @@ module PiBuildModifier
         @relative_output_path = 'stage0/01-locale/00-debconf'
       end
 
-      def check
-        true
-      end
-
       def map(json_data)
         unless json_data.nil?
           @gen_locales = json_data[LOCALE][GEN].map {|gen| gen} if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(GEN)
           @sys_locale = json_data[LOCALE][SYS] if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(SYS)
         end
+      end
+
+      def verify
+        # no verify
       end
 
       def get_binding
@@ -230,32 +233,31 @@ module PiBuildModifier
 
     end
 
-
     ##
     # Enable cgroups during boot
 
     class Boot
 
-      attr_accessor :c_groups
+      attr_accessor :cgroups
 
       attr_reader :template_path, :relative_output_path
 
-      def initialize(c_groups = [''])
-        @c_groups = c_groups
+      def initialize(cgroups = [''])
+        @cgroups = cgroups
         @template_path = File.join(File.dirname(__FILE__), '/templates/07-resize-init.diff.erb').to_s
         @relative_output_path = 'stage2/01-sys-tweaks/00-patches/07-resize-init.diff'
       end
 
-      def check
-        true
-      end
-
       def map(json_data)
-        unless json_data.nil? || !json_data.has_key?(C_GROUPS)
-          if json_data[C_GROUPS].has_key?(C_GROUP_MEMORY) && json_data[C_GROUPS][C_GROUP_MEMORY]
-            @c_groups << 'cgroup_enable=memory cgroup_memory=1 swapaccount=1'
+        unless json_data.nil? || !json_data.has_key?(CGROUPS)
+          if json_data[CGROUPS].has_key?(CGROUP_MEMORY) && json_data[CGROUPS][CGROUP_MEMORY]
+            @cgroups << 'cgroup_enable=memory cgroup_memory=1 swapaccount=1'
           end
         end
+      end
+
+      def verify
+        # no verify
       end
 
       def get_binding
@@ -277,15 +279,17 @@ module PiBuildModifier
         @type = Type::FULL
       end
 
-      def check
-        true
-      end
-
       def map(json_data)
         unless json_data.nil?
           @type = json_data[SYSTEM][TYPE] if json_data.has_key?(SYSTEM) && json_data[SYSTEM].has_key?(TYPE)
         else
           $logger.error "No json configuration found"
+        end
+      end
+
+      def verify
+        unless (@type == Type::FULL) || (@type == Type::LITE)
+          raise "Invalid type '#{@type}' specified. Must be in (#{Type::LITE}, #{Type::FULL}.)"
         end
       end
 
@@ -307,6 +311,9 @@ module PiBuildModifier
     end
 
     ######################## Helper ########################
+
+    ##
+    # WifiNetwork represents the network section of the wpa_supplicant's configuration
 
     class WifiNetwork
       attr_reader :ssid, :psk

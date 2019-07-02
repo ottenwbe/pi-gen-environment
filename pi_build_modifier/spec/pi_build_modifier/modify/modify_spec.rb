@@ -72,6 +72,13 @@ RSpec.describe PiBuildModifier::Modifiers do
       modifiers.with_config_modifier(test_modifier).with_json_configuration(tmp_cfg_file).modify_configs
     end
 
+    it 'triggers verifications of the configuration modifiers' do
+      test_modifier = PiBuildModifier::Modifiers::ConfigModifier.new(".")
+      expect(test_modifier).to receive(:verify)
+      modifiers = PiBuildModifier::Modifiers::Modifiers.new
+      modifiers.with_config_modifier(test_modifier).with_json_configuration(tmp_cfg_file).modify_configs
+    end
+
     it 'triggers mappings of the configuration modifiers' do
       test_modifier = PiBuildModifier::Modifiers::ConfigModifier.new(".")
       expect(test_modifier).to receive(:map)
@@ -117,6 +124,16 @@ RSpec.describe PiBuildModifier::Modifiers do
       configuration.map(JSON.parse '{"system": {"username" : "user", "password" : "pwd"}}')
       expect(configuration.config_line).to eq("IMG_NAME='custompi'\nFIRST_USER_NAME=user\nFIRST_USER_PASS=pwd")
     end
+    it 'ensures that a name for the image is provided' do
+      configuration = PiBuildModifier::Configs::SystemConfig.new
+      configuration.map(JSON.parse '{"system": {"name" : ""}}')
+      expect {configuration.verify}.to raise_error("No valid image name string provided in the config file! E.g., it might be an empty string or not a string at all. Configured image name: ''.")
+    end
+    it 'ensures that the name for the image ca' do
+      configuration = PiBuildModifier::Configs::SystemConfig.new
+      configuration.map(JSON.parse '{"system": {"name" : 1234}}')
+      expect {configuration.verify}.to raise_error("No valid image name string provided in the config file! E.g., it might be an empty string or not a string at all. Configured image name: '1234'.")
+    end
   end
 
   context 'SshConfig' do
@@ -135,7 +152,7 @@ RSpec.describe PiBuildModifier::Modifiers do
   context 'Boot' do
 
     let(:empty_json_config) {JSON.parse '{}'}
-    let(:true_json_config) {JSON.parse '{ "cgroups": { "memory" : true }}'}
+    let(:json_config) {JSON.parse '{ "cgroups": { "memory" : true }}'}
     let(:disabled_json_config) {JSON.parse '{ "cgroups": { "memory" : false }}'}
     let(:workspace) {File.join(File.dirname(__FILE__), '/workspace_boot')}
 
@@ -147,7 +164,17 @@ RSpec.describe PiBuildModifier::Modifiers do
       FileUtils.rm_rf workspace
     end
 
-    it 'should create a cmdline.txt file with all cgroups enabled when they are specified in the resources.json' do
+    it 'should create a cmdline.txt file with all cgroups enabled when they are specified' do
+      modifier = PiBuildModifier::Modifiers::ERBConfigModifier.new(workspace)
+      config = PiBuildModifier::Configs::Boot.new
+      modifier.add(config)
+      modifier.map(json_config)
+      modifier.modify
+      expect(Pathname.new(File.join(workspace, config.relative_output_path))).to be_file
+      expect(File.read(File.join(workspace, config.relative_output_path))).to match(/ cgroup_memory=1 /)
+    end
+
+    it 'should create a cmdline.txt file without cgroups enabled when they are disabled' do
       modifier = PiBuildModifier::Modifiers::ERBConfigModifier.new(workspace)
       config = PiBuildModifier::Configs::Boot.new
       modifier.add(config)
@@ -171,6 +198,7 @@ RSpec.describe PiBuildModifier::Modifiers do
   context 'Type' do
 
     let(:json_config) {JSON.parse '{ "system": { "type" : "lite" }}'}
+    let(:invalid_json_config) {JSON.parse '{ "system": { "type" : "image" }}'}
     let(:workspace) {File.join(File.dirname(__FILE__), '/workspace_boot')}
 
     before(:each) do
@@ -179,6 +207,16 @@ RSpec.describe PiBuildModifier::Modifiers do
 
     after(:each) do
       FileUtils.rm_rf workspace
+    end
+
+    it 'ensures that a valid type is specified' do
+      modifier = PiBuildModifier::Modifiers::ConfigModifier.new(workspace)
+      config = PiBuildModifier::Configs::TypeConfig.new
+      modifier.add(config)
+      modifier.map(invalid_json_config)
+      modifier.modify
+
+      expect {modifier.verify}.to raise_error
     end
 
     it 'should create skip files' do
