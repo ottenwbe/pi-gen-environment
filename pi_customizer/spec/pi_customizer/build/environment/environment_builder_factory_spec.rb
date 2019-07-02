@@ -18,10 +18,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-module PiCustomizer
+require_relative '../../../spec_helper'
+require 'rspec'
+require 'pi_customizer/build/environment/environment_factory'
+require 'pi_customizer/build/environment/environment'
+require 'pi_customizer/build/environment/docker/docker'
+require 'pi_customizer/build/environment/vagrant/vagrant'
 
-  ##
-  # The current version of the pi_customizer gem
+RSpec.describe 'environment_factory' do
 
-  VERSION = '0.5.0.pre.alpha'
+  it 'creates a vagrant environment when ENV_VAGRANT is specified' do
+    env = PiCustomizer::Environment::environment_factory(PiCustomizer::Environment::ENV_VAGRANT, '', '')
+    expect(env).to be_a PiCustomizer::Environment::Vagrant
+  end
+
+  it 'creates a docker environment when ENV_DOCKER is specified' do
+    env = PiCustomizer::Environment::environment_factory(PiCustomizer::Environment::ENV_DOCKER, '', '')
+    expect(env).to be_a PiCustomizer::Environment::Docker
+  end
+
+  it 'creates an echo environment when ENV_ECHO is specified' do
+    env = PiCustomizer::Environment::environment_factory(PiCustomizer::Environment::ENV_DOCKER, '', '')
+    expect(env).to be_a PiCustomizer::Environment::Docker
+  end
+
 end

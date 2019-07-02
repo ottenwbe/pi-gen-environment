@@ -19,21 +19,23 @@
 # SOFTWARE.
 
 require 'pi_customizer/utils/logex'
+require 'pi_customizer/build/environment/environment'
+require 'pi_customizer/build/config/build_config'
 
 module PiCustomizer
   module Builder
 
     ##
-    # BuildExecutor triggers the steps of a build process in a given environment (e.g., a vagrant box).
+    # BuildExecutor triggers the steps of a build process for a given environment (e.g., a vagrant box).
     # It skips individual steps in the build process when they are defined as skip_build_steps.
 
     class BuildExecutor
 
-      attr_reader :env, :skip_build_steps
+      attr_reader :env
 
-      def initialize(environment, skip_build_steps = Array.new)
+      def initialize(environment, build_config)
         @env = environment
-        @skip_build_steps = convert_to_skip(skip_build_steps)
+        @build_config = build_config
       end
 
       ##
@@ -48,7 +50,7 @@ module PiCustomizer
       # execute the prepare step for the build environment
 
       def prepare
-        unless @skip_build_steps.include?(:prepare)
+        unless @build_config.skip?(:prepare)
           @env.prepare
         end
       end
@@ -57,7 +59,7 @@ module PiCustomizer
       # execute the start step for the build environment
 
       def start
-        unless @skip_build_steps.include?(:start)
+        unless @build_config.skip?(:start)
           @env.start
         end
       end
@@ -66,7 +68,7 @@ module PiCustomizer
       # execute the build_image step for the build environment
 
       def build_image
-        unless @skip_build_steps.include?(:build_image)
+        unless @build_config.skip?(:build_image)
           @env.build_image
         end
       end
@@ -75,7 +77,7 @@ module PiCustomizer
       # publish the image from the build environment
 
       def publish
-        unless @skip_build_steps.include?(:publish)
+        unless @build_config.skip?(:publish)
           @env.publish
         end
       end
@@ -84,7 +86,7 @@ module PiCustomizer
       # clean_up the build environment
 
       def clean_up
-        unless @skip_build_steps.include?(:clean_up)
+        unless @build_config.skip?(:clean_up)
           @env.clean_up
         end
       end
@@ -93,7 +95,7 @@ module PiCustomizer
       # execute the stop step of the environment
 
       def stop
-        unless @skip_build_steps.include?(:stop)
+        unless @build_config.skip?(:stop)
           @env.stop
         end
       end
@@ -103,20 +105,6 @@ module PiCustomizer
 
       def ensure
         @env.ensure
-      end
-
-      ##
-      # convert a list of stringified build steps to a list of symbols
-
-      private def convert_to_skip(skip_build_steps)
-        if skip_build_steps.nil?
-          skip_build_steps = Array.new
-        else
-          # convert every key to a symbol
-          skip_build_steps = skip_build_steps.collect {|k| k.to_sym}
-        end
-        $logger.debug "Skipping the following build steps: #{skip_build_steps}"
-        skip_build_steps
       end
 
       ##

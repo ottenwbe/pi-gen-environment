@@ -18,10 +18,37 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require 'pi_customizer/build/environment/environment'
+require 'pi_customizer/build/environment/vagrant/vagrant'
+require 'pi_customizer/build/environment/docker/docker'
+require 'pi_customizer/build/config/remote_workspace'
+require 'pi_customizer/build/config/local_workspace'
+require 'pi_customizer/utils/logex'
+
+
 module PiCustomizer
+  module Environment
 
-  ##
-  # The current version of the pi_customizer gem
+    ENV_VAGRANT = 'VAGRANT'
+    ENV_DOCKER = 'DOCKER'
+    ENV_ECHO = 'ECHO'
 
-  VERSION = '0.5.0.pre.alpha'
+    ##
+    # The environment_factory creates an environment controller tailored to the selected build environment env
+
+    def Environment.environment_factory(env, local_workspace, remote_workspace)
+      case env
+      when ENV_VAGRANT
+        environment = Vagrant.new(remote_workspace, local_workspace)
+      when ENV_DOCKER
+        environment = Docker.new(remote_workspace, local_workspace)
+      when ENV_ECHO
+        environment = EnvironmentControl.new(remote_workspace, local_workspace)
+      else
+        $logger.warn 'No valid environment (e.g., DOCKER or VAGRANT) defined!'
+        environment = EnvironmentControl.new(remote_workspace, local_workspace)
+      end
+      environment
+    end
+  end
 end

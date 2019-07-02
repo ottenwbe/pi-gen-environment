@@ -20,8 +20,8 @@
 
 require 'erb'
 require 'fileutils'
-require 'pi_customizer/build/workspace/remote_workspace'
-require 'pi_customizer/build/workspace/local_workspace'
+require 'pi_customizer/build/config/remote_workspace'
+require 'pi_customizer/build/config/local_workspace'
 
 module PiCustomizer
   module Environment
@@ -38,7 +38,7 @@ module PiCustomizer
         @disk_size = '60GB'
         @config_file_destination = '/vagrant/config.json'
         @config = if config.nil?
-                    Workspace::LocalWorkspace.new
+                    Workspace::LocalWorkspaceConfig.new
                   else
                     config
                   end

@@ -24,7 +24,7 @@ module PiCustomizer
   module Environment
 
     ##
-    # EnvironmentControl defines the build steps that must be supported for a concrete environment
+    # EnvironmentControl defines the lifecycle steps of a build environment 
 
     class EnvironmentControl
 

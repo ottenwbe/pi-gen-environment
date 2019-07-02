@@ -27,16 +27,15 @@ module PiCustomizer
   module Environment
     class Vagrant < EnvironmentControl
 
-      VAGRANT_SOURCE = File.join(File.dirname(__FILE__), '/templates')
-
       def check
         $logger.info '[Check] Pre-flight checks are executing...'
-        ensure_vagrant
+        check_vagrant
       end
 
       def prepare
         $logger.info '[Prepare] pi-image in vagrant environment'
         VagrantFileRenderer.new(VagrantFile.new(@config, @workspace)).create_from_template
+        system 'vagrant box update' # cleanup old environment
       end
 
       def start
@@ -54,10 +53,6 @@ module PiCustomizer
         end
       end
 
-      def clean_up
-        $logger.info '[Clean Up] pi-image in local vagrant environment'
-      end
-
       def stop
         $logger.info '[Stop] pi-image in local vagrant environment'
         Dir.chdir(@config.workspace_directory) do
@@ -65,7 +60,7 @@ module PiCustomizer
         end
       end
 
-      def ensure_vagrant
+      def check_vagrant
         unless system 'vagrant -v'
           raise 'Vagrant not installed. Please ensure that vagrant is installed correctly.'
         end

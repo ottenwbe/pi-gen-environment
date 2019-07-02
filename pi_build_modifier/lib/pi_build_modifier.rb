@@ -19,11 +19,9 @@
 # SOFTWARE.
 
 require 'thor'
-require 'pi_build_modifier/net-tweaks/wifi_network'
-require 'pi_build_modifier/modifier/erb_mapper'
+require 'pi_build_modifier/modify/modifiers'
 require 'pi_build_modifier/version'
-require 'pi_build_modifier/modifier_task'
-require 'pi_build_modifier/config/logex'
+require 'pi_build_modifier/utils/logex'
 
 module PiBuildModifier
 
@@ -38,12 +36,11 @@ module PiBuildModifier
     desc 'modify CONFIG WORKSPACE', 'Modify the pi image sources at the specified WORKSPACE with the specified configuration file CONFIG.'
     def modify(config, workspace)
       $logger.debug "Modifying with a configuration read from '#{config}' in the workspace '#{workspace}'"
-      task = Task::Modifier.new(config, workspace)
-      task.execute
+      Modifiers::ModifiersBuilder::build_defaults(workspace, config).modify_configs
     end
 
     ##
-    # The version command allows users to query for the current version of the pi_customizer gem. It is printed on the command line.
+    # The version command allows users to query for the current version of the pi_build_modifier gem. It is printed on the command line.
 
     desc 'v, version', 'Show the version of the modifier.'
     def version

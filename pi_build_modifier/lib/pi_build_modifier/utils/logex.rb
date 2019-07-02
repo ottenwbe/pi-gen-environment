@@ -18,10 +18,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-module PiCustomizer
+require 'logger'
 
-  ##
-  # The current version of the pi_customizer gem
-
-  VERSION = '0.5.0.pre.alpha'
+module PiBuildModifier
+  begin
+    $logger = Logger.new('/etc/pi_build_modifier/modifier.log')
+  rescue
+    $logger = Logger.new(STDOUT)
+  end
 end

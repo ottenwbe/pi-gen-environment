@@ -19,9 +19,39 @@
 # SOFTWARE.
 
 module PiCustomizer
+  module Config
 
-  ##
-  # The current version of the pi_customizer gem
+    ##
+    # BuildConfig holds all configurations for the build execution
 
-  VERSION = '0.5.0.pre.alpha'
+    class BuildConfig
+      attr_reader :skip_build_steps
+
+      def initialize(skip_build_steps = Array.new)
+        @skip_build_steps = convert_to_skip(skip_build_steps)
+      end
+
+      ##
+      # check if a build step needs to be skipped
+
+      def skip?(build_step)
+        @skip_build_steps.include? build_step
+      end
+
+      ##
+      # convert a list of stringified build steps to a list of symbols
+
+      private def convert_to_skip(skip_build_steps)
+        if skip_build_steps.nil?
+          skip_build_steps = Array.new
+        else
+          # convert every key to a symbol
+          skip_build_steps = skip_build_steps.collect(&:to_sym)
+        end
+        $logger.debug "Skipping the following build steps: #{skip_build_steps}"
+        skip_build_steps
+      end
+    end
+
+  end
 end

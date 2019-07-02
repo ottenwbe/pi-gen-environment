@@ -21,9 +21,11 @@
 require 'thor'
 require 'fileutils'
 require 'pi_customizer/version'
-require 'pi_customizer/build/environment/environment_builder_factory'
-require 'pi_customizer/build/workspace/remote_workspace'
-require 'pi_customizer/build/workspace/local_workspace'
+require 'pi_customizer/build/builder/builder'
+require 'pi_customizer/build/config/remote_workspace'
+require 'pi_customizer/build/config/local_workspace'
+require 'pi_customizer/build/config/build_config'
+require 'pi_customizer/build/environment/environment_factory'
 require 'pi_customizer/write/image_writer'
 require 'pi_customizer/utils/logex'
 
@@ -39,7 +41,7 @@ module PiCustomizer
 
     desc 'build ENV', 'Build pi image on environment ENV (valid environments are: VAGRANT).'
     method_option :build_sources_git_url, :default => Workspace::DEFAULT_GIT_PATH, :aliases => '-g'
-    method_option :build_sources_git_tag, :default => Workspace::DEFAULT_GIT_TAG, :aliases => '-t'    
+    method_option :build_sources_git_tag, :default => Workspace::DEFAULT_GIT_TAG, :aliases => '-t'
     method_option :remote_workspace_dir, :default => Workspace::DEFAULT_REMOTE_WORKSPACE_DIRECTORY, :aliases => '-w'
     method_option :config_file, :aliases => '-c', :required => true
     method_option :local_workspace_dir, :default => Workspace::DEFAULT_LOCAL_WORKSPACE_DIRECTORY, :aliases => '-l'
@@ -50,9 +52,13 @@ module PiCustomizer
     def build(env)
       begin
         remote_workspace = Workspace::RemoteWorkspace.new("#{options[:remote_workspace_dir]}", "#{options[:build_sources_git_url]}", "#{options[:build_sources_git_tag]}")
-        local_workspace = Workspace::LocalWorkspace.new("#{options[:config_file]}", "#{options[:local_workspace_dir]}", "#{options[:modifier_gem]}")
-        builder = Environment::builder_factory(env, local_workspace, remote_workspace, options[:skip_steps])
-        builder.build
+        local_workspace = Workspace::LocalWorkspaceConfig.new("#{options[:config_file]}", "#{options[:local_workspace_dir]}", "#{options[:modifier_gem]}")
+        build_config = Config::BuildConfig.new(options[:skip_steps])
+
+        environment = Environment::environment_factory(env, local_workspace, remote_workspace)
+        builder = Builder::PiBuilder.new
+
+        builder.build(environment, build_config)
       rescue Exception => e
         $logger.error e.message
       end
@@ -68,13 +74,13 @@ module PiCustomizer
     end
 
     ##
-    # Allow uswers to write an image to a SD card
+    # Allow users to write an image to a device, i.e., a SD card
 
     desc 'write IMAGE DEVICE', 'Write an image to a device.'
 
     def write_image(image, device)
       begin
-        ImageWriter.new().write(image, device)
+        ImageWriter.new.write(image, device)
       rescue Exception => e
         $logger.error e.message
       end
