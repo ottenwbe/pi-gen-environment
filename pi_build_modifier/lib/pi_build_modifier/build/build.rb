@@ -18,4 +18,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-VERSION = '0.6.0.pre.alpha'
+require 'fileutils'
+require 'pi_build_modifier/utils/logex'
+
+module PiBuildModifier
+
+  module Builder
+
+    ##
+    # build actually triggers the build scripts for the Pi image
+
+    def Builder.build(workspace)
+      Dir.chdir workspace do
+        $logger.debug "Building in #{workspace}"
+        system "./build.sh"
+      end
+    end
+
+    ##
+    # copies the built image from the publish_folder to the workspace
+
+    def Builder.publish(workspace, publish_folder)
+      $logger.debug "Publishing from #{workspace} to #{publish_folder}"
+      FileUtils.cp_r(File.join(workspace, 'deploy'), publish_folder)
+    end
+
+  end
+end

@@ -31,12 +31,13 @@ module PiCustomizer
 
     class VagrantFile
 
-      attr_accessor :vagrant_template_path, :disk_size, :config_file_destination, :workspace, :config
+      attr_accessor :exchange_destination, :vagrant_template_path, :disk_size, :config_file_destination, :workspace, :config
 
       def initialize(config, workspace)
         @vagrant_template_path = File.join(File.dirname(__FILE__), '/templates/Vagrantfile.erb')
         @disk_size = '60GB'
         @config_file_destination = '/vagrant/config.json'
+        @exchange_destination = '/vagrant'
         @config = if config.nil?
                     Workspace::LocalWorkspaceConfig.new
                   else

@@ -25,5 +25,6 @@ module PiBuildModifier
     $logger = Logger.new('/etc/pi_build_modifier/modifier.log')
   rescue
     $logger = Logger.new(STDOUT)
+    $logger.warn "Fallback to default logger"
   end
 end

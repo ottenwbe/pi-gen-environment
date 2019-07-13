@@ -20,6 +20,7 @@
 
 require 'thor'
 require 'pi_build_modifier/modify/modifiers'
+require 'pi_build_modifier/build/build'
 require 'pi_build_modifier/version'
 require 'pi_build_modifier/utils/logex'
 
@@ -34,15 +35,29 @@ module PiBuildModifier
     # The modify command allows users to modify pi-gen sources in a given workspace based on a given configuration
 
     desc 'modify CONFIG WORKSPACE', 'Modify the pi image sources at the specified WORKSPACE with the specified configuration file CONFIG.'
+
     def modify(config, workspace)
       $logger.debug "Modifying with a configuration read from '#{config}' in the workspace '#{workspace}'"
       Modifiers::ModifiersBuilder::build_defaults(workspace, config).modify_configs
     end
 
     ##
+    # The build command triggers the pi image's build scripts
+    # TODO: merge with modify command
+
+    desc 'build WORKSPACE PUBLISH_FOLDER', 'Build the pi image in WORKSPACE and publish it to PUBLISH_FOLDER'
+
+    def build(workspace, publish_folder)
+      Builder::build(workspace)
+      Builder::publish(workspace, publish_folder)
+    end
+
+
+    ##
     # The version command allows users to query for the current version of the pi_build_modifier gem. It is printed on the command line.
 
     desc 'v, version', 'Show the version of the modifier.'
+
     def version
       puts VERSION
     end

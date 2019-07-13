@@ -18,13 +18,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+##
+# modifiers.rb comprises all classes that orchestrate the build source modifications. One file to avoid the require hell.
+
 require 'json'
 require 'erb'
 require 'fileutils'
-require 'pi_build_modifier/modify/configs'
+require 'pi_build_modifier/modify/configs/configs'
+require 'pi_build_modifier/modify/stages/stage'
 require 'pi_build_modifier/utils/logex'
+require 'pi_build_modifier/utils/templates'
 
 module PiBuildModifier
+
+  ##
+  # Scope for all modifiers of build sources
 
   module Modifiers
 
@@ -200,7 +208,8 @@ module PiBuildModifier
       end
 
       def modify
-        @configs.each {|config| @cfg_lines << config.config_line unless config.nil?}
+        @configs.each {|config| config.modify(@workspace) if config.class.method_defined? :modify}
+        @configs.each {|config| @cfg_lines << config.config_line}
       end
 
       def finish
@@ -224,8 +233,8 @@ module PiBuildModifier
       def check
         @configs.each do |config|
           template_path = config.template_path
-          output_path = config.relative_output_path
-          template = read_template(template_path)
+          output_path = File.join(@workspace, config.relative_output_path)
+          template = Templates.read_template(template_path)
 
           rendered = render(template, config.get_binding)
           original = ""
@@ -241,34 +250,25 @@ module PiBuildModifier
       end
 
       def modify
-        create_conf
-      end
-
-      private def create_conf
-
         @configs.each do |config|
-          template_path = config.template_path
-          output_path = File.join(@workspace, config.relative_output_path)
+          if config.can_modify
+            template_path = config.template_path
+            output_path = File.join(@workspace, config.relative_output_path)
 
-          template = read_template(template_path)
+            template = Templates::read_template(template_path)
 
-          # ensure that the output_path is available
-          FileUtils.mkdir_p File.dirname output_path
+            # ensure that the output_path is available
+            FileUtils.mkdir_p File.dirname output_path
 
-          File.open(output_path, 'w+') do |f|
-            f.write(render(template, config.get_binding))
+            File.open(output_path, 'w+') do |f|
+              f.write(render(template, config.get_binding))
+            end
+
+            $logger.info "Created config at #{output_path} from #{template_path}"
+          else
+            $logger.info "Skipped template #{template_path}"
           end
-
-          $logger.info "Created config at #{output_path} from #{template_path}"
         end
-      end
-
-      private def read_template(template_path)
-        template = ""
-        File.open(template_path.to_s, 'r+') do |f|
-          template = f.read
-        end
-        template
       end
 
       private def render(template, binding)

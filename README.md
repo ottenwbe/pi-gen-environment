@@ -121,6 +121,7 @@ An example of the json config file with all current configuration options
       "cgroups": {
         "memory": true
       },
+      "packages" : ['ca-cacert', 'nano'],
       "wifi": {
         "networks": [
           {
@@ -154,6 +155,10 @@ An example of the json config file with all current configuration options
 ### The cgroups section
 
 * To enable the cgroup memory, enable __memory__, otherwise leave it out.
+
+### The packages section
+
+Installs all custom packages defined in this section.
 
 ### The wifi section
 

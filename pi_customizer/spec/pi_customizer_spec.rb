@@ -66,14 +66,14 @@ describe PiCustomizer::PiCustomizer do
     end
   end
 
-  context '#version' do
+  context '#v' do
     it 'returns the app\'s version' do
       expect(STDOUT).to receive(:puts).with(PiCustomizer::VERSION)
       PiCustomizer::PiCustomizer.start(%w(v))
     end
   end
 
-  context 'version' do
+  context '#version' do
     it 'returns the app\'s version' do
       expect(STDOUT).to receive(:puts).with(PiCustomizer::VERSION)
       PiCustomizer::PiCustomizer.start(%w(version))

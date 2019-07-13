@@ -46,7 +46,7 @@ module PiCustomizer
         self.config_path = config_path
         self.workspace_directory = workspace_directory
         self.modifier_gem_path = modifier_gem_path
-        $logger.debug "Local Workspace is at '#{@config_path}' with tmp directory '#{@workspace_directory}' and modifier_gem_path '#{@modifier_gem_path}'"
+        $logger.debug "Local Workspace\nconfiguration='#{@config_path}'\ndirectory='#{@workspace_directory}'\ngem='#{@modifier_gem_path}'"
       end
 
       ##

@@ -18,4 +18,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-VERSION = '0.6.0.pre.alpha'
+require_relative '../../spec_helper'
+require 'pi_build_modifier/build/build'
+
+
+RSpec.describe PiBuildModifier::Builder do
+
+  let(:workspace) {File.join(File.dirname(__FILE__), '/workspace_build')}
+  let(:mock_build_sh) {File.join(File.dirname(__FILE__), '/workspace_build/build.sh')}
+  let(:expected_done_file) {File.join(File.dirname(__FILE__), '/workspace_build/done')}
+
+  before(:each) do
+    FileUtils.mkdir_p workspace
+    File.open(mock_build_sh, 'w') {|file| file.write("#!/bin/bash\ntouch #{expected_done_file}")}
+    File.chmod(0777, "#{mock_build_sh}")
+  end
+
+  after(:each) do
+    FileUtils.rm_rf workspace
+  end
+
+
+  it 'executes the build script' do
+    PiBuildModifier::Builder.build(workspace)
+    expect(Pathname.new(expected_done_file)).to be_file
+  end
+end

@@ -18,15 +18,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/utils/logex'
 require 'pi_customizer/build/environment/environment'
 require 'pi_customizer/build/config/build_config'
+require 'pi_customizer/utils/logex'
 
 module PiCustomizer
   module Builder
 
     ##
-    # BuildExecutor triggers the steps of a build process for a given environment (e.g., a vagrant box).
+    # BuildExecutor triggers the steps of a build process in a given environment (e.g., a vagrant box).
     # It skips individual steps in the build process when they are defined as skip_build_steps.
 
     class BuildExecutor

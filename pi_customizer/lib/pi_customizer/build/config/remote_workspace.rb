@@ -37,7 +37,7 @@ module PiCustomizer
     ##
     # the default directory for the build sources
 
-    DEFAULT_GIT_TAG = 'master'    
+    DEFAULT_GIT_TAG = 'master'
 
     ##
     # The RemoteWorkspace class encapsulates the configuration of the config in the build environment
@@ -58,11 +58,12 @@ module PiCustomizer
                       git_path.to_s
                     end
         @git_tag = if git_tag.nil? or git_tag == ''
-                      DEFAULT_GIT_TAG
-                    else
-                      git_tag.to_s
-                    end                    
-        $logger.debug "Workspace at '#{@workspace_directory}' with sources from '#{@git_path}'"
+                     DEFAULT_GIT_TAG
+                   else
+                     git_tag.to_s
+                   end
+        $logger.debug
+        "Remote Workspace:\ndir='#{@workspace_directory}'\ngit-url='#{@git_path}'\ngit-tag=#{@git_tag}"
       end
 
       ##

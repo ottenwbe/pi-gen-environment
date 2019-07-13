@@ -18,4 +18,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-VERSION = '0.6.0.pre.alpha'
+module PiBuildModifier
+  module Templates
+    def Templates.read_template(template_path)
+      template = ""
+      File.open(template_path.to_s, 'r+') do |f|
+        template = f.read
+      end
+      template
+    end
+  end
+end

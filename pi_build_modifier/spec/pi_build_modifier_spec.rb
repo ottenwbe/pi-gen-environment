@@ -22,6 +22,7 @@ require_relative 'spec_helper'
 require 'pi_build_modifier'
 require 'pi_build_modifier/version'
 require 'pi_build_modifier/modify/modifiers'
+require 'pi_build_modifier/build/build'
 
 RSpec.describe PiBuildModifier do
   it 'has a version number' do
@@ -39,6 +40,18 @@ RSpec.describe PiBuildModifier::PiBuildModifier do
     it 'informs about the current version' do
       expect {PiBuildModifier::PiBuildModifier.start(%w(version))}.to output(/#{PiBuildModifier::VERSION}/).to_stdout
     end
+  end
+
+  context '#build' do
+    let(:tmp_workspace) {'tmp_space'}
+    let(:tmp_deploy) {'tmp_deploy_folder'}
+
+    it 'triggers the build and publish steps' do
+      expect(PiBuildModifier::Builder).to receive(:build).with(tmp_workspace)
+      expect(PiBuildModifier::Builder).to receive(:publish).with(tmp_workspace, tmp_deploy)
+      PiBuildModifier::PiBuildModifier.start(['build', tmp_workspace, tmp_deploy])
+    end
+
   end
 
   context '#modify' do
