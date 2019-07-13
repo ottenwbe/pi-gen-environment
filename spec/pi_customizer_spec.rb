@@ -36,7 +36,7 @@ describe PiCustomizer::PiCustomizer do
 
   context '#build' do
     it 'starts a build when the command line parameter \'build\' is passed' do
-      expect_any_instance_of(PiCustomizer::Builder::PiBuilder).to receive(:build).with(anything, anything)
+      expect_any_instance_of(PiCustomizer::Builder::PiBuilder).to receive(:build)
       PiCustomizer::PiCustomizer.start(%w(build ECHO -c tst))
     end
     it 'reads the modifier_gem_path parameter' do

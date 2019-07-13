@@ -47,6 +47,10 @@ module PiCustomizer
         $logger.warn '[Start] skipped...'
       end
 
+      def modify
+        $logger.warn '[Modify] skipped...'
+      end
+
       def build_image
         $logger.warn '[Build Image] skipped...'
       end

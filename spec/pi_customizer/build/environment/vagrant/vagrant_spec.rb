@@ -63,10 +63,16 @@ RSpec.describe PiCustomizer::Environment::Vagrant do
     end
   end
 
-  context '#build_image' do
+  context '#modify' do
     it 'starts provisioning' do
       expect(vagrant_env).to receive(:system).with('vagrant ssh -- sudo pi_customizer modify /vagrant/config.json /build/pi-gen')
-      expect(vagrant_env).to receive(:system).with('vagrant ssh -- sudo pi_customizer build /build/pi-gen /vagrant')
+      vagrant_env.modify
+    end
+  end
+
+  context '#build_image' do
+    it 'starts provisioning' do
+      expect(vagrant_env).to receive(:system).with('vagrant ssh -- sudo pi_customizer trigger /build/pi-gen /vagrant')
       vagrant_env.build_image
     end
   end

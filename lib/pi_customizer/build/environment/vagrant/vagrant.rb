@@ -51,11 +51,17 @@ module PiCustomizer
         end
       end
 
-      def build_image
+      def modify
         $logger.info '[Build] pi-image in local vagrant environment'
         Dir.chdir(@config.workspace_directory) do
           system "vagrant ssh -- sudo pi_customizer modify #{@vagrant_file.config_file_destination} #{@workspace.workspace_directory}"
-          system "vagrant ssh -- sudo pi_customizer build #{@workspace.workspace_directory} #{@vagrant_file.exchange_destination}"
+        end
+      end
+
+      def build_image
+        $logger.info '[Build] pi-image in local vagrant environment'
+        Dir.chdir(@config.workspace_directory) do
+          system "vagrant ssh -- sudo pi_customizer trigger #{@workspace.workspace_directory} #{@vagrant_file.exchange_destination}"
         end
       end
 

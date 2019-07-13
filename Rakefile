@@ -59,7 +59,7 @@ namespace :uninstall do
 end
 
 namespace :install do
-  task :local => [:spec, :rdoc, 'uninstall:local']
+  task :local => [:spec, :rdoc, 'uninstall:local', :build]
 end
 
 # run the pi_customizer from source

@@ -29,10 +29,9 @@ describe PiCustomizer::Builder do
   context 'Builder' do
 
     it 'triggers the build executor' do
-      expect_any_instance_of(PiCustomizer::Builder::BuildExecutor).to receive(:check)
-      expect_any_instance_of(PiCustomizer::Builder::BuildExecutor).to receive(:stop)
-      builder = PiCustomizer::Builder::PiBuilder.new
-      builder.build(PiCustomizer::Environment::environment_factory(PiCustomizer::Environment::ENV_ECHO, nil, nil), PiCustomizer::Config::BuildConfig.new([]))
+      builder = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::environment_factory(PiCustomizer::Environment::ENV_ECHO, nil, nil), PiCustomizer::Config::BuildConfig.new([]))
+      expect(builder).to receive(:stop)
+      builder.build
     end
 
   end
@@ -40,79 +39,79 @@ describe PiCustomizer::Builder do
   context 'BuildExecutor' do
 
     it 'honors skipping the build step prepare' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([:prepare]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([:prepare]))
       expect(build_exec.env).not_to receive(:prepare)
       build_exec.prepare
     end
 
     it 'honors skipping the build step start' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([:start]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([:start]))
       expect(build_exec.env).not_to receive(:start)
       build_exec.start
     end
 
     it 'honors skipping the build step' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([:build_image]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([:build_image]))
       expect(build_exec.env).not_to receive(:build_image)
       build_exec.build_image
     end
 
     it 'honors skipping the publish step' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([:publish]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([:publish]))
       expect(build_exec.env).not_to receive(:publish)
       build_exec.publish
     end
 
     it 'honors skipping the build step clean' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([:clean_up]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([:clean_up]))
       expect(build_exec.env).not_to receive(:clean_up)
       build_exec.clean_up
     end
 
     it 'honors skipping the build step stop' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([:stop]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([:stop]))
       expect(build_exec.env).not_to receive(:stop)
       build_exec.stop
     end
 
     it 'honors not skipping the build step check' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
       expect(build_exec.env).to receive(:check)
       build_exec.check
     end
 
     it 'honors not skipping the build step prepare' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
       expect(build_exec.env).to receive(:prepare)
       build_exec.prepare
     end
 
     it 'honors not skipping the build step start' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
       expect(build_exec.env).to receive(:start)
       build_exec.start
     end
 
     it 'honors not skipping the build step' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
       expect(build_exec.env).to receive(:build_image)
       build_exec.build_image
     end
 
     it 'honors not skipping the publish step' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
       expect(build_exec.env).to receive(:publish)
       build_exec.publish
     end
 
     it 'honors not skipping the build step clean' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
       expect(build_exec.env).to receive(:clean_up)
       build_exec.clean_up
     end
 
     it 'honors not skipping the build step stop' do
-      build_exec = PiCustomizer::Builder::BuildExecutor.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
+      build_exec = PiCustomizer::Builder::PiBuilder.new(PiCustomizer::Environment::EnvironmentControl.new('', ''), PiCustomizer::Config::BuildConfig.new([]))
       expect(build_exec.env).to receive(:stop)
       build_exec.stop
     end

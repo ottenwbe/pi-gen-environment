@@ -18,7 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'pi_customizer/build/builder/build_executor'
 require 'pi_customizer/utils/logex'
 
 module PiCustomizer
@@ -31,32 +30,123 @@ module PiCustomizer
 
     class PiBuilder
 
+      attr_reader :env
+
+      def initialize(environment, build_config)
+        @env = environment
+        @build_config = build_config
+      end
+
       ##
       # build orchestrates the build steps and therefore the build process of an image
 
-      def build(environment, build_config)
-        build_executor = BuildExecutor.new(environment, build_config)
+      def build
         begin
-          execute_builder(build_executor)
+          execute_builder
         rescue Exception => e
           $logger.error e.message
         ensure
-          ensure_builder(build_executor)
+          ensure_builder
         end
       end
 
-      private def execute_builder(build_executor)
-        build_executor.check
-        build_executor.prepare
-        build_executor.start
-        build_executor.build_image
-        build_executor.publish
-        build_executor.stop
-        build_executor.clean_up
+      private def execute_builder
+        check
+        prepare
+        start
+        modify
+        build_image
+        publish
+        stop
+        clean_up
       end
 
-      private def ensure_builder(build_executor)
-        build_executor.ensure
+      ##
+      # check if a build environment is specified and then calls the check step for this environment
+
+      def check
+        check_env
+        @env.check
+      end
+
+      ##
+      # execute the prepare step for the build environment
+
+      def prepare
+        unless @build_config.skip?(:prepare)
+          @env.prepare
+        end
+      end
+
+      ##
+      # execute the start step for the build environment
+
+      def start
+        unless @build_config.skip?(:start)
+          @env.start
+        end
+      end
+
+
+      ##
+      # execute the start step for the build environment
+
+      def modify
+        unless @build_config.skip?(:modify)
+          @env.modify
+        end
+      end
+
+      ##
+      # execute the build_image step for the build environment
+
+      def build_image
+        unless @build_config.skip?(:build_image)
+          @env.build_image
+        end
+      end
+
+      ##
+      # publish the image from the build environment
+
+      def publish
+        unless @build_config.skip?(:publish)
+          @env.publish
+        end
+      end
+
+      ##
+      # clean_up the build environment
+
+      def clean_up
+        unless @build_config.skip?(:clean_up)
+          @env.clean_up
+        end
+      end
+
+      ##
+      # execute the stop step of the environment
+
+      def stop
+        unless @build_config.skip?(:stop)
+          @env.stop
+        end
+      end
+
+      ##
+      # execute the ensure step of an environment
+
+      def ensure_builder
+        @env.ensure
+      end
+
+      ##
+      # check if an environment is specified
+
+      private def check_env
+        if @env.nil?
+          raise 'No environment specified, please specify the "environment", e.g. Vagrant'
+        end
       end
 
     end

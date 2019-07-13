@@ -27,6 +27,7 @@ require 'pi_customizer/build/config/local_workspace'
 require 'pi_customizer/build/config/build_config'
 require 'pi_customizer/build/environment/environment_factory'
 require 'pi_customizer/modify/modifiers'
+require 'pi_customizer/trigger/build'
 require 'pi_customizer/write/image_writer'
 require 'pi_customizer/utils/logex'
 
@@ -57,9 +58,9 @@ module PiCustomizer
         build_config = Config::BuildConfig.new(options[:skip_steps])
 
         environment = Environment::environment_factory(env, local_workspace, remote_workspace)
-        builder = Builder::PiBuilder.new
+        builder = Builder::PiBuilder.new(environment, build_config)
 
-        builder.build(environment, build_config)
+        builder.build
       rescue Exception => e
         $logger.error "Fatal build error: #{e.message}"
       end
