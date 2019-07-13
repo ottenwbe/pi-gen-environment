@@ -12,7 +12,7 @@ with all customizations baked into the image.
 
 The image is built in an isolated [build environment](#environments), e.g., 
 a vagrant box, which is orchestrated by the pi_customizer.
-The customization is performed behind the scenes by Ruby scripts (_pi_build_modifier_) in the build environment by adapting the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
+The customization is performed behind the scenes by Ruby scripts in the build environment by adapting the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
 
 Additionally, pi_customizer also allows you to write the image to an SD card.
 
@@ -227,8 +227,7 @@ This might change if their versions run out of sync.
 * Install dependencies
 
     ```
-    cd pi_customizer/ && bundle install && cd ..
-    cd pi_build_modifier/ && bundle install && cd ..
+    bundle install 
     ```    
 
 ## Test
