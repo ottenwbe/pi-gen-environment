@@ -4,9 +4,7 @@
 
 |Gem                |Badge      |
 |:-:|:-:|
-| pi_customizer     | [![Gem Version](https://badge.fury.io/rb/pi_customizer.svg)](https://badge.fury.io/rb/pi_customizer)  | 
-| pi_build_modifier | [![Gem Version](https://badge.fury.io/rb/pi_build_modifier.svg)](https://badge.fury.io/rb/pi_build_modifier)  | 
-
+| pi_customizer     | [![Gem Version](https://badge.fury.io/rb/pi_customizer.svg)](https://badge.fury.io/rb/pi_customizer)  |  
 
 The _pi_customizer_ allows you to adapt Raspbian images to your needs.
 To this end, an image is built from [scratch](https://github.com/ottenwbe/pi-gen.git) 
@@ -16,7 +14,7 @@ The image is built in an isolated [build environment](#environments), e.g.,
 a vagrant box, which is orchestrated by the pi_customizer.
 The customization is performed behind the scenes by Ruby scripts (_pi_build_modifier_) in the build environment by adapting the [pi-gen](https://github.com/RPi-Distro/pi-gen) build scripts.
 
-Finally, pi_customizer also allows you to write the image to an SD card.
+Additionally, pi_customizer also allows you to write the image to an SD card.
 
 # Install
 
