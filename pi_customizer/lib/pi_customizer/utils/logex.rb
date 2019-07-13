@@ -21,5 +21,5 @@
 require 'logger'
 
 module PiCustomizer
-  $logger = Logger.new(STDOUT)
+  $logger = Logger.new("pi_customizer.log")
 end

@@ -43,7 +43,7 @@ module PiBuildModifier
     end
 
     def Configs.create_config_file_modifiers
-      [SystemConfig.new, SshConfig.new]
+      [SystemConfig.new, SshConfig.new, Packages.new]
     end
 
     ######################## Configuration Constants ########################
@@ -63,9 +63,9 @@ module PiBuildModifier
     TYPE = 'type'
     USERNAME = 'username'
     PASSWORD = 'password'
+    PACKAGES = 'packages'
 
     ######################## Config File Modifiers (ConfigFileModifier) ########################
-
 
     ##
     # Customization of the pi image's name
@@ -135,10 +135,47 @@ module PiBuildModifier
       def config_line
         if @enable
           "ENABLE_SSH=1"
+        else
+          ""
         end
       end
     end
 
+    class Packages
+
+      def initialize
+        @packages = Array.new
+      end
+
+      def map(json_data)
+        unless json_data.nil?
+          @packages = json_data[PACKAGES] if json_data.has_key?(PACKAGES)
+        else
+          $logger.error "No json configuration found"
+        end
+      end
+
+      def verify
+        unless @packages.is_a? Array
+          raise "Invalid configuration for '#{PACKAGES}' specified. Is a #{@packages.class}. Expected #{Array.class}."
+        end
+      end
+
+      def modify(workspace)
+        stage = Stages::Stage.new(@packages)
+        stage.folder_name = 'stage_build'
+        stage.create_in workspace
+      end
+
+      def config_line
+        if @packages.empty?
+          ""
+        else
+          'STAGE_LIST="stage0 stage1 stage2 stage_build stage3 stage4 stage5"'
+        end
+      end
+
+    end
     ######################## ERB Modifiers (ERBConfigModifier) ########################
 
     ##
@@ -146,13 +183,14 @@ module PiBuildModifier
 
     class Wifi
 
-      attr_reader :template_path, :relative_output_path
+      attr_reader :template_path, :relative_output_path, :can_modify
 
       def initialize
         @networks = map_network(nil)
         @wpa_country = 'DE'
         @template_path = File.join(File.dirname(__FILE__), '/templates/wpa_supplicant.conf.erb').to_s
         @relative_output_path = 'stage2/02-net-tweaks/files/wpa_supplicant.conf'
+        @can_modify = false
       end
 
       ##
@@ -162,6 +200,7 @@ module PiBuildModifier
         unless json_data.nil?
           @networks = map_network(json_data['wifi']) if json_data.has_key?('wifi')
           @wpa_country = json_data['wifi']['wpa_country'] if json_data.has_key?('wifi') && json_data['wifi'].has_key?('wpa_country')
+          @can_modify = json_data.has_key?('wifi')
         else
           $logger.warn("Could not map wifi config due to missing Json")
         end
@@ -207,19 +246,21 @@ module PiBuildModifier
 
       attr_accessor :gen_locales, :sys_locales
 
-      attr_reader :template_path, :relative_output_path
+      attr_reader :template_path, :relative_output_path, :can_modify
 
       def initialize(gen_locales = ['en_GB.UTF-8 UTF-8'], sys_locale = 'en_GB.UTF-8')
         @gen_locales = gen_locales
         @sys_locale = sys_locale
         @template_path = File.join(File.dirname(__FILE__), '/templates/00-debconf.erb').to_s
         @relative_output_path = 'stage0/01-locale/00-debconf'
+        @can_modify = false
       end
 
       def map(json_data)
-        unless json_data.nil?
-          @gen_locales = json_data[LOCALE][GEN].map {|gen| gen} if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(GEN)
-          @sys_locale = json_data[LOCALE][SYS] if json_data.has_key?(LOCALE) && json_data[LOCALE].has_key?(SYS)
+        unless json_data.nil? or !json_data.has_key?(LOCALE)
+          @gen_locales = json_data[LOCALE][GEN].map {|gen| gen} if json_data[LOCALE].has_key?(GEN)
+          @sys_locale = json_data[LOCALE][SYS] if json_data[LOCALE].has_key?(SYS)
+          @can_modify = json_data[LOCALE].has_key?(SYS) or json_data[LOCALE].has_key?(GEN)
         end
       end
 
@@ -240,19 +281,21 @@ module PiBuildModifier
 
       attr_accessor :cgroups
 
-      attr_reader :template_path, :relative_output_path
+      attr_reader :template_path, :relative_output_path, :can_modify
 
       def initialize(cgroups = [''])
         @cgroups = cgroups
         @template_path = File.join(File.dirname(__FILE__), '/templates/07-resize-init.diff.erb').to_s
         @relative_output_path = 'stage2/01-sys-tweaks/00-patches/07-resize-init.diff'
+        @can_modify = false
       end
 
       def map(json_data)
-        unless json_data.nil? || !json_data.has_key?(CGROUPS)
-          if json_data[CGROUPS].has_key?(CGROUP_MEMORY) && json_data[CGROUPS][CGROUP_MEMORY]
+        unless json_data.nil? or !json_data.has_key?(CGROUPS)
+          if json_data[CGROUPS].has_key?(CGROUP_MEMORY) and json_data[CGROUPS][CGROUP_MEMORY]
             @cgroups << 'cgroup_enable=memory cgroup_memory=1 swapaccount=1'
           end
+          @can_modify = json_data[CGROUPS].has_key?(CGROUP_MEMORY) and json_data[CGROUPS][CGROUP_MEMORY]
         end
       end
 
@@ -269,9 +312,19 @@ module PiBuildModifier
     ######################## Config Modifiers (ConfigModifier) ########################
 
     module Type
+      ##
+      # Identifies a full pi image
+
       FULL = 'full'
+
+      ##
+      # Identifies a lite pi image
+
       LITE = 'lite'
     end
+
+    ##
+    # Change the type of the system to either a lite or a full system
 
     class TypeConfig
 

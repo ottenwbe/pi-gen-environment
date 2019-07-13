@@ -21,16 +21,6 @@ echo 'git clone to workspace'
 git clone --branch <%= workspace.git_tag %> <%= workspace.git_path %> <%= workspace.workspace_directory %>
 SCRIPT
 
-$modify = <<SCRIPT
-# Execute gem with parameters
-cd  <%= workspace.workspace_directory %>
-pi_build_modifier modify <%= config_file_destination %> <%= workspace.workspace_directory %>
-sudo ./build.sh
-mkdir -p <%= workspace.workspace_directory %>/deploy
-cp -r <%= workspace.workspace_directory %>/deploy /vagrant
-echo "Pi Image copied to your local workspace <%= config.workspace_directory.to_s %>"
-SCRIPT
-
 Vagrant.configure('2') do |config|
 
   config.vm.box = 'ubuntu/xenial64' #Note, that 'debian/stretch64' cannot be resized with the disksize plugin
@@ -54,8 +44,5 @@ Vagrant.configure('2') do |config|
 
   # Prepare the modification
   config.vm.provision 'shell', inline: $prepare
-
-  # Actually modify the build sources and then build the environment
-  config.vm.provision 'shell', inline: $modify
 
 end

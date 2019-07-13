@@ -19,18 +19,20 @@
 # SOFTWARE.
 
 require 'pi_customizer/build/builder/build_executor'
+require 'pi_customizer/utils/logex'
 
 module PiCustomizer
   module Builder
 
     ##
-    # PiBuilder abstractly defines the steps of a build process.
-    # However, the concrete orchestration of the build process's steps is done by its sub-classes.
+    # PiBuilder defines the life-cycle steps of a pi image build process.
+    # More precisely it ensures that a build environment is up and running and then triggers the build in it
+    # before cleaning everything up.
 
     class PiBuilder
 
       ##
-      # build orchestrates the build steps related to an environment and therefore the build process of an image
+      # build orchestrates the build steps and therefore the build process of an image
 
       def build(environment, build_config)
         build_executor = BuildExecutor.new(environment, build_config)

@@ -20,7 +20,7 @@
 
 require_relative '../../spec_helper'
 require 'pi_build_modifier/modify/modifiers'
-require 'pi_build_modifier/modify/configs'
+require 'pi_build_modifier/modify/configs/configs'
 
 
 RSpec.describe PiBuildModifier::Modifiers do
@@ -184,15 +184,71 @@ RSpec.describe PiBuildModifier::Modifiers do
       expect(File.read(File.join(workspace, config.relative_output_path))).to_not match(/ cgroup_memory=1 /)
     end
 
-    it 'should create a cmdline.txt file without cgroups enabled when they are not specified' do
+    it 'should NOT create a cmdline.txt file without cgroups enabled when they are not specified' do
       modifier = PiBuildModifier::Modifiers::ERBConfigModifier.new(workspace)
       config = PiBuildModifier::Configs::Boot.new
       modifier.add(config)
       modifier.map(empty_json_config)
       modifier.modify
-      expect(Pathname.new(File.join(workspace, config.relative_output_path))).to be_file
-      expect(File.read(File.join(workspace, config.relative_output_path))).to_not match(/ cgroup_memory=1 /)
+      expect(Pathname.new(File.join(workspace, config.relative_output_path))).to_not be_file
     end
+  end
+
+  context 'Packages' do
+
+    let(:packages_config) {JSON.parse '{ "packages": ["vim","less"] }'}
+    let(:invalid_config) {JSON.parse '{ "packages": { "foo" : "test" } }'}
+    let(:workspace) {File.join(File.dirname(__FILE__), '/workspace_packages')}
+
+    before(:each) do
+      FileUtils.mkdir_p workspace
+    end
+
+    after(:each) do
+      FileUtils.rm_rf workspace
+    end
+
+    it 'creates a packages stage' do
+      modifier = PiBuildModifier::Modifiers::ConfigFileModifier.new(workspace)
+      config = PiBuildModifier::Configs::Packages.new
+      modifier.add(config)
+      modifier.map(packages_config)
+      modifier.modify
+
+      expect(Pathname.new(File.join(workspace, '/stage_build'))).to be_directory
+    end
+
+    it 'creates a prerun.sh' do
+      modifier = PiBuildModifier::Modifiers::ConfigFileModifier.new(workspace)
+      config = PiBuildModifier::Configs::Packages.new
+      modifier.add(config)
+      modifier.map(packages_config)
+      modifier.modify
+      modifier.verify
+
+      expect(Pathname.new(File.join(workspace, '/stage_build/prerun.sh'))).to be_file
+    end
+
+    it 'verifies that packages are provided as an array in the config file' do
+      modifier = PiBuildModifier::Modifiers::ConfigFileModifier.new(workspace)
+      config = PiBuildModifier::Configs::Packages.new
+      modifier.add(config)
+      modifier.map(invalid_config)
+
+      expect {modifier.verify}.to raise_error
+    end
+
+
+    it 'writes the packages specified int the configuration to a file' do
+      modifier = PiBuildModifier::Modifiers::ConfigFileModifier.new(workspace)
+      config = PiBuildModifier::Configs::Packages.new
+      modifier.add(config)
+      modifier.map(packages_config)
+      modifier.modify
+
+      expect(File.read(File.join(workspace, '/stage_build/00-install-packages/00-packages'))).to eq("vim\nless\n")
+    end
+
   end
 
   context 'Type' do
@@ -292,14 +348,14 @@ RSpec.describe PiBuildModifier::Modifiers do
       expect(File.read(File.join(workspace, config.relative_output_path))).to match(/ccc/)
     end
 
-    it 'should create a default debconf file' do
+    it 'should NOT create a default debconf file' do
       modifier = PiBuildModifier::Modifiers::ERBConfigModifier.new(workspace)
       config = PiBuildModifier::Configs::Locale.new
       modifier.add(config)
       modifier.map(empty_json_config)
       modifier.modify
 
-      expect(Pathname.new(File.join(workspace, config.relative_output_path))).to be_file
+      expect(Pathname.new(File.join(workspace, config.relative_output_path))).to_not be_file
     end
   end
 

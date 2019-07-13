@@ -27,6 +27,11 @@ module PiCustomizer
   module Environment
     class Vagrant < EnvironmentControl
 
+      def initialize(remote_workspace, local_workspace)
+        super(remote_workspace, local_workspace)
+        @vagrant_file = VagrantFile.new(@config, @workspace)
+      end
+
       def check
         $logger.info '[Check] Pre-flight checks are executing...'
         check_vagrant
@@ -34,7 +39,7 @@ module PiCustomizer
 
       def prepare
         $logger.info '[Prepare] pi-image in vagrant environment'
-        VagrantFileRenderer.new(VagrantFile.new(@config, @workspace)).create_from_template
+        VagrantFileRenderer.new(@vagrant_file).create_from_template
         system 'vagrant box update' # cleanup old environment
       end
 
@@ -42,14 +47,15 @@ module PiCustomizer
         $logger.info '[Start] pi-image in local vagrant environment'
         Dir.chdir(@config.workspace_directory) do
           system 'vagrant destroy -f' # cleanup old environment
-          system 'vagrant up --provider=virtualbox --no-provision'
+          system 'vagrant up --provider=virtualbox'
         end
       end
 
       def build_image
         $logger.info '[Build] pi-image in local vagrant environment'
         Dir.chdir(@config.workspace_directory) do
-          system 'vagrant provision'
+          system "vagrant ssh -- sudo pi_build_modifier modify #{@vagrant_file.config_file_destination} #{@workspace.workspace_directory}"
+          system "vagrant ssh -- sudo pi_build_modifier build #{@workspace.workspace_directory} #{@vagrant_file.exchange_destination}"
         end
       end
 
