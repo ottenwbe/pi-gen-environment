@@ -1,10 +1,10 @@
 PI_CUSTOMIZER = 'pi_customizer'
-PI_BUILD_MODIFIER = 'pi_build_modifier'
+files = %w(lib/**/*.rb)
 
-build_projects = [PI_BUILD_MODIFIER]
-install_projects = [PI_CUSTOMIZER]
-all_gems = (build_projects + install_projects).uniq
-files = %w(pi_build_modifier/lib/**/*.rb pi_customizer/lib/**/*.rb)
+##
+# Enable gem tasks
+
+require 'bundler/gem_tasks'
 
 ##
 # The spec task executes rspec tests for all gems of the pi_customizer project.
@@ -13,20 +13,7 @@ files = %w(pi_build_modifier/lib/**/*.rb pi_customizer/lib/**/*.rb)
 begin
   require 'rspec/core/rake_task'
 
-  RSpec::Core::RakeTask.new(:spec) do |t|
-
-    # find all spec files (for all gems)
-    pattern = ''
-    all_gems.each do |gem|
-      if pattern == ''
-        pattern = "#{gem}/spec/**{,/*/**}/*_spec.rb"
-      else
-        pattern = pattern + ',' + "#{gem}/spec/**{,/*/**}/*_spec.rb"
-      end
-    end
-    # tell rspec to execute tests on all spec files
-    t.pattern = pattern
-  end
+  RSpec::Core::RakeTask.new(:spec)
 
 rescue LoadError
   puts 'RSpec is not installed. This means rake is not able to execute tests! '
@@ -34,17 +21,6 @@ rescue LoadError
 end
 
 task :default => :spec
-
-# release task
-
-desc 'Release and upload to Rubygems.org'
-task :release do
-  all_gems.each do |p|
-    Dir.chdir p do
-      system 'rake release'
-    end
-  end
-end
 
 # doc tasks
 
@@ -56,7 +32,7 @@ begin
     rdoc.rdoc_files.include(files)
   end
 rescue LoadError
-  puts 'RSpec is not installed. This means rake is not able to build the documentation!'
+  puts 'RDoc is not installed. This means rake is not able to build the documentation!'
   puts '* Try: gem install rdoc'
 end
 
@@ -64,7 +40,7 @@ end
 
 desc "Show the gem's versions"
 task :versions do
-  require_relative "#{PI_CUSTOMIZER}/lib/#{PI_CUSTOMIZER}/version"
+  require_relative "lib/#{PI_CUSTOMIZER}/version"
   puts "#{PI_CUSTOMIZER} Versions"
   puts ' '
   puts '*** Dev VERSION ***'
@@ -72,57 +48,18 @@ task :versions do
   puts "#{PI_CUSTOMIZER}: #{PiCustomizer::VERSION} "
   system "gem list #{PI_CUSTOMIZER} --pre --remote"
   puts ' '
-  require_relative "#{PI_BUILD_MODIFIER}/lib/#{PI_BUILD_MODIFIER}/version"
-  puts "#{PI_BUILD_MODIFIER} Versions"
-  puts ' '
-  puts '*** Dev VERSION ***'
-  puts ' '
-  puts "#{PI_BUILD_MODIFIER}: #{PiBuildModifier::VERSION}"
-  system "gem list #{PI_BUILD_MODIFIER} --pre --remote"
 end
 
-# build tasks
-
-desc "Build all gems (i.e., #{PI_BUILD_MODIFIER} and #{PI_CUSTOMIZER})"
-task :build do
-  all_gems.each do |p|
-    Dir.chdir p do
-      system 'rake build'
-    end
-  end
-end
 
 namespace :uninstall do
   desc 'remove the locally required gems'
   task :local do
-    install_projects.each do |p|
-      Dir.chdir p do
-        system "gem uninstall #{p} -a -x"
-      end
-    end
+    system "gem uninstall #{PI_CUSTOMIZER} -a -x"
   end
 end
 
 namespace :install do
-
-  require 'fileutils'
-
-  desc 'install the locally required gems'
-  task :local do
-    build_projects.each do |p|
-      Dir.chdir p do
-        system 'rake build'
-      end
-    end
-    install_projects.each do |p|
-      Dir.chdir p do
-        system 'rake install:local'
-      end
-    end
-  end
-
-  task :local => [:spec, :rdoc, 'uninstall:local']
-
+  task :local => [:spec, :rdoc, 'uninstall:local', :build]
 end
 
 # run the pi_customizer from source
@@ -131,12 +68,12 @@ namespace :run do
 
   desc 'run the pi_customizer and build the pi image in a vagrant box'
   task :vagrant, [:resources] do |t, args|
-    system ("ruby pi_customizer/bin/pi_customizer build VAGRANT #{args[:resources]}")
+    system ("ruby bin/pi_customizer build VAGRANT #{args[:resources]}")
   end
 
   desc 'run the pi_customizer and build the pi image in a docker container'
   task :docker, [:resources] do |t, args|
-    system ("ruby pi_customizer/bin/pi_customizer build DOCKER #{args[:resources]}")
+    system ("ruby bin/pi_customizer build DOCKER #{args[:resources]}")
   end
 
 end
