@@ -23,7 +23,7 @@ SCRIPT
 
 Vagrant.configure('2') do |config|
 
-  config.vm.box = 'ubuntu/xenial64' #Note, that 'debian/stretch64' cannot be resized with the disksize plugin
+  config.vm.box = 'ubuntu/bionic64' #Note, that 'debian/stretch64' cannot be resized with the disksize plugin
 
   unless Vagrant.has_plugin?("vagrant-disksize")
     raise 'vagrant-disksize plugin is not installed! Use: vagrant plugin install vagrant-disksize'
